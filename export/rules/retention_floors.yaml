@@ -1,0 +1,15 @@
+- floor_id: pmla_kyc
+  minimum_period: "5 years"
+  statute_citation: "PMLA 2002 s.12; PML Rules 2005 r.6"
+- floor_id: gst
+  minimum_period: "6 years"
+  statute_citation: "CGST Act 2017 s.36"
+- floor_id: income_tax
+  minimum_period: "6 years"
+  statute_citation: "Income-tax Rules 2026 r.46(9)"
+- floor_id: companies_act
+  minimum_period: "8 years"
+  statute_citation: "Companies Act 2013 s.128"
+- floor_id: sebi
+  minimum_period: "8 years"
+  statute_citation: "SEBI (LODR) Regulations 2015 Reg. 9"

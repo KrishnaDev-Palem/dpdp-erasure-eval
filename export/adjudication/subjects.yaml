@@ -1,0 +1,60 @@
+subjects:
+  - subject_id: mixed-fanout-subject
+    tags:
+      - mixed_fanout
+    request:
+      subject_id: mixed-fanout-subject
+      type: erasure
+      basis: explicit_erasure_right
+      as_of: "2026-06-01"
+    locations:
+      - location_id: txn-004
+        entity: transactions
+        txn_date: "2024-03-15"
+        amount: 25000
+        instrument_type: equity
+        is_processor_held: false
+        expected:
+          category: securities_transaction
+          anchor_resolvable: true
+          verdict: retain
+          cited_floors:
+            - pmla_kyc
+            - income_tax
+            - companies_act
+            - sebi
+      - location_id: note-001
+        entity: notes
+        note_text: "Customer requested deletion of all records."
+        expected:
+          category: customer_note
+          anchor_resolvable: false
+          verdict: erase
+          cited_floors: []
+  - subject_id: floor-inside-subject
+    tags:
+      - floor_inside
+    request:
+      subject_id: floor-inside-subject
+      type: erasure
+      basis: consent_withdrawn
+      as_of: "2026-06-01"
+    locations:
+      - location_id: kyc-001
+        entity: kyc_records
+        record_date: "2023-01-10"
+        expected:
+          category: kyc_record
+          anchor_resolvable: true
+          verdict: retain
+          cited_floors:
+            - pmla_kyc
+  - subject_id: empty-locations-subject
+    tags:
+      - under_determined
+    request:
+      subject_id: empty-locations-subject
+      type: erasure
+      basis: inactivity
+      as_of: "2026-06-01"
+    locations: []
