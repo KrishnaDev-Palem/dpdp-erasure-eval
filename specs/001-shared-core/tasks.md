@@ -4,133 +4,97 @@
 
 **Prerequisites**: plan.md, spec.md, research.md, data-model.md, contracts/, quickstart.md
 
-**Tests**: Acceptance tests are MANDATORY per constitution Principle II. Each phase lists failing tests before implementation.
+**Tests**: Acceptance tests are MANDATORY per constitution Principle II. Each module phase lists failing tests before implementation.
 
-**Organization**: Tasks grouped by user story (spec.md priorities).
+**Organization**: Execution order follows project bootstrap → export loader → model seam → cache → scoring → context helpers. User story labels (US1–US6) map to spec.md for traceability.
 
 ## Format: `[ID] [P?] [Story] Description`
 
 - **[P]**: Can run in parallel (different files, no dependencies on incomplete tasks)
-- **[Story]**: User story label (US1–US6)
+- **[Story]**: User story label (US1–US6) on user-story phase tasks only
 
 ---
 
-## Phase 1: Setup (Shared Infrastructure)
+## Phase 1: Setup — Project Bootstrap
 
-**Purpose**: Reproducible Python project skeleton
+**Purpose**: Reproducible Python project skeleton with uv, lint, pre-commit, and CI gate (offline, no secrets)
 
-- [ ] T001 Create `core/` package layout per plan.md (`core/export`, `core/model`, `core/cache`, `core/scoring`, `core/context`) with `__init__.py` files
-- [ ] T002 Create `pyproject.toml` with Python 3.11, pytest, ruff, pyyaml, pydantic dependencies and `core` package discovery
-- [ ] T003 Run `uv lock` and commit `uv.lock`
-- [ ] T004 [P] Add `ruff` lint/format config in `pyproject.toml` (line length, target py311)
-- [ ] T005 [P] Add `.env.example` with `MODEL_API_KEY`, `MODEL_ID`, `CACHE_MODE` variable names (no values)
-- [ ] T006 [P] Ensure `.gitignore` covers `.env`, `__pycache__`, `.pytest_cache`, `.ruff_cache`
-- [ ] T007 [P] Create `tests/core/conftest.py` with shared fixtures path (`export/`, `cache/`)
+- [ ] T001 Create `core/` package layout per plan.md (`core/export`, `core/model`, `core/cache`, `core/scoring`, `core/context`) with empty `__init__.py` files
+- [ ] T002 Create `pyproject.toml` with Python 3.11, `pytest`, `ruff`, `pyyaml`, `pydantic` v2, and `core` package discovery
+- [ ] T003 Run `uv lock` and commit `uv.lock` at repository root
+- [ ] T004 [P] Add `ruff` lint and format config in `pyproject.toml` (target py311, line length per project convention)
+- [ ] T005 [P] Add `.env.example` with `MODEL_API_KEY`, `MODEL_ID`, `CACHE_MODE` variable names and no values
+- [ ] T006 [P] Ensure `.gitignore` covers `.env`, `__pycache__`, `.pytest_cache`, `.ruff_cache`, `.venv`
+- [ ] T007 Add `.pre-commit-config.yaml` with `ruff` lint/format and basic file hygiene (trailing whitespace, end-of-file, YAML check) per constitution
+- [ ] T008 Add GitHub Actions CI skeleton in `.github/workflows/ci.yml` — `uv sync`, `ruff check`, `ruff format --check`, `pytest tests/core` placeholder (no secrets)
+- [ ] T009 Create `tests/core/conftest.py` with shared paths to `export/` and `cache/` fixtures
+
+**Checkpoint**: `uv sync` succeeds; CI workflow file exists; pre-commit config present
 
 ---
 
 ## Phase 2: Foundational (Blocking Prerequisites)
 
-**Purpose**: Shared types, ADR, export fixture scaffold — blocks all user stories
+**Purpose**: Shared types, exceptions, ADR, and export fixture scaffold — blocks all user stories
 
 **⚠️ CRITICAL**: No user story implementation until this phase completes
 
-- [ ] T008 Author `docs/adr/0001-frozen-export-ground-truth.md` (eval methodology + frozen-export coupling)
-- [ ] T009 [P] Create `docs/adr/README.md` indexing ADR-0001
-- [ ] T010 [P] Create shared domain types in `core/types.py` per data-model.md (`ErasureRequest`, `ExpectedLabel`, `LabeledLocation`, `ModelVerdict`, `ClassifierResult`, `ContextBundle`, `Rate`)
-- [ ] T011 [P] Create `core/exceptions.py` with `ProvenanceError`, `CacheMissError`, `ModelResponseError`, `ExportLoadError`
-- [ ] T012 Scaffold committed export fixture: `export/PINNED_AGENT_SHA`, `export/manifest.yaml`, `export/adjudication/subjects.yaml`, `export/rules/retention_floors.yaml`, `export/rules/governance_map.yaml`, `export/adversarial_seeds/seeds.yaml` (minimal representative content; full agent export at pinned SHA)
-- [ ] T013 [P] Add `scripts/regenerate_export.py` stub documenting deliberate re-export only (no default execution)
+- [ ] T010 Author `docs/adr/0001-frozen-export-ground-truth.md` (eval methodology + frozen-export ground-truth coupling)
+- [ ] T011 [P] Create `docs/adr/README.md` indexing ADR-0001
+- [ ] T012 [P] Create shared domain types in `core/types.py` per data-model.md (`ErasureRequest`, `ExpectedLabel`, `LabeledLocation`, `AdjudicationSubject`, `ModelVerdict`, `ClassifierResult`, `ContextBundle`, `Rate`, `CacheKey`, `CacheEntry`)
+- [ ] T013 [P] Create `core/exceptions.py` with `ProvenanceError`, `ExportLoadError`, `CacheMissError`, `ModelResponseError`
+- [ ] T014 Scaffold committed export fixture: `export/PINNED_AGENT_SHA`, `export/manifest.yaml`, `export/adjudication/subjects.yaml`, `export/rules/retention_floors.yaml`, `export/rules/governance_map.yaml`, `export/adversarial_seeds/seeds.yaml` (minimal representative content; full agent export at pinned SHA)
+- [ ] T015 [P] Add `scripts/regenerate_export.py` stub documenting deliberate re-export only (must not run in CI or default workflows)
 
-**Checkpoint**: Foundation ready — user story work can begin
+**Checkpoint**: Foundation ready — export loader work can begin
 
 ---
 
 ## Phase 3: User Story 1 — Load and Verify Frozen Answer Key (Priority: P1) 🎯 MVP
 
-**Goal**: Loader exposes answer key, rules, seeds; provenance verifies pinned agent SHA
+**Goal**: Loader exposes answer key, rules, and seeds; provenance verifies pinned agent SHA
 
 **Independent Test**: `uv run pytest tests/core/test_acceptance_export.py tests/core/test_acceptance_provenance.py -v`
 
 ### Tests for User Story 1 (write first — MUST FAIL)
 
-- [ ] T014 [P] [US1] Acceptance tests for export loading in `tests/core/test_acceptance_export.py` (subjects, `expected` blocks, rules, three seeds, no `expected` in raw API)
-- [ ] T015 [P] [US1] Acceptance tests for provenance in `tests/core/test_acceptance_provenance.py` (match success, SHA mismatch fail, URL mismatch fail, fail-closed)
+- [ ] T016 [P] [US1] Add acceptance tests for export loading in `tests/core/test_acceptance_export.py` (subjects parse, `expected` blocks available, five retention floors, governance map, three frozen seeds unchanged)
+- [ ] T017 [P] [US1] Add acceptance tests for provenance in `tests/core/test_acceptance_provenance.py` (match success, SHA mismatch fail, URL mismatch fail, fail-closed with no case data exposed)
 
 ### Implementation for User Story 1
 
-- [ ] T016 [US1] Implement `core/export/provenance.py` — read `PINNED_AGENT_SHA`, validate manifest per `contracts/frozen-export.md`
-- [ ] T017 [US1] Implement `core/export/loader.py` — parse YAML, return typed `ExportBundle` with subjects, rules, seeds; call provenance before expose
-- [ ] T018 [US1] Export public API in `core/export/__init__.py` (`load_export`, `verify_provenance`)
-- [ ] T019 [US1] Verify US1 acceptance tests pass; confirm tests failed before T016–T018
+- [ ] T018 [US1] Implement `core/export/provenance.py` — read `export/PINNED_AGENT_SHA`, validate `manifest.yaml` per `contracts/frozen-export.md`, raise `ProvenanceError` on mismatch
+- [ ] T019 [US1] Implement manifest and rules parsing in `core/export/loader.py` per `contracts/frozen-export.md`
+- [ ] T020 [US1] Implement subjects and adversarial-seed parsing in `core/export/loader.py`; return typed export bundle; invoke provenance before exposing data
+- [ ] T021 [US1] Export public API in `core/export/__init__.py` (`load_export`, `verify_provenance`)
+- [ ] T022 [US1] Confirm US1 acceptance tests pass (must have failed before T018–T021)
 
 **Checkpoint**: Export loads and provenance gate passes on committed fixture
 
 ---
 
-## Phase 4: User Story 2 — Score Adjudication Verdicts (Priority: P1)
+## Phase 4: User Story 4 — Injectable Model Seam (Priority: P2)
 
-**Goal**: Per-lane confusion matrix and standalone over-erasure / over-retention / mis-escalation rates
+**Goal**: Protocol + `FakeModelSeam`; adjudicate and `classify_note`; config-driven model id (uses `ContextBundle` type from `core/types.py`, not tier builders)
 
-**Independent Test**: `uv run pytest tests/core/test_acceptance_scoring_adjudication.py -v`
+**Independent Test**: `uv run pytest tests/core/test_acceptance_model_seam.py -v`
 
-### Tests for User Story 2 (write first — MUST FAIL)
+### Tests for User Story 4 (write first — MUST FAIL)
 
-- [ ] T020 [P] [US2] Acceptance tests in `tests/core/test_acceptance_scoring_adjudication.py` per `contracts/scoring.md` (matrix cells, over-erasure standalone, no blended accuracy, empty input, invalid verdict)
+- [ ] T023 [P] [US4] Add acceptance tests in `tests/core/test_acceptance_model_seam.py` per `contracts/model-seam.md` (fake double, no network, `classify_note` text-only, `adjudicate` one verdict per location, invalid verdict raises `ModelResponseError`)
 
-### Implementation for User Story 2
+### Implementation for User Story 4
 
-- [ ] T021 [US2] Implement `core/scoring/adjudication.py` — `score_adjudication(pairs) -> AdjudicationScoringResult`
-- [ ] T022 [US2] Export API in `core/scoring/__init__.py`
-- [ ] T023 [US2] Verify US2 tests pass; hand-computed fixture values match
+- [ ] T024 [US4] Implement `ModelSeam` protocol and config loading in `core/model/seam.py` (`MODEL_ID` from env; no provider client at import time)
+- [ ] T025 [P] [US4] Implement `FakeModelSeam` with call recording in `core/model/fake.py`
+- [ ] T026 [US4] Export API in `core/model/__init__.py`
+- [ ] T027 [US4] Confirm US4 acceptance tests pass offline without `MODEL_API_KEY`
 
-**Checkpoint**: Adjudication scoring primitives ready for Feature 002 runners
-
----
-
-## Phase 5: User Story 3 — Adversarial Rate Primitives (Priority: P3, minimal)
-
-**Goal**: Detection rate, false-alarm rate, per-family breakdown
-
-**Independent Test**: `uv run pytest tests/core/test_acceptance_scoring_adversarial.py -v`
-
-### Tests for User Story 3 (write first — MUST FAIL)
-
-- [ ] T024 [P] [US3] Acceptance tests in `tests/core/test_acceptance_scoring_adversarial.py` per `contracts/scoring.md` (detection, false-alarm, per-family, empty denominators)
-
-### Implementation for User Story 3
-
-- [ ] T025 [US3] Implement `core/scoring/adversarial.py` — `score_adversarial(pairs) -> AdversarialScoringResult`
-- [ ] T026 [US3] Wire adversarial exports in `core/scoring/__init__.py`
-- [ ] T027 [US3] Verify US3 tests pass
-
-**Checkpoint**: Adversarial scoring primitives ready for Feature 003
+**Checkpoint**: Model seam injectable; tests use hand-crafted `ContextBundle` instances
 
 ---
 
-## Phase 6: User Story 6 — Assemble Tier-Appropriate Context (Priority: P3)
-
-**Goal**: T1/T2/T3 context bundles from export; no `expected` leakage
-
-**Independent Test**: `uv run pytest tests/core/test_acceptance_context.py -v`
-
-*Implemented before US4/US5 because cache and model seam depend on `ContextBundle`.*
-
-### Tests for User Story 6 (write first — MUST FAIL)
-
-- [ ] T028 [P] [US6] Acceptance tests in `tests/core/test_acceptance_context.py` per `contracts/context-tiers.md` (T1 request-only, T2 records, T3 rules, no expected, tier delta)
-
-### Implementation for User Story 6
-
-- [ ] T029 [US6] Implement `core/context/tiers.py` — `build_t1`, `build_t2`, `build_t3`
-- [ ] T030 [US6] Export API in `core/context/__init__.py`
-- [ ] T031 [US6] Verify US6 tests pass
-
-**Checkpoint**: Context helpers ready for tier runners and cache hashing
-
----
-
-## Phase 7: User Story 5 — Offline Cache Replay (Priority: P2)
+## Phase 5: User Story 5 — Offline Cache Replay (Priority: P2)
 
 **Goal**: Committed cache entries, offline replay, explicit refresh path, N=5 sample keys
 
@@ -138,51 +102,90 @@
 
 ### Tests for User Story 5 (write first — MUST FAIL)
 
-- [ ] T032 [P] [US5] Acceptance tests in `tests/core/test_acceptance_cache.py` per `contracts/cache.md` (hit, miss error, canonical hash stability, sample_index 0–4, refresh opt-in via marker)
+- [ ] T028 [P] [US5] Add acceptance tests in `tests/core/test_acceptance_cache.py` per `contracts/cache.md` (cache hit, miss raises `CacheMissError`, canonical hash stability, `sample_index` 0–4 keys, refresh opt-in via pytest marker)
 
 ### Implementation for User Story 5
 
-- [ ] T033 [P] [US5] Implement `core/cache/canonicalize.py` — stable JSON canonicalization + SHA-256 `prompt_hash`
-- [ ] T034 [US5] Implement `core/cache/store.py` — read/write/list, `CACHE_MODE` offline vs refresh
-- [ ] T035 [US5] Seed minimal committed cache entry under `cache/` for acceptance fixture
-- [ ] T036 [US5] Export API in `core/cache/__init__.py`
-- [ ] T037 [US5] Verify US5 offline tests pass without `MODEL_API_KEY`
+- [ ] T029 [P] [US5] Implement stable JSON canonicalization and SHA-256 `prompt_hash` in `core/cache/canonicalize.py`
+- [ ] T030 [US5] Implement cache read and key path layout in `core/cache/store.py` per `contracts/cache.md`
+- [ ] T031 [US5] Implement cache write and `CACHE_MODE` offline vs refresh behavior in `core/cache/store.py`
+- [ ] T032 [US5] Seed minimal committed cache entry under `cache/` for acceptance fixture
+- [ ] T033 [US5] Export API in `core/cache/__init__.py`
+- [ ] T034 [US5] Confirm US5 offline tests pass without `MODEL_API_KEY`
 
 **Checkpoint**: Offline replay works; refresh path tested only when opted in
 
 ---
 
-## Phase 8: User Story 4 — Injectable Model Seam (Priority: P2)
+## Phase 6: User Story 2 — Score Adjudication Verdicts (Priority: P1)
 
-**Goal**: Protocol + `FakeModelSeam`; adjudicate and classify_note; config-driven model id
+**Goal**: Per-lane confusion matrix and standalone over-erasure / over-retention / mis-escalation rates
 
-**Independent Test**: `uv run pytest tests/core/test_acceptance_model_seam.py -v`
+**Independent Test**: `uv run pytest tests/core/test_acceptance_scoring_adjudication.py -v`
 
-### Tests for User Story 4 (write first — MUST FAIL)
+### Tests for User Story 2 (write first — MUST FAIL)
 
-- [ ] T038 [P] [US4] Acceptance tests in `tests/core/test_acceptance_model_seam.py` per `contracts/model-seam.md` (fake double, no network, classify note text only, adjudicate per location)
+- [ ] T035 [P] [US2] Add acceptance tests in `tests/core/test_acceptance_scoring_adjudication.py` per `contracts/scoring.md` (3×3 matrix, over-erasure standalone, no blended accuracy, empty input null rates, invalid verdict validation failure)
 
-### Implementation for User Story 4
+### Implementation for User Story 2
 
-- [ ] T039 [US4] Implement `core/model/seam.py` — `ModelSeam` protocol, config from env, `NotConfiguredError` for live path without key
-- [ ] T040 [P] [US4] Implement `core/model/fake.py` — `FakeModelSeam` with call recording
-- [ ] T041 [US4] Export API in `core/model/__init__.py`
-- [ ] T042 [US4] Verify US4 tests pass offline
+- [ ] T036 [US2] Implement confusion matrix and standalone rates in `core/scoring/adjudication.py` — `score_adjudication(pairs) -> AdjudicationScoringResult`
+- [ ] T037 [US2] Export adjudication API in `core/scoring/__init__.py`
+- [ ] T038 [US2] Confirm US2 tests pass; hand-computed fixture values match
 
-**Checkpoint**: Model seam injectable; Feature 002/003 can wire live provider later
+**Checkpoint**: Adjudication scoring primitives ready for Feature 002 runners
+
+---
+
+## Phase 7: User Story 3 — Adversarial Rate Primitives (Priority: P3, minimal)
+
+**Goal**: Detection rate, false-alarm rate, per-family breakdown (pure functions; no runner or slice)
+
+**Independent Test**: `uv run pytest tests/core/test_acceptance_scoring_adversarial.py -v`
+
+### Tests for User Story 3 (write first — MUST FAIL)
+
+- [ ] T039 [P] [US3] Add acceptance tests in `tests/core/test_acceptance_scoring_adversarial.py` per `contracts/scoring.md` (detection rate, false-alarm rate, per-family breakdown, empty denominators, three frozen seed shapes as fixture input)
+
+### Implementation for User Story 3
+
+- [ ] T040 [US3] Implement detection and false-alarm rate functions in `core/scoring/adversarial.py` — `score_adversarial(pairs) -> AdversarialScoringResult`
+- [ ] T041 [US3] Wire adversarial exports in `core/scoring/__init__.py`
+- [ ] T042 [US3] Confirm US3 tests pass
+
+**Checkpoint**: Adversarial scoring primitives ready for Feature 003
+
+---
+
+## Phase 8: User Story 6 — Assemble Tier-Appropriate Context (Priority: P3)
+
+**Goal**: T1/T2/T3 context bundles from export; no `expected` leakage; compatible with `canonicalize()`
+
+**Independent Test**: `uv run pytest tests/core/test_acceptance_context.py -v`
+
+### Tests for User Story 6 (write first — MUST FAIL)
+
+- [ ] T043 [P] [US6] Add acceptance tests in `tests/core/test_acceptance_context.py` per `contracts/context-tiers.md` (T1 request-only, T2 records without `expected`, T3 rules + governance map, adjacent-tier delta, ground truth excluded)
+
+### Implementation for User Story 6
+
+- [ ] T044 [US6] Implement `build_t1` in `core/context/tiers.py`
+- [ ] T045 [US6] Implement `build_t2` and `build_t3` in `core/context/tiers.py`
+- [ ] T046 [US6] Export API in `core/context/__init__.py`
+- [ ] T047 [US6] Confirm US6 tests pass; bundles hash consistently via `core/cache/canonicalize.py`
+
+**Checkpoint**: Context helpers ready for tier runners in Feature 002
 
 ---
 
 ## Phase 9: Polish & Cross-Cutting Concerns
 
-**Purpose**: CI, full suite, quickstart validation
+**Purpose**: Full-suite validation, licensing, terminology
 
-- [ ] T043 [P] Add GitHub Actions workflow `.github/workflows/ci.yml` — `uv sync`, `ruff check`, `ruff format --check`, `pytest tests/core` (no secrets)
-- [ ] T044 [P] Add pre-commit config `.pre-commit-config.yaml` — ruff + file hygiene per constitution
-- [ ] T045 Run full core suite: `uv run pytest tests/core -v` — all green offline
-- [ ] T046 Run quickstart.md validation steps end-to-end
-- [ ] T047 [P] Add `LICENSE` (MIT) at repository root
-- [ ] T048 Review terminology in error messages (DPDP, T1/T2/T3) across `core/`
+- [ ] T048 Run full core acceptance suite: `uv run pytest tests/core -v` — all green offline
+- [ ] T049 Run quickstart.md validation steps end-to-end
+- [ ] T050 [P] Add MIT `LICENSE` at repository root
+- [ ] T051 [P] Review DPDP and T1/T2/T3 terminology in user-facing error messages across `core/`
 
 ---
 
@@ -192,34 +195,57 @@
 
 | Phase | Depends on | Blocks |
 |-------|------------|--------|
-| 1 Setup | — | 2 |
+| 1 Bootstrap | — | 2 |
 | 2 Foundational | 1 | 3–8 |
-| 3 US1 Export | 2 | — |
-| 4 US2 Adjudication scoring | 2 | — |
-| 5 US3 Adversarial scoring | 2 | — |
-| 6 US6 Context | 2, US1 (loader) | 7, 8 |
-| 7 US5 Cache | 2, US6 (canonicalize) | — |
-| 8 US4 Model seam | 2, US6 (ContextBundle) | — |
+| 3 US1 Export | 2 | 8 (loader integration in context tests) |
+| 4 US4 Model seam | 2 (`ContextBundle` type) | — |
+| 5 US5 Cache | 2, 4 optional (seam for refresh tests) | — |
+| 6 US2 Adjudication scoring | 2 | — |
+| 7 US3 Adversarial scoring | 2 | — |
+| 8 US6 Context | 2, 3 (loader for real subjects) | — |
 | 9 Polish | 3–8 | — |
 
-### User Story Independence
+### Execution Sequence (binding)
 
-- **US1** and **US2** can proceed in parallel after Phase 2 (US2 uses hand-crafted pairs, not loader).
-- **US3** parallel with US2 after Phase 2.
-- **US6** needs US1 loader for integration tests (real subject); implement after US1.
-- **US5** needs US6 `canonicalize` on real `ContextBundle`.
-- **US4** needs US6 types; implement after US6.
+```text
+Bootstrap → Foundational → US1 export (tests → impl) → US4 model seam (tests → impl)
+  → US5 cache (tests → impl) → US2 adjudication scoring (tests → impl)
+  → US3 adversarial scoring (tests → impl) → US6 context (tests → impl) → Polish
+```
+
+### Within Each User Story
+
+- Acceptance tests MUST fail for the right reason before implementation tasks in that phase
+- Implementation tasks within a phase run sequentially unless marked [P]
 
 ### Parallel Opportunities
 
 ```bash
-# After Phase 2 — P1 stories in parallel:
-T014, T015   # US1 tests
-T020         # US2 tests
-T024         # US3 tests
+# Phase 1 bootstrap (after T003):
+T004, T005, T006
 
-# After US1 — context + remaining:
-T028         # US6 tests
+# Phase 2 foundational (after T010):
+T011, T012, T013, T015
+
+# US1 tests (after Phase 2):
+T016, T017
+
+# Independent scoring test authoring (after Phase 2, before impl):
+T035   # US2 adjudication tests
+T039   # US3 adversarial tests
+```
+
+---
+
+## Parallel Example: User Story 1
+
+```bash
+# Launch export acceptance tests together (must fail before impl):
+Task T016: tests/core/test_acceptance_export.py
+Task T017: tests/core/test_acceptance_provenance.py
+
+# Then implement sequentially:
+T018 → T019 → T020 → T021 → T022
 ```
 
 ---
@@ -228,18 +254,22 @@ T028         # US6 tests
 
 ### MVP First (User Stories 1 + 2)
 
-1. Phase 1–2: Setup + foundational types + export scaffold
-2. Phase 3: US1 export loader + provenance
-3. Phase 4: US2 adjudication scoring
-4. **STOP and VALIDATE**: `pytest tests/core/test_acceptance_export.py tests/core/test_acceptance_provenance.py tests/core/test_acceptance_scoring_adjudication.py`
+1. Phase 1–2: Bootstrap + foundational types + export scaffold
+2. Phase 3: US1 export loader + provenance (tests first)
+3. Phase 6: US2 adjudication scoring (tests first; hand-crafted pairs, no loader dependency)
+4. **STOP and VALIDATE**: `uv run pytest tests/core/test_acceptance_export.py tests/core/test_acceptance_provenance.py tests/core/test_acceptance_scoring_adjudication.py -v`
 
 ### Full Feature 001 (planning §8 definition of done)
 
-Complete Phases 1–9. Success: core suite green; export loads and verifies pinned SHA.
+Complete Phases 1–9 in execution order. Success: core suite green offline; export loads and verifies pinned SHA.
 
-### Suggested PR scope
+### Incremental Delivery
 
-Single PR `001-shared-core` with all phases; human merge after green CI.
+| Increment | Phases | Delivers |
+|-----------|--------|----------|
+| MVP | 1–3, 6 | Verified export + adjudication scoring |
+| Reproducibility spine | +4–5 | Model seam + offline cache |
+| Complete shared core | +7–9 | Adversarial rates + context tiers + polish |
 
 ---
 
@@ -248,4 +278,5 @@ Single PR `001-shared-core` with all phases; human merge after green CI.
 - Do not edit committed export or seed content after acceptance (frozen-interface discipline).
 - Do not add `runners/`, `cli`, `report/`, or `core/tools/` in this feature.
 - Primary model string is config-only — never hardcode in `core/`.
-- Total tasks: **48** (Setup 7, Foundational 6, US1 6, US2 4, US3 4, US6 4, US5 6, US4 5, Polish 6)
+- Agent MUST NOT merge to `main`; human review and merge after green CI.
+- US4/US5 tests use hand-crafted `ContextBundle` objects from `core/types.py` until US6 lands.
