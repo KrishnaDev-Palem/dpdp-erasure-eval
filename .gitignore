@@ -1,1 +1,14 @@
 Planning/
+.env
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+dist/
+build/
+.pytest_cache/
+.ruff_cache/
+*.log
+.DS_Store
+Thumbs.db
