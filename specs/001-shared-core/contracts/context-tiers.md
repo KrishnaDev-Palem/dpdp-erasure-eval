@@ -35,3 +35,7 @@ build_t3(request, subject, rules) -> ContextBundle
 ## Prompt hash
 
 All builders MUST produce bundles compatible with `canonicalize()` in the cache contract for stable `prompt_hash`.
+
+## Edge cases
+
+- When `subject.locations` is empty, builders MUST NOT invent records. T1 MAY proceed with request-only context and an empty `locations` list. T2 and T3 MUST return an empty `locations` list without fabricating business fields (callers decide whether to skip the case).

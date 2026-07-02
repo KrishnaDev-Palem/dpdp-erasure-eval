@@ -43,7 +43,7 @@
 - [ ] T011 [P] Create `docs/adr/README.md` indexing ADR-0001
 - [ ] T012 [P] Create shared domain types in `core/types.py` per data-model.md (`ErasureRequest`, `ExpectedLabel`, `LabeledLocation`, `AdjudicationSubject`, `ModelVerdict`, `ClassifierResult`, `ContextBundle`, `Rate`, `CacheKey`, `CacheEntry`)
 - [ ] T013 [P] Create `core/exceptions.py` with `ProvenanceError`, `ExportLoadError`, `CacheMissError`, `ModelResponseError`
-- [ ] T014 Scaffold committed export fixture: `export/PINNED_AGENT_SHA`, `export/manifest.yaml`, `export/adjudication/subjects.yaml`, `export/rules/retention_floors.yaml`, `export/rules/governance_map.yaml`, `export/adversarial_seeds/seeds.yaml` (minimal representative content; full agent export at pinned SHA)
+- [ ] T014 Scaffold committed export fixture: `export/PINNED_AGENT_SHA`, `export/manifest.yaml`, `export/adjudication/subjects.yaml`, `export/rules/retention_floors.yaml`, `export/rules/governance_map.yaml`, `export/adversarial_seeds/seeds.yaml` (minimal representative content; full agent export at pinned SHA; re-verify statute citations per research R7 before commit)
 - [ ] T015 [P] Add `scripts/regenerate_export.py` stub documenting deliberate re-export only (must not run in CI or default workflows)
 
 **Checkpoint**: Foundation ready — export loader work can begin
@@ -58,7 +58,7 @@
 
 ### Tests for User Story 1 (write first — MUST FAIL)
 
-- [ ] T016 [P] [US1] Add acceptance tests for export loading in `tests/core/test_acceptance_export.py` (subjects parse, `expected` blocks available, five retention floors, governance map, three frozen seeds unchanged)
+- [ ] T016 [P] [US1] Add acceptance tests for export loading in `tests/core/test_acceptance_export.py` (subjects parse, `expected` blocks available, five retention floors, governance map, three frozen seeds unchanged; missing/malformed/incomplete export raises `ExportLoadError` with no partial case data)
 - [ ] T017 [P] [US1] Add acceptance tests for provenance in `tests/core/test_acceptance_provenance.py` (match success, SHA mismatch fail, URL mismatch fail, fail-closed with no case data exposed)
 
 ### Implementation for User Story 1
@@ -165,7 +165,7 @@
 
 ### Tests for User Story 6 (write first — MUST FAIL)
 
-- [ ] T043 [P] [US6] Add acceptance tests in `tests/core/test_acceptance_context.py` per `contracts/context-tiers.md` (T1 request-only, T2 records without `expected`, T3 rules + governance map, adjacent-tier delta, ground truth excluded)
+- [ ] T043 [P] [US6] Add acceptance tests in `tests/core/test_acceptance_context.py` per `contracts/context-tiers.md` (T1 request-only, T2 records without `expected`, T3 rules + governance map, adjacent-tier delta, ground truth excluded, subject with zero locations does not invent records)
 
 ### Implementation for User Story 6
 
@@ -180,12 +180,13 @@
 
 ## Phase 9: Polish & Cross-Cutting Concerns
 
-**Purpose**: Full-suite validation, licensing, terminology
+**Purpose**: Full-suite validation, licensing, terminology, and constitution repository gates (README on-ramp)
 
 - [ ] T048 Run full core acceptance suite: `uv run pytest tests/core -v` — all green offline
 - [ ] T049 Run quickstart.md validation steps end-to-end
 - [ ] T050 [P] Add MIT `LICENSE` at repository root
 - [ ] T051 [P] Review DPDP and T1/T2/T3 terminology in user-facing error messages across `core/`
+- [ ] T052 [P] Add minimal thesis-first `README.md` at repository root (clone path, offline `uv sync` + `pytest tests/core`, CI badge placeholder; reader-facing tier names per constitution repository quality gates)
 
 ---
 
