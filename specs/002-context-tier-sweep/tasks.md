@@ -36,15 +36,15 @@
 ### Bootstrap Tasks
 
 - [ ] T001 Create `runners/` package skeleton with empty `runners/__init__.py` per plan.md project structure (FR-014)
-- [ ] T002 [P] Create `tests/runners/conftest.py` with shared fixtures: repo `export/` path, `cache/` root, `FakeModelSeam`, `CACHE_MODE=offline` default, and helpers to build minimal `SweepConfig` (FR-015, SC-001)
+- [ ] T002 [P] Create `tests/runners/conftest.py` with shared fixtures: repo `export/` path, `cache/` root, `FakeModelSeam`, `CACHE_MODE=offline` default, fixture helper for a subject with `locations=[]` (empty-location edge case), and helpers to build minimal `SweepConfig` (FR-015, SC-001)
 - [ ] T003 [P] Add minimal committed cache seed under `cache/primary/t1/` for at least one export subject covering `sample_index` 0–4 to unblock early offline assertions (FR-006, SC-005)
 - [ ] T004 [P] [US4] Write failing `tests/runners/test_acceptance_runner_config.py` asserting `MODEL_ID` and `CACHE_MODE` are read from environment at runner init, not hardcoded literals (FR-004, FR-005, US4 scenario 4)
 - [ ] T005 [P] [US4] Write failing `tests/runners/test_acceptance_context_isolation.py` asserting model-facing bundles never contain `expected` keys for all tiers (FR-003, US4 scenario 3)
-- [ ] T006 [P] [US4] Write failing `tests/runners/test_acceptance_runner_spine.py` for export load, provenance abort, subject iteration, pairing by `location_id`, and offline determinism (FR-002, FR-012, FR-014, SC-008)
+- [ ] T006 [P] [US4] Write failing `tests/runners/test_acceptance_runner_spine.py` for export load, provenance abort, subject iteration, pairing by `location_id`, offline determinism, empty-location subjects (visited, zero pairs, no model/cache call), and invalid verdict enum rejection with error naming `subject_id`, `location_id`, and `sample_index` (FR-002, FR-012, FR-014, SC-002, SC-008)
 - [ ] T007 [P] [US1] Write failing `tests/runners/test_acceptance_t1_runner.py` for full T1 sweep: all subjects visited, `runner_id=t1`, per-lane confusion matrix, standalone rates, no blended accuracy (FR-001, FR-008, FR-013, SC-002, SC-007)
 - [ ] T008 [P] [US2] Write failing `tests/runners/test_acceptance_t2_runner.py` for T2 context inclusion (records, no rules) and independent tier metrics (FR-001, FR-003, US2 scenarios 1 & 4)
 - [ ] T009 [P] [US2] Write failing `tests/runners/test_acceptance_t3_runner.py` for T3 context inclusion (T2 + rules corpus) and `runner_id=t3` cache namespace (FR-001, FR-003, FR-008, US2 scenarios 2 & 3)
-- [ ] T010 [P] [US3] Write failing `tests/runners/test_acceptance_sample_variance.py` for five per-sample rollups, variance summary with `constant_across_samples` flags, and explicit offline cache-miss failure (`cache_miss` marker) (FR-009, FR-011, US3 scenarios 1–4, SC-003, SC-004)
+- [ ] T010 [P] [US3] Write failing `tests/runners/test_acceptance_sample_variance.py` for five per-sample rollups, variance summary with `constant_across_samples` flags, explicit offline cache-miss failure (`cache_miss` marker), and hand-calculated parity of over-erasure, over-retention, and mis-escalation rates for at least one tier/sample from raw prediction–ground-truth pairs (FR-009, FR-011, US3 scenarios 1–4, SC-003, SC-004)
 - [ ] T011 Verify Feature 001 prerequisite: `uv run pytest tests/core -v` passes on branch `002-context-tier-sweep`
 
 **Checkpoint (Bootstrap — tests must fail for the right reason)**:
@@ -74,7 +74,7 @@ uv run pytest tests/runners -v --tb=short
 ### Implementation for Shared Spine
 
 - [ ] T012 [P] Implement runner-layer Pydantic types in `runners/types.py`: `SweepConfig`, `PerCaseResult`, `SampleRollup`, `RateAtSample`, `RateVariance`, `VarianceSummary`, `TierSweepResult` per data-model.md and contracts/sweep-result.md (FR-010, FR-011, FR-013)
-- [ ] T013 [P] Implement `location_id` alignment and verdict enum validation in `runners/pairing.py` — missing/extra verdicts fail validation; no silent drops (FR-012)
+- [ ] T013 [P] Implement `location_id` alignment and verdict enum validation in `runners/pairing.py` — missing/extra verdicts fail validation; invalid enum values fail with identifying error; no silent drops (FR-012; acceptance coverage in T006)
 - [ ] T014 [P] Implement cross-sample rate comparison in `runners/variance.py` producing `VarianceSummary` with `constant_across_samples` per sweep-result contract (FR-011)
 - [ ] T015 Implement `run_tier_sweep` in `runners/spine.py`: export load + provenance verify, env-driven config via `core.model.load_model_config()`, outer sample loop 0–4, subject iteration, cache key via `core.cache.make_cache_key`, `CacheStore.get_or_refresh`, pairing from `expected` only, `core.scoring.score_adjudication` per sample, variance rollup (FR-002, FR-006, FR-007, FR-009, FR-010, FR-014, SC-008)
 - [ ] T016 Expand minimal committed cache under `cache/primary/t1/` so spine acceptance tests can replay at least one subject × five samples offline (FR-006)
@@ -162,7 +162,7 @@ uv run pytest tests/runners/test_acceptance_t2_runner.py tests/runners/test_acce
 ### Validation for User Story 3
 
 - [ ] T025 [US3] Verify spine outer sample loop emits exactly five `SampleRollup` entries with `sample_index` 0–4 and distinct cache keys per `(runner_id, subject_id, sample_index)` (FR-009, SC-003)
-- [ ] T026 [US3] Add hand-calculated rate parity assertions in `tests/runners/test_acceptance_sample_variance.py` for at least one tier/sample (SC-004)
+- [ ] T026 [US3] Confirm SC-004 hand-calculated rate parity assertions from T010 pass against full committed cache after Phases 3–4 (no new test logic in this phase) (SC-004)
 - [ ] T027 [US3] Verify offline cache-miss test (`cache_miss` marker) fails with message identifying tier, `subject_id`, and `sample_index` — no silent live model call (FR-006, US3 scenario 4)
 - [ ] T028 [US3] Verify `VarianceSummary.constant_across_samples` is correct when sample rates differ vs. identical (FR-011)
 
@@ -209,7 +209,7 @@ uv run ruff format --check .
 
 **Depends on**: Phase 6 complete.
 
-- [ ] T032 [P] Update `README.md` with thesis-first on-ramp: mention T1/T2/T3 tier sweep runners, link to `specs/002-context-tier-sweep/quickstart.md`, and document `uv run pytest tests/runners -v` offline path (FR-016, FR-017)
+- [ ] T032 [P] If README lacks a runner path, add a minimal section only: link to `specs/002-context-tier-sweep/quickstart.md` and one command (`uv run pytest tests/runners -v`). Do not rewrite thesis, badges, or clone-and-run for full published tables (FR-016, SC-006). Skip if quickstart alone satisfies SC-006 on review.
 - [ ] T033 Run full offline runners acceptance suite and confirm SC-001: all tests green with `CACHE_MODE=offline` and no `MODEL_API_KEY` (SC-001)
 - [ ] T034 [P] Audit runner modules and tests for vocabulary: T1/T2/T3, `runner_id`, `subject_id`, DPDP domain terms; no retired terms (`pillar`, `condition`) (FR-017)
 - [ ] T035 Confirm no blended accuracy field in `TierSweepResult` or embedded scoring across all tier outputs (FR-013, SC-007)
@@ -260,9 +260,10 @@ Phase 7 Polish
 ### Critical Sequencing Rules
 
 1. **Test-first (Principle II)**: T004–T010 (all acceptance tests) MUST complete before T012–T015 (spine implementation).
-2. **Spine before tiers**: T015 MUST complete before T017, T020, T021.
-3. **Cache before offline validation**: T018 before T019; T022/T023 before T024; full cache before T025–T028.
-4. **No out-of-scope work**: No CLI entrypoints, `report/` modules, adversarial gate (Feature 003), or autonomous runner (Feature 004).
+2. **SC-004 at bootstrap**: Hand-calculated rate parity assertions MUST be written in T010 (Phase 1), not added after spine implementation.
+3. **Spine before tiers**: T015 MUST complete before T017, T020, T021.
+4. **Cache before offline validation**: T018 before T019; T022/T023 before T024; full cache before T025–T028.
+5. **No out-of-scope work**: No CLI entrypoints, `report/` modules, adversarial gate (Feature 003), or autonomous runner (Feature 004).
 
 ### FR/SC Traceability Matrix
 
@@ -283,14 +284,14 @@ Phase 7 Polish
 | FR-013 (confusion matrix, standalone rates) | T007, T012 |
 | FR-014 (shared spine) | T001, T006, T015, T017, T020–T021 |
 | FR-015 (acceptance suite before impl) | T002, T004–T010 |
-| FR-016 (quickstart guide) | T029–T031, T032 |
-| FR-017 (vocabulary) | T032, T034 |
+| FR-016 (quickstart guide) | T029–T031 |
+| FR-017 (vocabulary) | T034 |
 | SC-001 (offline CI green) | T011, T033 |
-| SC-002 (100% subject coverage) | T019, T024 |
+| SC-002 (100% subject coverage) | T006, T019, T024 |
 | SC-003 (five per-sample results) | T018, T022–T023, T025 |
-| SC-004 (hand-calculated rate parity) | T026 |
+| SC-004 (hand-calculated rate parity) | T010, T026 |
 | SC-005 (additive fixtures only) | T003, T018, T022–T023 |
-| SC-006 (quickstart under 10 min) | T029 |
+| SC-006 (quickstart under 10 min) | T029, T032 (README link only if needed) |
 | SC-007 (no blended accuracy) | T007, T035 |
 | SC-008 (deterministic replay) | T006, T015, T019 |
 

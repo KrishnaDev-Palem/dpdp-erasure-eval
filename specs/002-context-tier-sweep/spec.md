@@ -24,6 +24,7 @@ An evaluator measuring how a model adjudicates erasure requests with minimal con
 2. **Given** a subject with multiple locations, **When** the T1 runner grades results, **Then** each model verdict is paired with ground truth by `location_id` and scoring uses only fields from the location's `expected` block.
 3. **Given** assembled T1 context for any subject, **When** the model is invoked, **Then** the context bundle contains the erasure request alone and never includes `expected` labels or retention-floor rule text.
 4. **Given** a completed T1 sweep, **When** aggregate results are inspected, **Then** the output includes a per-lane confusion matrix and standalone over-erasure, over-retention, and mis-escalation rates with no single blended accuracy figure.
+5. **Given** a subject with an empty `locations` list, **When** any tier runner sweeps that subject, **Then** the subject is visited, contributes zero location pairs, and the sweep continues without inventing records or calling the model.
 
 ---
 
@@ -96,8 +97,8 @@ An evaluator onboarding to the harness needs a quickstart document that walks th
 ### Edge Cases
 
 - What happens when provenance verification fails at export load? The sweep does not start; the runner surfaces the provenance error from the shared export loader.
-- What happens when a subject has no locations? T1 may still process request-only context; T2 and T3 follow the context-tier contract (empty location list, no fabricated records) and skip or clearly handle unscorable cases without inventing data.
-- What happens when the model returns a verdict outside {erase, retain, escalate}? The runner treats it as a validation failure for that location rather than silently coercing it into a lane.
+- What happens when a subject has no locations? All tiers visit the subject. Context builders return an empty `locations` list per the context-tier contract (no fabricated records). The spine appends zero location pairs, skips model/cache invocation for that subject, and continues the sweep without failing.
+- What happens when the model returns a verdict outside {erase, retain, escalate}? The runner raises a validation error naming `subject_id`, `location_id`, and `sample_index`; it does not coerce the verdict into a lane.
 - What happens when only some of the five sample indices have committed cache entries in offline mode? The sweep fails at the first cache miss with an explicit error identifying case, tier, and sample index.
 - What happens when `CACHE_MODE=refresh` and credentials are present? The runner may fetch and persist new cache entries per the shared cache contract; default and CI behavior remain offline replay.
 - What happens when two tier sweeps run sequentially? Each tier produces independent results keyed by its own `runner_id`; tiers do not share or overwrite one another's cache namespace.
@@ -155,7 +156,7 @@ An evaluator onboarding to the harness needs a quickstart document that walks th
 - The canonical planning document (`Planning/dpdp_eval_harness_planning.md`) supplies tier definitions (§4.1), scoring semantics (§5), reproducibility mechanics (§7), feature breakdown (§8), and cost guardrails (§9); this spec consumes those via Feature 001 contracts rather than redefining them.
 - Primary model identity is configuration supplied at run time; the spec does not fix a model string, consistent with planning §11 and Feature 001 assumptions.
 - Per-sample aggregate scoring (one result per sample index covering the entire sweep) is the primary reporting unit; the variance summary rolls up across those five results rather than reporting per-subject variance tables in this feature.
-- Subjects with empty location lists are handled per the context-tier contract; they contribute no location pairs to scoring and do not block the sweep.
+- Subjects with empty location lists are visited per the context-tier contract; they contribute zero location pairs, require no model invocation, and do not block the sweep.
 
 ## Dependencies
 
@@ -178,4 +179,5 @@ An evaluator onboarding to the harness needs a quickstart document that walks th
 - Live agent calls, Postgres, or harness-side rule engines that regenerate labels.
 - Blended accuracy or other single headline scores that subsume over-erasure.
 - Confidence intervals on adjudication rates (deferred to downstream reporting if needed).
-- README changes, CI workflow authoring, and pre-commit hook setup unless required solely to gate this feature's acceptance suite (repository bootstrap may proceed in parallel).
+- Broad README rewrites, CI workflow authoring, and pre-commit hook setup (repository bootstrap may proceed in parallel).
+- **Exception (constitution Quality Gates)**: Minimal README updates that link to this feature's quickstart and document the offline `tests/runners` path are in scope when required for SC-006 clone-and-run reproducibility; thesis-first structure and status badges remain bootstrap work.
