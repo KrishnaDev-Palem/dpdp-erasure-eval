@@ -77,6 +77,15 @@ class SampleRollup(BaseModel):
     total_subjects: int
     scored_location_pairs: int
 
+    @model_validator(mode="after")
+    def _validate_scored_pairs(self) -> SampleRollup:
+        if self.scored_location_pairs != self.scoring.total_cases:
+            raise ValueError(
+                f"scored_location_pairs ({self.scored_location_pairs}) "
+                f"must equal scoring.total_cases ({self.scoring.total_cases})"
+            )
+        return self
+
 
 class RateAtSample(BaseModel):
     model_config = ConfigDict(frozen=True)
@@ -113,3 +122,19 @@ class TierSweepResult(BaseModel):
     variance: VarianceSummary
     started_at: str | None = None
     finished_at: str | None = None
+
+    @model_validator(mode="after")
+    def _validate_samples(self) -> TierSweepResult:
+        if len(self.samples) != 5:
+            raise ValueError(f"samples must have length 5, got {len(self.samples)}")
+        for index, sample in enumerate(self.samples):
+            if sample.sample_index != index:
+                raise ValueError(
+                    f"samples[{index}].sample_index must be {index}, got {sample.sample_index}"
+                )
+        prohibited = {"accuracy", "micro_f1", "blended_score"}
+        dumped = self.model_dump()
+        for field in prohibited:
+            if field in dumped:
+                raise ValueError(f"prohibited field {field!r} in TierSweepResult")
+        return self

@@ -16,15 +16,15 @@ def pair_subject_verdicts(
     subject_id: str,
     sample_index: int,
     locations: list[LabeledLocation],
-    context_location_ids: list[str],
+    pairing_location_ids: list[str],
     raw_verdicts: list[dict],
 ) -> list[tuple[ModelVerdict, ExpectedLabel]]:
     """Align model verdicts with export ground truth by location_id."""
-    if not context_location_ids:
+    if not pairing_location_ids:
         if raw_verdicts:
             raise PairingValidationError(
                 f"subject_id={subject_id} sample_index={sample_index}: "
-                f"unexpected verdicts for empty context locations"
+                f"unexpected verdicts for empty pairing locations"
             )
         return []
 
@@ -32,7 +32,7 @@ def pair_subject_verdicts(
     for item in raw_verdicts:
         verdict_by_id[str(item["location_id"])] = item
 
-    expected_ids = set(context_location_ids)
+    expected_ids = set(pairing_location_ids)
     actual_ids = set(verdict_by_id)
 
     missing = expected_ids - actual_ids
@@ -53,7 +53,7 @@ def pair_subject_verdicts(
 
     location_by_id = {item.location_id: item for item in locations}
     pairs: list[tuple[ModelVerdict, ExpectedLabel]] = []
-    for location_id in context_location_ids:
+    for location_id in pairing_location_ids:
         raw = verdict_by_id[location_id]
         verdict_value = raw.get("verdict")
         if verdict_value not in VALID_VERDICTS:

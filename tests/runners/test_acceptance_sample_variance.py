@@ -98,12 +98,15 @@ def _cached_verdicts_for_subject(
     tier: str,
 ) -> list[dict]:
     from core.cache.store import make_cache_key, read_cache
-    from core.context import build_t2
+    from core.context import build_t2, build_t3
     from core.export import load_export
 
     export = load_export()
     subject = next(item for item in export.subjects if item.subject_id == subject_id)
-    context = build_t2(subject.request, subject)
+    if tier == "t3":
+        context = build_t3(subject.request, subject, export.rules)
+    else:
+        context = build_t2(subject.request, subject)
     key = make_cache_key(
         context=context,
         model_id="primary",
@@ -140,3 +143,41 @@ def test_constant_across_samples_flags(
     result = run_t2_sweep(seam=fake_seam, export_dir=export_dir, cache_root=cache_dir)
     assert result.variance.over_erasure.constant_across_samples is True
     assert result.variance.over_retention.constant_across_samples is False
+
+
+def test_t3_hand_calculated_rate_parity(
+    fake_seam: FakeModelSeam,
+    export_dir: Path,
+    cache_dir: Path,
+) -> None:
+    """SC-004: T3 rates from raw pairs match embedded Rate values."""
+    from runners.t3 import run_t3_sweep
+
+    result = run_t3_sweep(seam=fake_seam, export_dir=export_dir, cache_root=cache_dir)
+    sample = result.samples[0]
+    scoring = sample.scoring
+
+    pairs: list[tuple[ModelVerdict, ExpectedLabel]] = []
+    export = load_export(export_dir)
+    for subject in export.subjects:
+        for location in subject.locations:
+            for verdict_data in _cached_verdicts_for_subject(
+                subject.subject_id, location.location_id, cache_dir, sample_index=0, tier="t3"
+            ):
+                if verdict_data["location_id"] == location.location_id:
+                    pairs.append(
+                        (
+                            ModelVerdict(
+                                location_id=location.location_id,
+                                verdict=verdict_data["verdict"],
+                            ),
+                            location.expected,
+                        )
+                    )
+
+    assert pairs
+    hand_scored = score_adjudication(pairs)
+    assert hand_scored.over_erasure_rate.numerator == scoring.over_erasure_rate.numerator
+    assert hand_scored.over_erasure_rate.denominator == scoring.over_erasure_rate.denominator
+    assert hand_scored.over_retention_rate.numerator == scoring.over_retention_rate.numerator
+    assert hand_scored.mis_escalation_rate.numerator == scoring.mis_escalation_rate.numerator

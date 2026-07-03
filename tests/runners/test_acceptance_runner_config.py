@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import shutil
 from pathlib import Path
 
 import pytest
@@ -16,10 +17,14 @@ def test_model_id_from_environment(
     fake_seam: FakeModelSeam,
     export_dir: Path,
     cache_dir: Path,
+    tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setenv("MODEL_ID", "custom-model")
     monkeypatch.setenv("CACHE_MODE", "offline")
+
+    custom_cache = tmp_path / "cache"
+    shutil.copytree(cache_dir / "primary", custom_cache / "custom-model")
 
     config = SweepConfig(
         tier="t1",
@@ -28,7 +33,7 @@ def test_model_id_from_environment(
         cache_mode=os.environ["CACHE_MODE"],
         sample_indices=[0, 1, 2, 3, 4],
         export_dir=export_dir,
-        cache_root=cache_dir,
+        cache_root=custom_cache,
     )
     result = run_tier_sweep(tier="t1", seam=fake_seam, config=config)
     assert result.model_id == "custom-model"

@@ -94,7 +94,11 @@ def run_tier_sweep(
                 )
             )
             context_location_ids = [location["location_id"] for location in context.locations]
-            if not context_location_ids:
+            export_location_ids = [location.location_id for location in subject.locations]
+            pairing_location_ids = (
+                context_location_ids if context_location_ids else export_location_ids
+            )
+            if not pairing_location_ids:
                 continue
 
             key = make_cache_key(
@@ -109,7 +113,7 @@ def run_tier_sweep(
                 subject_id=subject.subject_id,
                 sample_index=sample_index,
                 locations=subject.locations,
-                context_location_ids=context_location_ids,
+                pairing_location_ids=pairing_location_ids,
                 raw_verdicts=entry.raw_response.get("verdicts", []),
             )
             all_pairs.extend(pairs)

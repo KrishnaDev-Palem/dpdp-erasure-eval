@@ -47,5 +47,5 @@ def test_t2_metrics_independent_from_t1(
     t1 = run_t1_sweep(seam=FakeModelSeam(), export_dir=export_dir, cache_root=cache_dir)
     t2 = run_t2_sweep(seam=fake_seam, export_dir=export_dir, cache_root=cache_dir)
     assert t1.runner_id != t2.runner_id
-    assert t1.samples[0].scoring.total_cases == 0
+    assert t1.samples[0].scoring.total_cases > 0
     assert t2.samples[0].scoring.total_cases > 0

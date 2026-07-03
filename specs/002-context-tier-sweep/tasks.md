@@ -366,6 +366,17 @@ After Phase 3, Developers A/B parallelize Phase 4 tier wrappers and cache seedin
 
 ---
 
+## Phase 8: Convergence
+
+- [X] T036 [US1] Fix T1 spine orchestration to invoke cache and pair verdicts against export `subject.locations` when request-only context has empty `locations` per US1/AC2, FR-001 (contradicts)
+- [X] T037 [US1] Reseed `cache/primary/t1/` for all export subjects with locations × `sample_index` 0–4 with valid verdicts; fix `scripts/seed_runner_cache.py` to seed T1 from export locations per FR-006, SC-003 (missing)
+- [X] T038 [US1] Update T1 acceptance tests to assert `scored_location_pairs > 0`, deterministic replay with real pairs, and SC-004 hand-calculated rate parity for T1 per SC-002, SC-004 (partial)
+- [X] T039 Add `TierSweepResult` and `SampleRollup` validators enforcing five samples with ordered indices per sweep-result contract (partial)
+- [X] T040 Add opt-in `@pytest.mark.refresh` acceptance test verifying cache write on miss when `CACHE_MODE=refresh` per FR-007 (missing)
+- [X] T041 [P] Add SC-004 hand-calculated rate parity test for T3 sweep per SC-004 (partial)
+
+---
+
 ## Notes
 
 - [P] tasks = different files, no dependencies on incomplete tasks in the same batch

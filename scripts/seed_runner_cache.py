@@ -49,9 +49,13 @@ def seed_tier(tier: Tier, *, model_id: str = "primary") -> int:
 
     for subject in export.subjects:
         context = _build_context(tier, subject, export.rules)
-        if not context.locations:
+        location_ids = (
+            [loc.location_id for loc in subject.locations]
+            if tier == "t1"
+            else [loc["location_id"] for loc in context.locations]
+        )
+        if not location_ids:
             continue
-        location_ids = [loc["location_id"] for loc in context.locations]
         for sample_index in range(5):
             verdict_map = _verdicts_for(subject.subject_id, sample_index)
             key = make_cache_key(

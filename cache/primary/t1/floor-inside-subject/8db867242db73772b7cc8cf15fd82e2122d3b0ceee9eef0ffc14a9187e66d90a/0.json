@@ -3,9 +3,15 @@
   "model_id": "primary",
   "prompt_hash": "8db867242db73772b7cc8cf15fd82e2122d3b0ceee9eef0ffc14a9187e66d90a",
   "raw_response": {
-    "verdicts": []
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "kyc-001",
+        "verdict": "retain"
+      }
+    ]
   },
-  "recorded_at": "2026-07-01T12:00:00Z",
+  "recorded_at": "2026-07-03T06:40:38Z",
   "runner_id": "t1",
   "sample_index": 0,
   "tool_calls": []
