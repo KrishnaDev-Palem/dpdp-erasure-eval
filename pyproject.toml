@@ -21,6 +21,7 @@ testpaths = ["tests"]
 pythonpath = ["."]
 markers = [
     "refresh: opt-in cache refresh tests requiring CACHE_MODE=refresh",
+    "cache_miss: offline cache miss behavior tests",
 ]
 
 [tool.ruff]

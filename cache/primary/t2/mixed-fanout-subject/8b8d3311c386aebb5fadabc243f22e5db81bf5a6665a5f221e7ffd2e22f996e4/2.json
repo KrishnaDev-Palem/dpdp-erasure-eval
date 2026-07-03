@@ -1,7 +1,7 @@
 {
   "case_id": "mixed-fanout-subject",
   "model_id": "primary",
-  "prompt_hash": "b5e941d4fecb1f64fd43650027953099da06d40779be86ce10e3dbaa9f74be20",
+  "prompt_hash": "8b8d3311c386aebb5fadabc243f22e5db81bf5a6665a5f221e7ffd2e22f996e4",
   "raw_response": {
     "verdicts": [
       {
@@ -17,7 +17,7 @@
     ]
   },
   "recorded_at": "2026-07-03T06:40:38Z",
-  "runner_id": "t1",
-  "sample_index": 0,
+  "runner_id": "t2",
+  "sample_index": 2,
   "tool_calls": []
 }

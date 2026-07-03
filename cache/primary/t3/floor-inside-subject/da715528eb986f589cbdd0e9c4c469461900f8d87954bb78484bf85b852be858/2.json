@@ -1,0 +1,18 @@
+{
+  "case_id": "floor-inside-subject",
+  "model_id": "primary",
+  "prompt_hash": "da715528eb986f589cbdd0e9c4c469461900f8d87954bb78484bf85b852be858",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "kyc-001",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-03T06:40:38Z",
+  "runner_id": "t3",
+  "sample_index": 2,
+  "tool_calls": []
+}

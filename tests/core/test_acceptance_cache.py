@@ -72,12 +72,8 @@ def test_sample_index_keys(sample_index: int, cache_dir: Path) -> None:
         case_id="mixed-fanout-subject",
         sample_index=sample_index,
     )
-    if sample_index == 0:
-        entry = read_cache(key, cache_dir)
-        assert entry.key.sample_index == 0
-    else:
-        with pytest.raises(CacheMissError):
-            read_cache(key, cache_dir)
+    entry = read_cache(key, cache_dir)
+    assert entry.key.sample_index == sample_index
 
 
 @pytest.mark.refresh
