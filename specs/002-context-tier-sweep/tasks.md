@@ -35,17 +35,17 @@
 
 ### Bootstrap Tasks
 
-- [ ] T001 Create `runners/` package skeleton with empty `runners/__init__.py` per plan.md project structure (FR-014)
-- [ ] T002 [P] Create `tests/runners/conftest.py` with shared fixtures: repo `export/` path, `cache/` root, `FakeModelSeam`, `CACHE_MODE=offline` default, fixture helper for a subject with `locations=[]` (empty-location edge case), and helpers to build minimal `SweepConfig` (FR-015, SC-001)
-- [ ] T003 [P] Add minimal committed cache seed under `cache/primary/t1/` for at least one export subject covering `sample_index` 0–4 to unblock early offline assertions (FR-006, SC-005)
-- [ ] T004 [P] [US4] Write failing `tests/runners/test_acceptance_runner_config.py` asserting `MODEL_ID` and `CACHE_MODE` are read from environment at runner init, not hardcoded literals (FR-004, FR-005, US4 scenario 4)
-- [ ] T005 [P] [US4] Write failing `tests/runners/test_acceptance_context_isolation.py` asserting model-facing bundles never contain `expected` keys for all tiers (FR-003, US4 scenario 3)
-- [ ] T006 [P] [US4] Write failing `tests/runners/test_acceptance_runner_spine.py` for export load, provenance abort, subject iteration, pairing by `location_id`, offline determinism, empty-location subjects (visited, zero pairs, no model/cache call), and invalid verdict enum rejection with error naming `subject_id`, `location_id`, and `sample_index` (FR-002, FR-012, FR-014, SC-002, SC-008)
-- [ ] T007 [P] [US1] Write failing `tests/runners/test_acceptance_t1_runner.py` for full T1 sweep: all subjects visited, `runner_id=t1`, per-lane confusion matrix, standalone rates, no blended accuracy (FR-001, FR-008, FR-013, SC-002, SC-007)
-- [ ] T008 [P] [US2] Write failing `tests/runners/test_acceptance_t2_runner.py` for T2 context inclusion (records, no rules) and independent tier metrics (FR-001, FR-003, US2 scenarios 1 & 4)
-- [ ] T009 [P] [US2] Write failing `tests/runners/test_acceptance_t3_runner.py` for T3 context inclusion (T2 + rules corpus) and `runner_id=t3` cache namespace (FR-001, FR-003, FR-008, US2 scenarios 2 & 3)
-- [ ] T010 [P] [US3] Write failing `tests/runners/test_acceptance_sample_variance.py` for five per-sample rollups, variance summary with `constant_across_samples` flags, explicit offline cache-miss failure (`cache_miss` marker), and hand-calculated parity of over-erasure, over-retention, and mis-escalation rates for at least one tier/sample from raw prediction–ground-truth pairs (FR-009, FR-011, US3 scenarios 1–4, SC-003, SC-004)
-- [ ] T011 Verify Feature 001 prerequisite: `uv run pytest tests/core -v` passes on branch `002-context-tier-sweep`
+- [X] T001 Create `runners/` package skeleton with empty `runners/__init__.py` per plan.md project structure (FR-014)
+- [X] T002 [P] Create `tests/runners/conftest.py` with shared fixtures: repo `export/` path, `cache/` root, `FakeModelSeam`, `CACHE_MODE=offline` default, fixture helper for a subject with `locations=[]` (empty-location edge case), and helpers to build minimal `SweepConfig` (FR-015, SC-001)
+- [X] T003 [P] Add minimal committed cache seed under `cache/primary/t1/` for at least one export subject covering `sample_index` 0–4 to unblock early offline assertions (FR-006, SC-005)
+- [X] T004 [P] [US4] Write failing `tests/runners/test_acceptance_runner_config.py` asserting `MODEL_ID` and `CACHE_MODE` are read from environment at runner init, not hardcoded literals (FR-004, FR-005, US4 scenario 4)
+- [X] T005 [P] [US4] Write failing `tests/runners/test_acceptance_context_isolation.py` asserting model-facing bundles never contain `expected` keys for all tiers (FR-003, US4 scenario 3)
+- [X] T006 [P] [US4] Write failing `tests/runners/test_acceptance_runner_spine.py` for export load, provenance abort, subject iteration, pairing by `location_id`, offline determinism, empty-location subjects (visited, zero pairs, no model/cache call), and invalid verdict enum rejection with error naming `subject_id`, `location_id`, and `sample_index` (FR-002, FR-012, FR-014, SC-002, SC-008)
+- [X] T007 [P] [US1] Write failing `tests/runners/test_acceptance_t1_runner.py` for full T1 sweep: all subjects visited, `runner_id=t1`, per-lane confusion matrix, standalone rates, no blended accuracy (FR-001, FR-008, FR-013, SC-002, SC-007)
+- [X] T008 [P] [US2] Write failing `tests/runners/test_acceptance_t2_runner.py` for T2 context inclusion (records, no rules) and independent tier metrics (FR-001, FR-003, US2 scenarios 1 & 4)
+- [X] T009 [P] [US2] Write failing `tests/runners/test_acceptance_t3_runner.py` for T3 context inclusion (T2 + rules corpus) and `runner_id=t3` cache namespace (FR-001, FR-003, FR-008, US2 scenarios 2 & 3)
+- [X] T010 [P] [US3] Write failing `tests/runners/test_acceptance_sample_variance.py` for five per-sample rollups, variance summary with `constant_across_samples` flags, explicit offline cache-miss failure (`cache_miss` marker), and hand-calculated parity of over-erasure, over-retention, and mis-escalation rates for at least one tier/sample from raw prediction–ground-truth pairs (FR-009, FR-011, US3 scenarios 1–4, SC-003, SC-004)
+- [X] T011 Verify Feature 001 prerequisite: `uv run pytest tests/core -v` passes on branch `002-context-tier-sweep`
 
 **Checkpoint (Bootstrap — tests must fail for the right reason)**:
 
@@ -73,11 +73,11 @@ uv run pytest tests/runners -v --tb=short
 
 ### Implementation for Shared Spine
 
-- [ ] T012 [P] Implement runner-layer Pydantic types in `runners/types.py`: `SweepConfig`, `PerCaseResult`, `SampleRollup`, `RateAtSample`, `RateVariance`, `VarianceSummary`, `TierSweepResult` per data-model.md and contracts/sweep-result.md (FR-010, FR-011, FR-013)
-- [ ] T013 [P] Implement `location_id` alignment and verdict enum validation in `runners/pairing.py` — missing/extra verdicts fail validation; invalid enum values fail with identifying error; no silent drops (FR-012; acceptance coverage in T006)
-- [ ] T014 [P] Implement cross-sample rate comparison in `runners/variance.py` producing `VarianceSummary` with `constant_across_samples` per sweep-result contract (FR-011)
-- [ ] T015 Implement `run_tier_sweep` in `runners/spine.py`: export load + provenance verify, env-driven config via `core.model.load_model_config()`, outer sample loop 0–4, subject iteration, cache key via `core.cache.make_cache_key`, `CacheStore.get_or_refresh`, pairing from `expected` only, `core.scoring.score_adjudication` per sample, variance rollup (FR-002, FR-006, FR-007, FR-009, FR-010, FR-014, SC-008)
-- [ ] T016 Expand minimal committed cache under `cache/primary/t1/` so spine acceptance tests can replay at least one subject × five samples offline (FR-006)
+- [X] T012 [P] Implement runner-layer Pydantic types in `runners/types.py`: `SweepConfig`, `PerCaseResult`, `SampleRollup`, `RateAtSample`, `RateVariance`, `VarianceSummary`, `TierSweepResult` per data-model.md and contracts/sweep-result.md (FR-010, FR-011, FR-013)
+- [X] T013 [P] Implement `location_id` alignment and verdict enum validation in `runners/pairing.py` — missing/extra verdicts fail validation; invalid enum values fail with identifying error; no silent drops (FR-012; acceptance coverage in T006)
+- [X] T014 [P] Implement cross-sample rate comparison in `runners/variance.py` producing `VarianceSummary` with `constant_across_samples` per sweep-result contract (FR-011)
+- [X] T015 Implement `run_tier_sweep` in `runners/spine.py`: export load + provenance verify, env-driven config via `core.model.load_model_config()`, outer sample loop 0–4, subject iteration, cache key via `core.cache.make_cache_key`, `CacheStore.get_or_refresh`, pairing from `expected` only, `core.scoring.score_adjudication` per sample, variance rollup (FR-002, FR-006, FR-007, FR-009, FR-010, FR-014, SC-008)
+- [X] T016 Expand minimal committed cache under `cache/primary/t1/` so spine acceptance tests can replay at least one subject × five samples offline (FR-006)
 
 **Checkpoint (Foundational — spine green, tier tests still red)**:
 
@@ -103,9 +103,9 @@ uv run pytest tests/runners/test_acceptance_runner_spine.py tests/runners/test_a
 
 ### Implementation for User Story 1
 
-- [ ] T017 [US1] Implement thin `run_t1_sweep` wrapper in `runners/t1.py` delegating to `run_tier_sweep(tier="t1", runner_id="t1", builder=build_t1)` per contracts/tier-runner.md (FR-001, FR-008, FR-014)
-- [ ] T018 [US1] Seed committed cache entries for **all** export subjects × `t1` × `sample_index` 0–4 under `cache/primary/t1/` (additive only; do not edit `export/`) (FR-006, FR-008, SC-003, SC-005)
-- [ ] T019 [US1] Validate full T1 offline sweep: 100% subject coverage, deterministic replay, hand-check one sample's standalone rates against raw pairs (SC-002, SC-004, SC-008)
+- [X] T017 [US1] Implement thin `run_t1_sweep` wrapper in `runners/t1.py` delegating to `run_tier_sweep(tier="t1", runner_id="t1", builder=build_t1)` per contracts/tier-runner.md (FR-001, FR-008, FR-014)
+- [X] T018 [US1] Seed committed cache entries for **all** export subjects × `t1` × `sample_index` 0–4 under `cache/primary/t1/` (additive only; do not edit `export/`) (FR-006, FR-008, SC-003, SC-005)
+- [X] T019 [US1] Validate full T1 offline sweep: 100% subject coverage, deterministic replay, hand-check one sample's standalone rates against raw pairs (SC-002, SC-004, SC-008)
 
 **Checkpoint (US1 — T1 sweep green)**:
 
@@ -131,11 +131,11 @@ uv run pytest tests/runners/test_acceptance_t1_runner.py -v
 
 ### Implementation for User Story 2
 
-- [ ] T020 [P] [US2] Implement thin `run_t2_sweep` in `runners/t2.py` delegating to spine with `build_t2` (FR-001, FR-008, FR-014)
-- [ ] T021 [P] [US2] Implement thin `run_t3_sweep` in `runners/t3.py` delegating to spine with `build_t3` and `export.rules` (FR-001, FR-008, FR-014)
-- [ ] T022 [P] [US2] Seed committed cache entries for **all** export subjects × `t2` × `sample_index` 0–4 under `cache/primary/t2/` (FR-006, FR-008, SC-003, SC-005)
-- [ ] T023 [P] [US2] Seed committed cache entries for **all** export subjects × `t3` × `sample_index` 0–4 under `cache/primary/t3/` (FR-006, FR-008, SC-003, SC-005)
-- [ ] T024 [US2] Validate full T2 and T3 offline sweeps: subject coverage, tier-isolated metrics, no cross-tier cache overwrite (SC-002, US2 scenario 4)
+- [X] T020 [P] [US2] Implement thin `run_t2_sweep` in `runners/t2.py` delegating to spine with `build_t2` (FR-001, FR-008, FR-014)
+- [X] T021 [P] [US2] Implement thin `run_t3_sweep` in `runners/t3.py` delegating to spine with `build_t3` and `export.rules` (FR-001, FR-008, FR-014)
+- [X] T022 [P] [US2] Seed committed cache entries for **all** export subjects × `t2` × `sample_index` 0–4 under `cache/primary/t2/` (FR-006, FR-008, SC-003, SC-005)
+- [X] T023 [P] [US2] Seed committed cache entries for **all** export subjects × `t3` × `sample_index` 0–4 under `cache/primary/t3/` (FR-006, FR-008, SC-003, SC-005)
+- [X] T024 [US2] Validate full T2 and T3 offline sweeps: subject coverage, tier-isolated metrics, no cross-tier cache overwrite (SC-002, US2 scenario 4)
 
 **Checkpoint (US2 — all three tiers green)**:
 
@@ -161,10 +161,10 @@ uv run pytest tests/runners/test_acceptance_t2_runner.py tests/runners/test_acce
 
 ### Validation for User Story 3
 
-- [ ] T025 [US3] Verify spine outer sample loop emits exactly five `SampleRollup` entries with `sample_index` 0–4 and distinct cache keys per `(runner_id, subject_id, sample_index)` (FR-009, SC-003)
-- [ ] T026 [US3] Confirm SC-004 hand-calculated rate parity assertions from T010 pass against full committed cache after Phases 3–4 (no new test logic in this phase) (SC-004)
-- [ ] T027 [US3] Verify offline cache-miss test (`cache_miss` marker) fails with message identifying tier, `subject_id`, and `sample_index` — no silent live model call (FR-006, US3 scenario 4)
-- [ ] T028 [US3] Verify `VarianceSummary.constant_across_samples` is correct when sample rates differ vs. identical (FR-011)
+- [X] T025 [US3] Verify spine outer sample loop emits exactly five `SampleRollup` entries with `sample_index` 0–4 and distinct cache keys per `(runner_id, subject_id, sample_index)` (FR-009, SC-003)
+- [X] T026 [US3] Confirm SC-004 hand-calculated rate parity assertions from T010 pass against full committed cache after Phases 3–4 (no new test logic in this phase) (SC-004)
+- [X] T027 [US3] Verify offline cache-miss test (`cache_miss` marker) fails with message identifying tier, `subject_id`, and `sample_index` — no silent live model call (FR-006, US3 scenario 4)
+- [X] T028 [US3] Verify `VarianceSummary.constant_across_samples` is correct when sample rates differ vs. identical (FR-011)
 
 **Checkpoint (US3 — variance and cache-miss green)**:
 
@@ -187,9 +187,9 @@ uv run pytest tests/runners -k cache_miss -v
 
 ### Validation for User Story 5
 
-- [ ] T029 [US5] Execute quickstart setup and full acceptance suite steps from `specs/002-context-tier-sweep/quickstart.md` (FR-016, SC-006)
-- [ ] T030 [P] [US5] Run quickstart spot-check commands: T1 inline sweep, context isolation, cache miss, variance tests per quickstart.md sections
-- [ ] T031 [US5] Confirm quickstart lint commands pass: `uv run ruff check .` and `uv run ruff format --check .`
+- [X] T029 [US5] Execute quickstart setup and full acceptance suite steps from `specs/002-context-tier-sweep/quickstart.md` (FR-016, SC-006)
+- [X] T030 [P] [US5] Run quickstart spot-check commands: T1 inline sweep, context isolation, cache miss, variance tests per quickstart.md sections
+- [X] T031 [US5] Confirm quickstart lint commands pass: `uv run ruff check .` and `uv run ruff format --check .`
 
 **Checkpoint (US5 — quickstart path green)**:
 
@@ -209,10 +209,10 @@ uv run ruff format --check .
 
 **Depends on**: Phase 6 complete.
 
-- [ ] T032 [P] If README lacks a runner path, add a minimal section only: link to `specs/002-context-tier-sweep/quickstart.md` and one command (`uv run pytest tests/runners -v`). Do not rewrite thesis, badges, or clone-and-run for full published tables (FR-016, SC-006). Skip if quickstart alone satisfies SC-006 on review.
-- [ ] T033 Run full offline runners acceptance suite and confirm SC-001: all tests green with `CACHE_MODE=offline` and no `MODEL_API_KEY` (SC-001)
-- [ ] T034 [P] Audit runner modules and tests for vocabulary: T1/T2/T3, `runner_id`, `subject_id`, DPDP domain terms; no retired terms (`pillar`, `condition`) (FR-017)
-- [ ] T035 Confirm no blended accuracy field in `TierSweepResult` or embedded scoring across all tier outputs (FR-013, SC-007)
+- [X] T032 [P] If README lacks a runner path, add a minimal section only: link to `specs/002-context-tier-sweep/quickstart.md` and one command (`uv run pytest tests/runners -v`). Do not rewrite thesis, badges, or clone-and-run for full published tables (FR-016, SC-006). Skip if quickstart alone satisfies SC-006 on review.
+- [X] T033 Run full offline runners acceptance suite and confirm SC-001: all tests green with `CACHE_MODE=offline` and no `MODEL_API_KEY` (SC-001)
+- [X] T034 [P] Audit runner modules and tests for vocabulary: T1/T2/T3, `runner_id`, `subject_id`, DPDP domain terms; no retired terms (`pillar`, `condition`) (FR-017)
+- [X] T035 Confirm no blended accuracy field in `TierSweepResult` or embedded scoring across all tier outputs (FR-013, SC-007)
 
 **Final Checkpoint**:
 

@@ -19,6 +19,16 @@ uv run pytest tests/core -v
 
 No `MODEL_API_KEY` is required. CI runs the same path in offline mode.
 
+## Tier runners (Feature 002)
+
+Context-tier adjudication sweeps (T1/T2/T3) live under `runners/`. See
+[`specs/002-context-tier-sweep/quickstart.md`](specs/002-context-tier-sweep/quickstart.md)
+for the full offline validation path.
+
+```bash
+uv run pytest tests/runners -v
+```
+
 ![CI status](https://github.com/KrishnaDev-Palem/dpdp-erasure-eval/actions/workflows/ci.yml/badge.svg)
 
 ## Context tiers (reader-facing names)
