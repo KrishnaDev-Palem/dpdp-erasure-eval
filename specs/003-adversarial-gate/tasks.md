@@ -38,17 +38,17 @@
 
 ### Bootstrap Tasks
 
-- [ ] T001 Create `runners/adversarial_gate/` package skeleton with empty `runners/adversarial_gate/__init__.py` per plan.md project structure (FR-001)
-- [ ] T002 [P] Create `tests/gate/conftest.py` with shared fixtures: repo root, `export/` path, `cache/` root, `fixtures/adversarial_slice/` path, `FakeModelSeam`, `CACHE_MODE=offline` default, helper to build minimal `GateSweepConfig`, and hand-calculated Wilson/rate parity fixture builders for report tests (FR-018, SC-001)
-- [ ] T003 [P] Add minimal committed cache seed under `cache/primary/adversarial_gate/` for at least one slice case covering `sample_index` 0–4 to unblock early offline assertions (FR-006, FR-017, SC-010)
-- [ ] T004 [P] [US5] Write failing `tests/gate/test_acceptance_gate_config.py` asserting `MODEL_ID` and `CACHE_MODE` are read from environment at gate runner init, not hardcoded literals (FR-005, US5 scenario 4)
-- [ ] T005 [P] [US5] Write failing `tests/gate/test_acceptance_label_isolation.py` asserting ground-truth `label` and `family` never appear in `classify_note` kwargs or cache-canonicalized payloads; only `text` drives prompt hash (FR-002, FR-009, US5 scenario 3)
-- [ ] T006 [P] [US5] Write failing `tests/gate/test_acceptance_adversarial_slice.py` for extended slice: three frozen seeds byte-identical to export, 80–100 total cases, attack/benign balance, five attack families at ~8–10 each (taxonomy IDs `direct_override`, `authority_spoof`, `obfuscated_injection`, `scope_expansion`, `exfiltration`), hard-negative benign controls, unique `case_id` values; abort with `ProvenanceError` when export provenance fails during seed cross-check (FR-013, FR-014, US2 scenarios 1–6, SC-007)
-- [ ] T007 [P] [US1] Write failing `tests/gate/test_acceptance_gate_runner.py` for full gate sweep: every slice case visited, `runner_id=adversarial_gate`, `classify_note` receives note `text` only, detection/false-alarm rates via shared scoring primitives, no blended accuracy, offline determinism (FR-001–FR-004, FR-008, US1 scenarios 1–5, SC-002, SC-004, SC-009)
-- [ ] T008 [P] [US4] Write failing `tests/gate/test_acceptance_gate_sample_variance.py` for five per-sample rollups, variance summary with `constant_across_samples` flags, distinct cache keys per `(runner_id, case_id, sample_index)`, explicit offline cache-miss failure (`cache_miss` marker), and hand-calculated detection/false-alarm rate parity for at least one sample from raw outcome–label pairs (FR-010–FR-012, US4 scenarios 1–4, SC-003, SC-004)
-- [ ] T009 [P] [US3] Write failing `tests/gate/test_acceptance_gate_report.py` with hand-crafted scoring fixtures asserting Wilson interval bounds and per-family detection rows match independently calculated values within documented tolerance; zero-denominator families omitted from per-family table; overall detection or false-alarm rate with zero attack or zero benign pairs yields `Rate.value: null` and `RateWithCI.interval: null` (FR-015, FR-016, US3 scenarios 1–5, SC-005, SC-006)
-- [ ] T010 [P] [US1] Write failing `tests/gate/test_acceptance_gate_cache_offline.py` for offline replay via `runner_id=adversarial_gate`, cache prompt identity from `{"text": note}` only, refresh path opt-in via `@pytest.mark.refresh`, and cache-miss error naming `case_id`, `sample_index`, `runner_id` (FR-006–FR-009, FR-017, US1 scenario 4, US4 scenario 4, SC-010)
-- [ ] T011 Verify Feature 001 and Feature 002 prerequisites: `uv run pytest tests/core tests/runners -v` passes on branch `003-adversarial-gate`
+- [x] T001 Create `runners/adversarial_gate/` package skeleton with empty `runners/adversarial_gate/__init__.py` per plan.md project structure (FR-001)
+- [x] T002 [P] Create `tests/gate/conftest.py` with shared fixtures: repo root, `export/` path, `cache/` root, `fixtures/adversarial_slice/` path, `FakeModelSeam`, `CACHE_MODE=offline` default, helper to build minimal `GateSweepConfig`, and hand-calculated Wilson/rate parity fixture builders for report tests (FR-018, SC-001)
+- [x] T003 [P] Add minimal committed cache seed under `cache/primary/adversarial_gate/` for at least one slice case covering `sample_index` 0–4 to unblock early offline assertions (FR-006, FR-017, SC-010)
+- [x] T004 [P] [US5] Write failing `tests/gate/test_acceptance_gate_config.py` asserting `MODEL_ID` and `CACHE_MODE` are read from environment at gate runner init, not hardcoded literals (FR-005, US5 scenario 4)
+- [x] T005 [P] [US5] Write failing `tests/gate/test_acceptance_label_isolation.py` asserting ground-truth `label` and `family` never appear in `classify_note` kwargs or cache-canonicalized payloads; only `text` drives prompt hash (FR-002, FR-009, US5 scenario 3)
+- [x] T006 [P] [US5] Write failing `tests/gate/test_acceptance_adversarial_slice.py` for extended slice: three frozen seeds byte-identical to export, 80–100 total cases, attack/benign balance, five attack families at ~8–10 each (taxonomy IDs `direct_override`, `authority_spoof`, `obfuscated_injection`, `scope_expansion`, `exfiltration`), hard-negative benign controls, unique `case_id` values; abort with `ProvenanceError` when export provenance fails during seed cross-check (FR-013, FR-014, US2 scenarios 1–6, SC-007)
+- [x] T007 [P] [US1] Write failing `tests/gate/test_acceptance_gate_runner.py` for full gate sweep: every slice case visited, `runner_id=adversarial_gate`, `classify_note` receives note `text` only, detection/false-alarm rates via shared scoring primitives, no blended accuracy, offline determinism (FR-001–FR-004, FR-008, US1 scenarios 1–5, SC-002, SC-004, SC-009)
+- [x] T008 [P] [US4] Write failing `tests/gate/test_acceptance_gate_sample_variance.py` for five per-sample rollups, variance summary with `constant_across_samples` flags, distinct cache keys per `(runner_id, case_id, sample_index)`, explicit offline cache-miss failure (`cache_miss` marker), and hand-calculated detection/false-alarm rate parity for at least one sample from raw outcome–label pairs (FR-010–FR-012, US4 scenarios 1–4, SC-003, SC-004)
+- [x] T009 [P] [US3] Write failing `tests/gate/test_acceptance_gate_report.py` with hand-crafted scoring fixtures asserting Wilson interval bounds and per-family detection rows match independently calculated values within documented tolerance; zero-denominator families omitted from per-family table; overall detection or false-alarm rate with zero attack or zero benign pairs yields `Rate.value: null` and `RateWithCI.interval: null` (FR-015, FR-016, US3 scenarios 1–5, SC-005, SC-006)
+- [x] T010 [P] [US1] Write failing `tests/gate/test_acceptance_gate_cache_offline.py` for offline replay via `runner_id=adversarial_gate`, cache prompt identity from `{"text": note}` only, refresh path opt-in via `@pytest.mark.refresh`, and cache-miss error naming `case_id`, `sample_index`, `runner_id` (FR-006–FR-009, FR-017, US1 scenario 4, US4 scenario 4, SC-010)
+- [x] T011 Verify Feature 001 and Feature 002 prerequisites: `uv run pytest tests/core tests/runners -v` passes on branch `003-adversarial-gate`
 
 **Checkpoint (Bootstrap — tests must fail for the right reason)**:
 
@@ -76,13 +76,13 @@ uv run pytest tests/gate -v --tb=short
 
 ### Implementation for Gate Spine & Slice Loading
 
-- [ ] T012 [P] Implement gate runner Pydantic types in `runners/adversarial_gate/types.py`: `GateSweepConfig`, `PerCaseGateResult`, `GateSampleRollup`, `GateRateAtSample`, `GateRateVariance`, `GateVarianceSummary`, `GateSweepResult` per data-model.md and contracts/gate-runner.md (FR-010–FR-012)
-- [ ] T013 [P] Author extended adversarial slice fixture `fixtures/adversarial_slice/cases.yaml` with ~80–100 labeled cases: three frozen export seeds byte-identical, ~40–50 attack and ~40–50 benign, five attack families at ~8–10 each, hard-negative benign controls; additive only — do not edit `export/adversarial_seeds/seeds.yaml` (FR-013, FR-014, US2, SC-007)
-- [ ] T014 Implement `load_extended_slice` in `runners/adversarial_gate/slice_loader.py`: parse `AdversarialSeedCase` list, validate coverage rules, optional export seed cross-check via `core.export.load_export()` with `verify_provenance()` then byte-identical seed comparison, stable file order, typed errors (`ProvenanceError`, seed mismatch) on validation failure per contracts/adversarial-slice.md (FR-013, FR-014, US2)
-- [ ] T015 [P] Implement gate cache key helper and classify resolution in `runners/adversarial_gate/cache.py`: `prompt_hash({"text": case.text})`, `CacheKey` with `runner_id=adversarial_gate`, offline replay, refresh via `seam.classify_note(text=..., case_id=...)`, `CacheMissError` with identifying path (FR-007–FR-009)
-- [ ] T016 [P] Implement cross-sample rate comparison in `runners/adversarial_gate/variance.py` producing `GateVarianceSummary` with `constant_across_samples` per contracts/gate-report.md (FR-011, FR-012)
-- [ ] T017 Implement `run_adversarial_gate_sweep` in `runners/adversarial_gate/runner.py`: load slice, env-driven config via `core.model.load_model_config()`, outer sample loop 0–4, case loop with label from fixture metadata only, outcome validation ∈ {clean, adversarial}, `core.scoring.score_adversarial` per sample, variance rollup; re-export from `runners/adversarial_gate/__init__.py` (FR-001–FR-005, FR-010, FR-011, FR-014)
-- [ ] T018 Expand minimal committed cache under `cache/primary/adversarial_gate/` so slice-loader, config, isolation, and spine acceptance tests can replay at least one case × five samples offline (FR-006, FR-017)
+- [x] T012 [P] Implement gate runner Pydantic types in `runners/adversarial_gate/types.py`: `GateSweepConfig`, `PerCaseGateResult`, `GateSampleRollup`, `GateRateAtSample`, `GateRateVariance`, `GateVarianceSummary`, `GateSweepResult` per data-model.md and contracts/gate-runner.md (FR-010–FR-012)
+- [x] T013 [P] Author extended adversarial slice fixture `fixtures/adversarial_slice/cases.yaml` with ~80–100 labeled cases: three frozen export seeds byte-identical, ~40–50 attack and ~40–50 benign, five attack families at ~8–10 each, hard-negative benign controls; additive only — do not edit `export/adversarial_seeds/seeds.yaml` (FR-013, FR-014, US2, SC-007)
+- [x] T014 Implement `load_extended_slice` in `runners/adversarial_gate/slice_loader.py`: parse `AdversarialSeedCase` list, validate coverage rules, optional export seed cross-check via `core.export.load_export()` with `verify_provenance()` then byte-identical seed comparison, stable file order, typed errors (`ProvenanceError`, seed mismatch) on validation failure per contracts/adversarial-slice.md (FR-013, FR-014, US2)
+- [x] T015 [P] Implement gate cache key helper and classify resolution in `runners/adversarial_gate/cache.py`: `prompt_hash({"text": case.text})`, `CacheKey` with `runner_id=adversarial_gate`, offline replay, refresh via `seam.classify_note(text=..., case_id=...)`, `CacheMissError` with identifying path (FR-007–FR-009)
+- [x] T016 [P] Implement cross-sample rate comparison in `runners/adversarial_gate/variance.py` producing `GateVarianceSummary` with `constant_across_samples` per contracts/gate-report.md (FR-011, FR-012)
+- [x] T017 Implement `run_adversarial_gate_sweep` in `runners/adversarial_gate/runner.py`: load slice, env-driven config via `core.model.load_model_config()`, outer sample loop 0–4, case loop with label from fixture metadata only, outcome validation ∈ {clean, adversarial}, `core.scoring.score_adversarial` per sample, variance rollup; re-export from `runners/adversarial_gate/__init__.py` (FR-001–FR-005, FR-010, FR-011, FR-014)
+- [x] T018 Expand minimal committed cache under `cache/primary/adversarial_gate/` so slice-loader, config, isolation, and spine acceptance tests can replay at least one case × five samples offline (FR-006, FR-017)
 
 **Checkpoint (Foundational — slice + spine green, full sweep/report still red)**:
 
@@ -109,8 +109,8 @@ uv run pytest tests/gate/test_acceptance_gate_runner.py -v -k "not full_sweep an
 
 ### Validation for User Story 2
 
-- [ ] T019 [US2] Audit `fixtures/adversarial_slice/cases.yaml` against contracts/adversarial-slice.md: confirm all five attack families present at ~8–10 each, benign hard negatives included, no duplicate `case_id`, no edits to export seed content (FR-014, US2 scenarios 2–4)
-- [ ] T020 [US2] Verify slice loader seed cross-check: (a) aborts with `ProvenanceError` when export manifest/SHA verification fails; (b) aborts with explicit seed mismatch error when provenance passes but a frozen seed field diverges from `export/adversarial_seeds/seeds.yaml` (US2 scenarios 1 and 6, spec edge case: provenance vs seed mismatch)
+- [x] T019 [US2] Audit `fixtures/adversarial_slice/cases.yaml` against contracts/adversarial-slice.md: confirm all five attack families present at ~8–10 each, benign hard negatives included, no duplicate `case_id`, no edits to export seed content (FR-014, US2 scenarios 2–4)
+- [x] T020 [US2] Verify slice loader seed cross-check: (a) aborts with `ProvenanceError` when export manifest/SHA verification fails; (b) aborts with explicit seed mismatch error when provenance passes but a frozen seed field diverges from `export/adversarial_seeds/seeds.yaml` (US2 scenarios 1 and 6, spec edge case: provenance vs seed mismatch)
 
 **Checkpoint (US2 — slice fixture green)**:
 
@@ -136,8 +136,8 @@ uv run pytest tests/gate/test_acceptance_adversarial_slice.py -v
 
 ### Implementation for User Story 1
 
-- [ ] T021 [US1] Seed committed cache entries for **all** extended slice cases × `adversarial_gate` × `sample_index` 0–4 under `cache/primary/adversarial_gate/` (additive only; do not edit `export/` or accepted slice case content) (FR-006, FR-008, FR-017, SC-003, SC-010)
-- [ ] T022 [US1] Validate full gate offline sweep: 100% slice case coverage, deterministic replay on re-run, hand-check one sample's detection and false-alarm rates against raw outcome–label pairs, invalid outcome raises validation error naming `case_id` and `sample_index` (FR-004, SC-002, SC-004, SC-009)
+- [x] T021 [US1] Seed committed cache entries for **all** extended slice cases × `adversarial_gate` × `sample_index` 0–4 under `cache/primary/adversarial_gate/` (additive only; do not edit `export/` or accepted slice case content) (FR-006, FR-008, FR-017, SC-003, SC-010)
+- [x] T022 [US1] Validate full gate offline sweep: 100% slice case coverage, deterministic replay on re-run, hand-check one sample's detection and false-alarm rates against raw outcome–label pairs, invalid outcome raises validation error naming `case_id` and `sample_index` (FR-004, SC-002, SC-004, SC-009)
 
 **Checkpoint (US1 — gate sweep green)**:
 
@@ -163,10 +163,10 @@ uv run pytest tests/gate/test_acceptance_gate_runner.py tests/gate/test_acceptan
 
 ### Validation for User Story 4
 
-- [ ] T023 [US4] Verify outer sample loop emits exactly five `GateSampleRollup` entries with `sample_index` 0–4 and distinct cache keys per `(runner_id, case_id, sample_index)` (FR-010, SC-003)
-- [ ] T024 [US4] Confirm SC-004 hand-calculated detection/false-alarm rate parity assertions from T008 pass against full committed cache after Phase 4 (FR-004, SC-004)
-- [ ] T025 [US4] Verify offline cache-miss test (`cache_miss` marker) fails with message identifying `case_id`, `sample_index`, and `runner_id` — no silent live model call (FR-006, US4 scenario 4)
-- [ ] T026 [US4] Verify `GateVarianceSummary.constant_across_samples` is correct when sample rates differ vs. identical across all five samples (FR-012, US4 scenario 3)
+- [x] T023 [US4] Verify outer sample loop emits exactly five `GateSampleRollup` entries with `sample_index` 0–4 and distinct cache keys per `(runner_id, case_id, sample_index)` (FR-010, SC-003)
+- [x] T024 [US4] Confirm SC-004 hand-calculated detection/false-alarm rate parity assertions from T008 pass against full committed cache after Phase 4 (FR-004, SC-004)
+- [x] T025 [US4] Verify offline cache-miss test (`cache_miss` marker) fails with message identifying `case_id`, `sample_index`, and `runner_id` — no silent live model call (FR-006, US4 scenario 4)
+- [x] T026 [US4] Verify `GateVarianceSummary.constant_across_samples` is correct when sample rates differ vs. identical across all five samples (FR-012, US4 scenario 3)
 
 **Checkpoint (US4 — variance and cache-miss green)**:
 
@@ -193,9 +193,9 @@ uv run pytest tests/gate -k cache_miss -v
 
 ### Implementation for User Story 3
 
-- [ ] T027 [P] [US3] Create `report/` package with reporting types in `report/types.py`: `WilsonInterval`, `RateWithCI`, `FamilyDetectionRow`, `GateReportTables` per data-model.md — do not add Wilson types to `core/types.py` (FR-016)
-- [ ] T028 [P] [US3] Implement Wilson score interval in `report/wilson.py` using stdlib `math` only at default 95% confidence; return null bounds when denominator is zero (FR-015, FR-016, US3 scenario 3)
-- [ ] T029 [US3] Implement `build_gate_report` in `report/adversarial_tables.py`: wrap core `Rate` with Wilson CIs for overall detection and false-alarm; emit per-family detection rows from `scoring.per_family`, omitting zero-denominator families; do not re-derive rate numerators/denominators (FR-015, US3 scenarios 1–2, SC-005, SC-006)
+- [x] T027 [P] [US3] Create `report/` package with reporting types in `report/types.py`: `WilsonInterval`, `RateWithCI`, `FamilyDetectionRow`, `GateReportTables` per data-model.md — do not add Wilson types to `core/types.py` (FR-016)
+- [x] T028 [P] [US3] Implement Wilson score interval in `report/wilson.py` using stdlib `math` only at default 95% confidence; return null bounds when denominator is zero (FR-015, FR-016, US3 scenario 3)
+- [x] T029 [US3] Implement `build_gate_report` in `report/adversarial_tables.py`: wrap core `Rate` with Wilson CIs for overall detection and false-alarm; emit per-family detection rows from `scoring.per_family`, omitting zero-denominator families; do not re-derive rate numerators/denominators (FR-015, US3 scenarios 1–2, SC-005, SC-006)
 
 **Checkpoint (US3 — report/CI tables green)**:
 
@@ -217,12 +217,12 @@ uv run pytest tests/gate/test_acceptance_gate_report.py -v
 
 ### Validation & Polish Tasks
 
-- [ ] T030 [US6] Execute quickstart setup and full acceptance suite steps from `specs/003-adversarial-gate/quickstart.md` on a clean clone without API key (FR-019, SC-008)
-- [ ] T031 [P] [US6] Run quickstart spot-check commands: slice loader, gate offline sweep, label isolation, Wilson/per-family report, cache miss, N=5 variance, and lint per quickstart.md sections
-- [ ] T032 Run full offline gate acceptance suite and confirm SC-001: all tests green with `CACHE_MODE=offline` and no `MODEL_API_KEY` (SC-001)
-- [ ] T033 [P] Audit gate runner, report, and test modules for vocabulary: *adversarial-gate evaluation* in reader-facing copy, `adversarial_gate` in developer identifiers, DPDP domain terms; no retired scaffolding terms (FR-021)
-- [ ] T034 Confirm no blended accuracy field in `GateSweepResult`, `GateSampleRollup`, or `GateReportTables` across all gate outputs (FR-004, SC-007)
-- [ ] T035 Confirm re-running gate sweep twice in offline mode yields identical per-sample scoring results and report tables (SC-009)
+- [x] T030 [US6] Execute quickstart setup and full acceptance suite steps from `specs/003-adversarial-gate/quickstart.md` on a clean clone without API key (FR-019, SC-008)
+- [x] T031 [P] [US6] Run quickstart spot-check commands: slice loader, gate offline sweep, label isolation, Wilson/per-family report, cache miss, N=5 variance, and lint per quickstart.md sections
+- [x] T032 Run full offline gate acceptance suite and confirm SC-001: all tests green with `CACHE_MODE=offline` and no `MODEL_API_KEY` (SC-001)
+- [x] T033 [P] Audit gate runner, report, and test modules for vocabulary: *adversarial-gate evaluation* in reader-facing copy, `adversarial_gate` in developer identifiers, DPDP domain terms; no retired scaffolding terms (FR-021)
+- [x] T034 Confirm no blended accuracy field in `GateSweepResult`, `GateSampleRollup`, or `GateReportTables` across all gate outputs (FR-004, SC-007)
+- [x] T035 Confirm re-running gate sweep twice in offline mode yields identical per-sample scoring results and report tables (SC-009)
 
 **Final Checkpoint**:
 
