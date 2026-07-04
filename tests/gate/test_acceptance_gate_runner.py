@@ -9,6 +9,8 @@ import pytest
 from core.model import FakeModelSeam
 from core.scoring import score_adversarial
 from core.types import ClassifierResult
+from report.adversarial_tables import build_gate_report
+from runners.adversarial_gate.cache import write_gate_cache_entry
 from runners.adversarial_gate.runner import run_adversarial_gate_sweep
 from runners.adversarial_gate.slice_loader import load_extended_slice
 from tests.gate.conftest import make_gate_sweep_config
@@ -96,6 +98,65 @@ def test_deterministic_replay(
         first_dump.pop(field, None)
         second_dump.pop(field, None)
     assert first_dump == second_dump
+
+    first_reports = [
+        build_gate_report(sample.scoring, sample_index=sample.sample_index).model_dump()
+        for sample in first.samples
+    ]
+    second_reports = [
+        build_gate_report(sample.scoring, sample_index=sample.sample_index).model_dump()
+        for sample in second.samples
+    ]
+    assert first_reports == second_reports
+
+
+def test_whitespace_only_note_text_is_not_skipped(
+    fake_seam: FakeModelSeam,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Edge case: whitespace-only note text is still classified, not silently skipped."""
+    from core.types import AdversarialSeedCase
+    from runners.adversarial_gate.slice_loader import ExtendedAdversarialSlice
+
+    whitespace_case = AdversarialSeedCase(
+        case_id="benign-whitespace-only",
+        surface="requester_note",
+        text="   ",
+        label="benign",
+    )
+    cache_root = tmp_path / "cache"
+    for sample_index in range(5):
+        write_gate_cache_entry(
+            case=whitespace_case,
+            sample_index=sample_index,
+            model_id="primary",
+            outcome="clean",
+            cache_root=cache_root,
+        )
+
+    def _load_single_case_whitespace_slice(
+        path: Path | None = None,
+        **kwargs: object,
+    ) -> ExtendedAdversarialSlice:
+        return ExtendedAdversarialSlice(
+            cases=[whitespace_case],
+            source_path=path or tmp_path / "cases.yaml",
+            seed_check_passed=False,
+        )
+
+    monkeypatch.setattr(
+        "runners.adversarial_gate.runner.load_extended_slice",
+        _load_single_case_whitespace_slice,
+    )
+    config = make_gate_sweep_config(
+        cache_root=cache_root,
+        slice_path=tmp_path / "cases.yaml",
+        verify_export_seeds=False,
+    )
+    result = run_adversarial_gate_sweep(seam=fake_seam, config=config)
+    assert result.slice_case_count == 1
+    assert result.samples[0].scored_pairs == 1
 
 
 def test_invalid_outcome_raises_validation_error(

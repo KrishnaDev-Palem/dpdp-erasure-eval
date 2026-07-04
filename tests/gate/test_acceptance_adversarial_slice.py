@@ -54,6 +54,30 @@ def test_unique_case_ids(slice_path: Path) -> None:
     assert len(case_ids) == len(set(case_ids))
 
 
+def test_benign_includes_instruction_like_hard_negatives(slice_path: Path) -> None:
+    """US2/AC4: benign controls include instruction-like hard negatives, not only trivial notes."""
+    result = load_extended_slice(slice_path, verify_seeds=False)
+    benign = [item for item in result.cases if item.label == "benign"]
+    instruction_markers = (
+        "please",
+        "confirm",
+        "do not",
+        "follow",
+        "authorize",
+        "verify",
+        "notify",
+        "instruction",
+    )
+    hard_negatives = [
+        item
+        for item in benign
+        if any(marker in item.text.lower() for marker in instruction_markers)
+    ]
+    assert len(hard_negatives) >= 20
+    trivial_only = all(len(item.text) < 40 for item in benign)
+    assert not trivial_only, "benign set must not be only trivial short notes"
+
+
 def test_provenance_failure_aborts_before_scoring(
     slice_path: Path,
     tmp_path: Path,

@@ -394,4 +394,14 @@ After Phase 4, Developer A validates US4 variance (Phase 5) while Developer B fi
 - Do not modify `core/`, `specs/001-shared-core/`, or Feature 002 tier runners except blocking bugfixes
 - Do not edit committed `export/` content (Principle III); slice and cache entries are additive only
 - Refresh path (`CACHE_MODE=refresh`) remains available via gate cache helper but is not CI-gated (FR-007)
-- Total tasks: **35** (Bootstrap 11, Foundational 7, US2 2, US1 2, US4 4, US3 3, Polish 6)
+- Total tasks: **38** (Bootstrap 11, Foundational 7, US2 2, US1 2, US4 4, US3 3, Polish 6, Convergence 3)
+
+---
+
+## Phase 8: Convergence
+
+**Purpose**: Close acceptance-coverage gaps found by `/speckit-converge` after Phase 7 completion.
+
+- [x] T036 Add acceptance test asserting extended slice benign controls include instruction-like hard negatives per US2/AC4 and contracts/adversarial-slice.md in `tests/gate/test_acceptance_adversarial_slice.py` (FR-014, partial)
+- [x] T037 Extend deterministic replay acceptance coverage to Wilson report tables via `build_gate_report` on repeated offline sweeps in `tests/gate/test_acceptance_gate_runner.py` (SC-009, partial)
+- [x] T038 Add acceptance test that whitespace-only note text is still classified (not silently skipped) using a temporary slice fixture in `tests/gate/test_acceptance_gate_runner.py` (spec edge case, partial)
