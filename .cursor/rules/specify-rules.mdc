@@ -4,6 +4,6 @@ alwaysApply: true
 
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
-shell commands, and other important information, read the current plan:
-`specs/002-context-tier-sweep/plan.md`
+shell commands, and other important information, read the current plan
+at specs/003-adversarial-gate/plan.md
 <!-- SPECKIT END -->
