@@ -88,12 +88,13 @@ Compared fields: `case_id`, `surface`, `text`, `label`, `family` (including null
 
 When `GateSweepConfig.verify_export_seeds` is true:
 
-1. Load export via `core.export.load_export()`.
-2. For each frozen seed id, find matching case in slice and export.
-3. Assert field-wise equality.
-4. Abort with explicit error on mismatch.
+1. Load export via `core.export.load_export(export_dir)`.
+2. Call `bundle.verify_provenance()` per [001/contracts/frozen-export.md](../../001-shared-core/contracts/frozen-export.md); on `ProvenanceError`, abort before returning cases.
+3. For each frozen seed id, find matching case in slice and export.
+4. Assert field-wise equality on `case_id`, `surface`, `text`, `label`, `family`.
+5. Abort with explicit seed mismatch error on field inequality (distinct from `ProvenanceError`).
 
-This does not modify export data; it verifies slice integrity before scoring.
+This does not modify export data; it verifies export integrity and slice seed alignment before scoring.
 
 ## Additive authoring rules
 

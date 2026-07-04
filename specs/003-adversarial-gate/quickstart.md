@@ -91,7 +91,7 @@ uv run pytest tests/gate/test_acceptance_label_isolation.py -v
 uv run pytest tests/gate/test_acceptance_gate_report.py -v
 ```
 
-**Expected**: Wilson bounds and per-family detection rows match hand-calculated fixtures on representative numerators/denominators; zero-denominator families omitted.
+**Expected**: Wilson bounds and per-family detection rows match hand-calculated fixtures on representative numerators/denominators; zero-denominator families omitted from per-family table; overall rates with zero attack or zero benign pairs report null Wilson intervals.
 
 ## Spot-check: cache miss behavior (offline)
 

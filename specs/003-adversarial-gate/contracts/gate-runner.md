@@ -40,9 +40,12 @@ Exposed from `runners/adversarial_gate/runner.py` (or `runners/adversarial_gate/
 ### 1. Load extended slice
 
 - Call `slice_loader.load_extended_slice(slice_path)`.
-- When `config.verify_export_seeds` is true (default), cross-check the three frozen seed cases against `core.export.load_export().seeds` for byte-identical fields.
-- On slice validation failure or seed mismatch, abort before sweep start.
-- Do **not** load adjudication subjects for gate grading (export is used only for seed integrity check).
+- When `config.verify_export_seeds` is true (default):
+  1. Load export via `core.export.load_export(export_dir)`.
+  2. Call `bundle.verify_provenance()` per [001/contracts/frozen-export.md](../../001-shared-core/contracts/frozen-export.md) — on `ProvenanceError`, abort before sweep start (mirrors Feature 002 runner spine).
+  3. Cross-check the three frozen seed cases against `bundle.seeds` for byte-identical fields — on mismatch, abort with seed mismatch error.
+- On slice validation failure, abort before sweep start.
+- Do **not** load adjudication subjects for gate grading (export is used only for provenance + seed integrity check).
 
 ### 2. Initialize configuration
 
@@ -98,26 +101,16 @@ Mirrors agent `screen_adversarial` gate per [001/contracts/model-seam.md](../../
 
 ## Cache entry shape (gate)
 
-```json
-{
-  "model_id": "primary",
-  "runner_id": "adversarial_gate",
-  "case_id": "adv-erase-all",
-  "prompt_hash": "<hex>",
-  "sample_index": 0,
-  "recorded_at": "2026-07-03T12:00:00Z",
-  "raw_response": {
-    "outcome": "adversarial",
-    "detail": null
-  }
-}
-```
+Gate cache entries MUST conform to [001/contracts/cache.md](../../001-shared-core/contracts/cache.md) for path layout, entry schema, and offline/refresh modes. Gate-specific differences only:
 
-Path layout per [001/contracts/cache.md](../../001-shared-core/contracts/cache.md):
+| Aspect | Gate rule |
+|--------|-----------|
+| `runner_id` | MUST be `adversarial_gate` |
+| `prompt_hash` | SHA-256 of canonical `{"text": "<note>"}` — not a `ContextBundle` |
+| `raw_response` | `ClassifierResult` shape: `{ "outcome": "clean" \| "adversarial", "detail": ... }` |
+| `tool_calls` | MUST NOT be present (Feature 004 only) |
 
-```text
-cache/{model_id}/adversarial_gate/{case_id}/{prompt_hash}/{sample_index}.json
-```
+Path: `cache/{model_id}/adversarial_gate/{case_id}/{prompt_hash}/{sample_index}.json`
 
 ## Determinism
 
@@ -128,7 +121,8 @@ Re-running the same gate sweep in offline mode with the same committed cache MUS
 | Error | When | Behavior |
 |-------|------|----------|
 | Slice validation error | Missing family, duplicate id, out-of-range count | Abort before sweep |
-| Seed mismatch error | Extended slice seed ≠ export seed | Abort before sweep |
+| `ProvenanceError` | Export manifest/SHA mismatch during seed cross-check | Abort before sweep; do not expose case data for scoring |
+| Seed mismatch error | Provenance passed but extended slice seed ≠ export seed | Abort before sweep |
 | `CacheMissError` | Offline cache miss | Fail at first miss; include case_id, sample_index, runner_id |
 | Validation error | Outcome ∉ {clean, adversarial} | Fail at offending case |
 | Empty/whitespace text | Documented case | Still invoke classification or fail with documented validation error; no silent skip |

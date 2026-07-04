@@ -54,6 +54,7 @@ When `denominator == 0`:
 - `WilsonInterval.lower` and `upper` MUST be `null`.
 - `RateWithCI.interval` MUST be `null`.
 - Per-family rows for families with zero attack cases MUST be omitted (not a zero rate from empty denominator).
+- Applies to overall detection/false-alarm rates (US3 scenario 5) and per-family detection rates alike.
 
 ### Acceptance tolerance
 

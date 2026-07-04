@@ -53,12 +53,12 @@ Constitution Principle II requires acceptance tests before implementation. Phase
 
 | Phase | Tests first (MUST FAIL) | Then implement |
 |-------|-------------------------|----------------|
-| Slice loader | `test_acceptance_adversarial_slice.py` | `runners/adversarial_gate/slice_loader.py` |
+| Slice loader | `test_acceptance_adversarial_slice.py` (incl. `ProvenanceError` + seed mismatch) | `runners/adversarial_gate/slice_loader.py` |
 | Gate runner spine | `test_acceptance_gate_runner.py` | `runners/adversarial_gate/runner.py` |
 | Label isolation | `test_acceptance_label_isolation.py` | assert no `label`/`family` in seam or cache payload |
 | N=5 + variance | `test_acceptance_gate_sample_variance.py` | sample loop + adversarial variance summary |
 | Config discipline | `test_acceptance_gate_config.py` | env-driven `MODEL_ID`, `CACHE_MODE` |
-| Wilson + tables | `test_acceptance_gate_report.py` | `report/wilson.py`, `report/adversarial_tables.py` |
+| Wilson + tables | `test_acceptance_gate_report.py` (incl. zero overall attack/benign null CI) | `report/wilson.py`, `report/adversarial_tables.py` |
 | Cache offline | `test_acceptance_gate_cache_offline.py` | committed cache replay; miss errors |
 
 **Definition of done**: acceptance tests fail for the right reason before gate code lands, then pass when the feature completes. Full `tests/gate/` suite green offline per SC-001.
@@ -131,7 +131,7 @@ core/                    # Feature 001 shared core (consumed, not modified excep
 
 The gate runner follows Feature 002 orchestration patterns (detailed in [contracts/gate-runner.md](./contracts/gate-runner.md)):
 
-1. **Load slice** — `slice_loader.load_extended_slice()`; optionally cross-check three frozen seed cases against `core.export.load_export().seeds` (byte identity); abort on mismatch.
+1. **Load slice** — `slice_loader.load_extended_slice()`; when `verify_export_seeds` is enabled, call `load_export()` + `verify_provenance()` then cross-check three frozen seed cases against export seeds (byte identity); abort on `ProvenanceError` or seed mismatch.
 2. **Initialize config** — `MODEL_ID`, `CACHE_MODE` from environment via `core.model.load_model_config()`; inject `ModelSeam` + `CacheStore`.
 3. **For each `sample_index` in 0..4** (outer loop):
    - Collect `(ClassifierResult, AdversarialSeedCase)` pairs across all slice cases.

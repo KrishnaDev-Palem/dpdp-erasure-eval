@@ -40,9 +40,10 @@ An evaluator reproducing adversarial-gate numbers needs a committed, additive ad
 
 1. **Given** the extended slice fixture, **When** cases are loaded, **Then** the three frozen seed cases (`adv-erase-all`, `adv-admin-claim`, `benign-extra-ask`) appear with identical content to the export seeds and are not modified.
 2. **Given** the full extended slice, **When** cases are counted, **Then** total cases fall within 80–100 inclusive and attack and benign counts are each approximately 40–50.
-3. **Given** attack cases in the slice, **When** family tags are inspected, **Then** all five families are represented with approximately 8–10 cases each: direct override, authority or role claim, obfuscated or encoded instruction, scope-expansion smuggling, and exfiltration-style.
+3. **Given** attack cases in the slice, **When** family tags are inspected, **Then** all five taxonomy IDs are represented with approximately 8–10 cases each: `direct_override`, `authority_spoof`, `obfuscated_injection`, `scope_expansion`, and `exfiltration` (see Key Entities — attack family taxonomy).
 4. **Given** benign controls, **When** difficulty is inspected, **Then** the set includes instruction-like yet legitimate hard negatives, not only trivial benign notes.
 5. **Given** any new case authored for this feature, **When** the fixture is committed, **Then** it is additive only — no edits to committed export adjudication subjects or frozen seed content.
+6. **Given** export provenance verification fails (e.g., `PINNED_AGENT_SHA` ≠ `manifest.agent_commit_sha`), **When** the slice loader cross-checks seeds via `core.export.load_export()`, **Then** loading aborts with `ProvenanceError` before sweep start and no slice cases are scored.
 
 ---
 
@@ -58,8 +59,9 @@ An evaluator publishing adversarial-gate findings needs reporting that accompani
 
 1. **Given** a completed gate sweep scoring result, **When** the report layer emits the primary table, **Then** detection rate and false-alarm rate each include a Wilson confidence interval alongside the point estimate.
 2. **Given** attack cases tagged by family, **When** the per-family breakdown table is emitted, **Then** each family row shows detection rate with Wilson interval computed only over cases in that family.
-3. **Given** a family with zero attack cases, **When** the per-family table is built, **Then** that family is omitted or reports an explicit null rate — not a misleading zero from an empty denominator.
+3. **Given** a family with zero attack cases in the scored pair set, **When** the per-family table is built, **Then** that family row is **omitted** — not a misleading zero rate or placeholder row from an empty denominator.
 4. **Given** representative hand-calculated fixtures, **When** acceptance tests compare report output, **Then** interval bounds and per-family rates match within documented tolerance (exact rational arithmetic on small fixtures).
+5. **Given** a hand-crafted scoring result with zero attack-labeled or zero benign-labeled pairs, **When** the report layer builds the primary table, **Then** the affected overall rate has `value: null` per the shared scoring contract and the corresponding `RateWithCI.interval` is `null` (Wilson bounds omitted).
 
 ---
 
@@ -114,7 +116,7 @@ An evaluator onboarding to the harness needs a quickstart document that walks th
 
 ### Edge Cases
 
-- What happens when provenance verification fails at export load (for seed inclusion check)? The gate runner loads the extended slice from eval-authored fixtures; if it cross-checks export seeds, a provenance failure surfaces before sweep start.
+- What happens when export **provenance** verification fails during seed cross-check? When `verify_export_seeds` is enabled, `load_extended_slice` calls `core.export.load_export()` which MUST run `verify_provenance()` per [001/contracts/frozen-export.md](../001-shared-core/contracts/frozen-export.md); on `ProvenanceError`, loading aborts before sweep start — distinct from a **seed field mismatch** when provenance passes but slice seed content ≠ export seed.
 - What happens when the model returns an outcome outside {clean, adversarial}? The runner raises a validation error naming `case_id` and `sample_index`; it does not coerce the outcome.
 - What happens when only some of the five sample indices have committed cache entries in offline mode? The sweep fails at the first cache miss with an explicit error identifying case, sample index, and `runner_id`.
 - What happens when `CACHE_MODE=refresh` and credentials are present? The runner may fetch and persist new cache entries per the shared cache contract; default and CI behavior remain offline replay.
@@ -152,7 +154,17 @@ An evaluator onboarding to the harness needs a quickstart document that walks th
 
 - **Extended adversarial slice**: The eval-authored, additive corpus of labeled gate cases (attack and benign) extending the three frozen export seeds; lives under `fixtures/adversarial_slice/`.
 - **Adversarial case**: One labeled gate fixture with `case_id`, `surface`, `text`, `label` (attack or benign), and optional `family` for attack cases.
-- **Attack family**: One of five taxonomy buckets — direct override, authority or role claim, obfuscated or encoded instruction, scope-expansion smuggling, exfiltration-style — used for per-family detection breakdown.
+- **Attack family**: One of five taxonomy buckets used for per-family detection breakdown. Fixture `family` field MUST use the stable ID; reader-facing prose MAY use the descriptive label:
+
+  | ID (`family` field) | Reader-facing label |
+  |---------------------|---------------------|
+  | `direct_override` | Direct override |
+  | `authority_spoof` | Authority or role claim |
+  | `obfuscated_injection` | Obfuscated or encoded instruction |
+  | `scope_expansion` | Scope-expansion smuggling |
+  | `exfiltration` | Exfiltration-style |
+
+  Canonical IDs are defined in [data-model.md](./data-model.md) and [contracts/adversarial-slice.md](./contracts/adversarial-slice.md).
 - **Gate runner**: Evaluation executor with `runner_id` `adversarial_gate` that sweeps all slice cases, invokes `classify_note` per case, and returns scored results.
 - **Sample run**: One full slice sweep at a fixed `sample_index` (0–4), producing one aggregate adversarial scoring result.
 - **Per-sample scoring result**: Detection rate, false-alarm rate, and per-family breakdown for all graded case pairs at one sample index.

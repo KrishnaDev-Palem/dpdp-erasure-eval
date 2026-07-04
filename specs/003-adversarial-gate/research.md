@@ -48,7 +48,7 @@
 **Decision**:
 
 1. **Location**: `fixtures/adversarial_slice/cases.yaml` — YAML list of case objects matching `AdversarialSeedCase` shape from `core/types.py`.
-2. **Frozen seed inclusion**: The three export seeds (`adv-erase-all`, `adv-admin-claim`, `benign-extra-ask`) MUST appear in the extended slice with **byte-identical** `case_id`, `surface`, `text`, `label`, and `family` fields to `export/adversarial_seeds/seeds.yaml`. Loader MAY verify equality against `core.export.load_export().seeds` at sweep start and abort on mismatch (spec edge case: provenance/slice integrity).
+2. **Frozen seed inclusion**: The three export seeds (`adv-erase-all`, `adv-admin-claim`, `benign-extra-ask`) MUST appear in the extended slice with **byte-identical** `case_id`, `surface`, `text`, `label`, and `family` fields to `export/adversarial_seeds/seeds.yaml`. When `verify_export_seeds` is enabled, loader calls `load_export()` + `verify_provenance()` then compares seeds; aborts on `ProvenanceError` or seed field mismatch before sweep start.
 3. **Additive authoring**: All new cases use new `case_id` values; no edits to export files or committed adjudication subjects.
 4. **Coverage targets** (planning §4.3): 80–100 total cases; ~40–50 attack, ~40–50 benign; five families at ~8–10 attack cases each; benign set includes instruction-like hard negatives.
 5. **Family taxonomy** (stable snake_case IDs):
