@@ -167,9 +167,9 @@ uv run pytest tests/autonomous/test_acceptance_autonomous_runner.py tests/autono
 
 ### Validation for User Story 3
 
-- [ ] T026 [US3] Verify committed autonomous cache entries include ordered `tool_calls` with required result-summary fields per contracts/tool-call-trace.md for entries where tool use occurred; empty `[]` valid when no tools invoked (FR-015, US3 scenarios 1 and 4, SC-006)
-- [ ] T027 [US3] Verify tier-runner cache entries under `cache/primary/t1/`, `t2/`, `t3/` and gate entries under `cache/primary/adversarial_gate/` normalize to empty `tool_calls` — autonomous-only trace namespace (FR-015, US3 scenario 3)
-- [ ] T028 [US3] Verify offline replay path in `runners/autonomous/cache.py` reads stored `tool_calls` and `raw_response.verdicts` without re-executing tools or live model calls (FR-015, US3 scenario 2)
+- [X] T026 [US3] Verify committed autonomous cache entries include ordered `tool_calls` with required result-summary fields per contracts/tool-call-trace.md for entries where tool use occurred; empty `[]` valid when no tools invoked (FR-015, US3 scenarios 1 and 4, SC-006)
+- [X] T027 [US3] Verify tier-runner cache entries under `cache/primary/t1/`, `t2/`, `t3/` and gate entries under `cache/primary/adversarial_gate/` normalize to empty `tool_calls` — autonomous-only trace namespace (FR-015, US3 scenario 3)
+- [X] T028 [US3] Verify offline replay path in `runners/autonomous/cache.py` reads stored `tool_calls` and `raw_response.verdicts` without re-executing tools or live model calls (FR-015, US3 scenario 2)
 
 **Checkpoint (US3 — tool-call traces green)**:
 
@@ -195,10 +195,10 @@ uv run pytest tests/autonomous/test_acceptance_tool_call_traces.py -v
 
 ### Validation for User Story 4
 
-- [ ] T029 [US4] Verify outer sample loop emits exactly five `SampleRollup` entries with `sample_index` 0–4 and distinct cache keys per `(runner_id, subject_id, sample_index)` using T1 prompt hash (FR-016, SC-003)
-- [ ] T030 [US4] Confirm SC-004 hand-calculated over-erasure, over-retention, and mis-escalation rate parity assertions from T010 pass against full committed cache after Phase 4 (FR-009, SC-004)
-- [ ] T031 [US4] Verify offline cache-miss test (`cache_miss` marker) fails with message identifying `subject_id`, `sample_index`, and `runner_id` — no silent live model call (FR-011, US4 scenario 4)
-- [ ] T032 [US4] Verify `VarianceSummary.constant_across_samples` is correct when sample rates differ vs. identical across all five samples (FR-018, US4 scenario 3)
+- [X] T029 [US4] Verify outer sample loop emits exactly five `SampleRollup` entries with `sample_index` 0–4 and distinct cache keys per `(runner_id, subject_id, sample_index)` using T1 prompt hash (FR-016, SC-003)
+- [X] T030 [US4] Confirm SC-004 hand-calculated over-erasure, over-retention, and mis-escalation rate parity assertions from T010 pass against full committed cache after Phase 4 (FR-009, SC-004)
+- [X] T031 [US4] Verify offline cache-miss test (`cache_miss` marker) fails with message identifying `subject_id`, `sample_index`, and `runner_id` — no silent live model call (FR-011, US4 scenario 4)
+- [X] T032 [US4] Verify `VarianceSummary.constant_across_samples` is correct when sample rates differ vs. identical across all five samples (FR-018, US4 scenario 3)
 
 **Checkpoint (US4 — variance and cache-miss green)**:
 
@@ -221,9 +221,9 @@ uv run pytest tests/autonomous -k cache_miss -v
 
 ### Validation for User Story 6
 
-- [ ] T033 [US6] Execute quickstart setup and full acceptance suite steps from `specs/004-autonomous-retrieval-eval/quickstart.md` on a clean clone without API key (FR-021, SC-008)
-- [ ] T034 [P] [US6] Run quickstart spot-check commands: retrieval tools parity, autonomous offline sweep, label isolation, tool-call traces, cache miss, N=5 variance, and lint per quickstart.md sections
-- [ ] T035 [US6] Confirm quickstart lint commands pass: `uv run ruff check .` and `uv run ruff format --check .`
+- [X] T033 [US6] Execute quickstart setup and full acceptance suite steps from `specs/004-autonomous-retrieval-eval/quickstart.md` on a clean clone without API key (FR-021, SC-008)
+- [X] T034 [P] [US6] Run quickstart spot-check commands: retrieval tools parity, autonomous offline sweep, label isolation, tool-call traces, cache miss, N=5 variance, and lint per quickstart.md sections
+- [X] T035 [US6] Confirm quickstart lint commands pass: `uv run ruff check .` and `uv run ruff format --check .`
 
 **Checkpoint (US6 — quickstart path green)**:
 
@@ -243,10 +243,10 @@ uv run ruff format --check .
 
 **Depends on**: Phase 7 complete.
 
-- [ ] T036 Run full offline autonomous acceptance suite and confirm SC-001: all tests green with `CACHE_MODE=offline` and no `MODEL_API_KEY` (SC-001)
-- [ ] T037 [P] Audit autonomous runner, retrieval tools, and test modules for vocabulary: *autonomous retrieval evaluation* in reader-facing copy, `autonomous` in developer identifiers, DPDP domain terms; no retired scaffolding terms (FR-023)
-- [ ] T038 Confirm no blended accuracy field in `AutonomousSweepResult`, `SampleRollup`, or runner output across all autonomous results (FR-009, SC-007)
-- [ ] T039 Confirm re-running autonomous sweep twice in offline mode yields identical per-sample scoring results (SC-009); confirm no edits to committed `export/`, tier runners, or adversarial-gate modules (FR-024, SC-007)
+- [X] T036 Run full offline autonomous acceptance suite and confirm SC-001: all tests green with `CACHE_MODE=offline` and no `MODEL_API_KEY` (SC-001)
+- [X] T037 [P] Audit autonomous runner, retrieval tools, and test modules for vocabulary: *autonomous retrieval evaluation* in reader-facing copy, `autonomous` in developer identifiers, DPDP domain terms; no retired scaffolding terms (FR-023)
+- [X] T038 Confirm no blended accuracy field in `AutonomousSweepResult`, `SampleRollup`, or runner output across all autonomous results (FR-009, SC-007)
+- [X] T039 Confirm re-running autonomous sweep twice in offline mode yields identical per-sample scoring results (SC-009); confirm no edits to committed `export/`, tier runners, or adversarial-gate modules (FR-024, SC-007)
 
 **Final Checkpoint**:
 

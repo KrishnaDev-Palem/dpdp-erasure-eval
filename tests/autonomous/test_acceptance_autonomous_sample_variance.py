@@ -22,7 +22,16 @@ def test_variance_summary_has_constancy_flags(fake_seam, autonomous_config) -> N
     result = run_autonomous_sweep(seam=fake_seam, config=autonomous_config)
     variance = result.variance
     assert hasattr(variance.over_erasure, "constant_across_samples")
+    assert hasattr(variance.over_retention, "constant_across_samples")
+    assert hasattr(variance.mis_escalation, "constant_across_samples")
     assert len(variance.over_erasure.by_sample) == 5
+
+
+def test_constant_across_samples_flags(fake_seam, autonomous_config) -> None:
+    """Sample 1 cache override changes over-retention but not over-erasure."""
+    result = run_autonomous_sweep(seam=fake_seam, config=autonomous_config)
+    assert result.variance.over_erasure.constant_across_samples is True
+    assert result.variance.over_retention.constant_across_samples is False
 
 
 @pytest.mark.cache_miss

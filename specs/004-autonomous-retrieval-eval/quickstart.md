@@ -81,7 +81,7 @@ With committed cache (preferred integration path), run via acceptance tests inst
 ## Spot-check: label isolation
 
 ```bash
-uv run pytest tests/autonomous/test_acceptance_label_isolation.py -v
+uv run pytest tests/autonomous/test_acceptance_autonomous_label_isolation.py -v
 ```
 
 **Expected**: `expected` fields absent from tool responses, T1 initial context, and cache-canonicalized payloads.
