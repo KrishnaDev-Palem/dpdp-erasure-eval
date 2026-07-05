@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 Verdict = Literal["erase", "retain", "escalate"]
 Basis = Literal[
@@ -158,6 +158,48 @@ class AdjudicationScoringResult(BaseModel):
     over_retention_rate: Rate
     mis_escalation_rate: Rate
     total_cases: int
+
+
+RetrievalToolName = Literal[
+    "get_location_records",
+    "get_retention_floors",
+    "get_governance_map",
+]
+
+
+class ToolCallTrace(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    sequence: int
+    tool_name: RetrievalToolName
+    arguments: dict[str, Any]
+    result_summary: dict[str, Any]
+
+    @model_validator(mode="after")
+    def _validate_no_expected(self) -> ToolCallTrace:
+        if self.sequence < 0:
+            raise ValueError("sequence must be >= 0")
+        if _payload_contains_expected_key(self.model_dump(mode="json")):
+            raise ValueError("tool call trace must not contain expected")
+        return self
+
+
+def _payload_contains_expected_key(payload: object) -> bool:
+    if isinstance(payload, dict):
+        if "expected" in payload:
+            return True
+        return any(_payload_contains_expected_key(value) for value in payload.values())
+    if isinstance(payload, list):
+        return any(_payload_contains_expected_key(item) for item in payload)
+    return False
+
+
+class AdjudicationSessionResult(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    verdicts: list[ModelVerdict] = Field(default_factory=list)
+    raw_verdicts: list[dict[str, Any]] = Field(default_factory=list)
+    tool_calls: list[ToolCallTrace]
 
 
 class AdversarialScoringResult(BaseModel):
