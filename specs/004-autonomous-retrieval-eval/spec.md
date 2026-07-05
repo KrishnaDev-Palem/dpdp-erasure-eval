@@ -147,7 +147,7 @@ An evaluator onboarding to the harness needs a quickstart document that walks th
 - **FR-016**: The runner MUST request model responses at five samples per case (`sample_index` 0 through 4), producing distinct cache keys per sample.
 - **FR-017**: For each sample index, the runner MUST aggregate all per-location prediction pairs across the full subject sweep into one adjudication scoring result via the shared scoring primitive.
 - **FR-018**: Runner output MUST include five per-sample aggregate scoring results plus a variance summary comparing over-erasure, over-retention, and mis-escalation rates across samples.
-- **FR-019**: Committed cache entries for `autonomous` MUST cover all export subjects and sample indices 0–4 sufficient for full offline CI replay.
+- **FR-019**: Committed cache entries for `autonomous` MUST cover every export subject that requires model adjudication (at least one location), at sample indices 0–4, sufficient for full offline CI replay. Subjects with empty `locations` lists MUST be visited by the sweep but do not require cache entries (no model call), consistent with Feature 002 tier runner seeding.
 - **FR-020**: An autonomous acceptance suite MUST exist under `tests/` (e.g., `tests/autonomous/` or `tests/runners/autonomous/`), written before implementation, and MUST pass fully offline when the feature is complete.
 - **FR-021**: A feature quickstart guide (`specs/004-autonomous-retrieval-eval/quickstart.md`) MUST document clone-and-run steps to reproduce a green offline autonomous sweep and the autonomous acceptance suite locally.
 - **FR-022**: Work MUST land on feature branch `004-autonomous-retrieval-eval`; the agent MAY commit to the feature branch but MUST NOT merge to `main` (human merge gate).

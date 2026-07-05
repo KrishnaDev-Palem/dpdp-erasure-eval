@@ -108,12 +108,13 @@ Introduce `AutonomousSweepResult` in `runners/autonomous/types.py` with `runner_
 
 ## R7 — Committed cache cardinality (spec FR-019, planning §9)
 
-**Decision**: Commit autonomous cache entries for all **6** export subjects × **5** sample indices = **30** entries under `cache/{model_id}/autonomous/{case_id}/{prompt_hash}/{sample_index}.json`. Prompt hashes per subject match corresponding T1 entries (different `runner_id` directory only).
+**Decision**: Commit autonomous cache entries for all export subjects **with at least one location** × **5** sample indices = **10** entries under `cache/{model_id}/autonomous/{case_id}/{prompt_hash}/{sample_index}.json`. Prompt hashes per subject match corresponding T1 entries (different `runner_id` directory only). Subjects with empty `locations` (e.g. `empty-locations-subject`) are swept but skipped for cache seeding — no model call — matching Feature 002 `scripts/seed_runner_cache.py` behavior.
 
-**Rationale**: Current export has 6 labeled subjects (`export/adjudication/subjects.yaml`). Bounded matrix: 6 × 5 × 1 runner = 30 entries — well within constitution VIII cost guardrails. Full offline CI replay requires complete coverage (FR-019).
+**Rationale**: Current export has **3** labeled subjects in `export/adjudication/subjects.yaml`; **2** have locations requiring adjudication. Bounded matrix: 2 × 5 × 1 runner = 10 entries — well within constitution VIII cost guardrails. Full offline CI replay requires cache for every subject that invokes the model (FR-019).
 
 **Alternatives considered**:
-- Partial cache with subset subjects — rejected; FR-019 requires full export coverage for CI.
+- Partial cache with subset subjects — rejected; FR-019 requires cache for all location-bearing subjects for CI.
+- Cache entries for empty-location subjects — rejected; no model call means no cache key needed (tier runner precedent).
 - Single sample only — rejected; N=5 is settled guardrail (spec US4).
 
 ## R8 — Test-first acceptance suite layout (spec FR-020, constitution II)

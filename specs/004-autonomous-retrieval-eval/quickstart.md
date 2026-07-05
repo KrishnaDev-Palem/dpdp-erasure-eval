@@ -138,7 +138,7 @@ Run refresh via project-specific cache generation script or runner entrypoint on
 
 | Symptom | Likely cause | Fix |
 |---------|--------------|-----|
-| `CacheMissError` on offline run | Missing autonomous cache entry for subject/sample | Ensure all 6 subjects × 5 samples committed under `cache/.../autonomous/` |
+| `CacheMissError` on offline run | Missing autonomous cache entry for subject/sample | Ensure all location-bearing subjects (2 in current export) × 5 samples committed under `cache/.../autonomous/` (10 entries total) |
 | `ProvenanceError` at sweep start | Export pin mismatch | Do not edit committed export; verify clone integrity |
 | Tests fail with `expected` in payload | Tool or context leakage | Check retrieval tools strip `expected`; use `build_t1` only for initial context |
 | Tier tests fail after autonomous work | Accidental tier/gate modification | Revert changes to `runners/t1.py`, `t2.py`, `t3.py`, `spine.py`, `adversarial_gate/` |

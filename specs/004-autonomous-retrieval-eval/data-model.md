@@ -134,7 +134,7 @@ Autonomous entries extend the shared [001 cache contract](../001-shared-core/con
 | `tool_calls` | Non-empty when model invoked tools; `[]` otherwise |
 | `raw_response.verdicts` | list[ModelVerdict] JSON |
 
-**Cardinality**: 6 export subjects × 5 sample indices = 30 committed entries for full offline CI (research R7).
+**Cardinality**: 3 labeled export subjects; 2 with locations × 5 sample indices = 10 committed entries for full offline CI (research R7). `empty-locations-subject` is visited by the sweep but has no cache entries (zero pairing IDs, no model call).
 
 ## Entity relationship diagram
 

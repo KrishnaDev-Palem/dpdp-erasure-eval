@@ -6,7 +6,7 @@
 
 ## Summary
 
-Deliver filesystem-backed retrieval tools under `core/tools/` that mirror T2 location records and T3 retention floors / governance map without pre-loading into context; an autonomous adjudication runner under `runners/autonomous/` that sweeps all six export subjects with request-only (T1-equivalent) initial context, tool-use enabled via an extended `ModelSeam.adjudicate`, and `runner_id=autonomous` cache entries including ordered `tool_calls` traces; and N=5 per-sample aggregate scoring via `core.scoring.score_adjudication` with cross-sample variance. Default execution replays committed cache in offline mode with no live model in CI. Acceptance tests under `tests/autonomous/` are written before implementation and must pass fully offline.
+Deliver filesystem-backed retrieval tools under `core/tools/` that mirror T2 location records and T3 retention floors / governance map without pre-loading into context; an autonomous adjudication runner under `runners/autonomous/` that sweeps all labeled export subjects (3 in the committed export) with request-only (T1-equivalent) initial context, tool-use enabled via an extended `ModelSeam.adjudicate`, and `runner_id=autonomous` cache entries including ordered `tool_calls` traces; and N=5 per-sample aggregate scoring via `core.scoring.score_adjudication` with cross-sample variance. Default execution replays committed cache in offline mode with no live model in CI. Acceptance tests under `tests/autonomous/` are written before implementation and must pass fully offline.
 
 ## Technical Context
 
@@ -18,7 +18,7 @@ Deliver filesystem-backed retrieval tools under `core/tools/` that mirror T2 loc
 **Project Type**: Library-style Python package + retrieval tools module + autonomous runner + committed cache expansion  
 **Performance Goals**: Full autonomous acceptance suite completes in <60s offline on a standard dev machine  
 **Constraints**: No Postgres, no live agent in CI, frozen export/tier/gate modules immutable, `CACHE_MODE=offline` default, N=5 samples only (planning §9), ground-truth isolation on tools and initial context  
-**Scale/Scope**: 6 export subjects × 5 sample indices = 30 autonomous cache entries; 3 retrieval tools; one autonomous runner namespace
+**Scale/Scope**: 3 labeled export subjects (2 with locations requiring cache); 2 × 5 sample indices = 10 autonomous cache entries; 3 retrieval tools; one autonomous runner namespace
 
 ## Constitution Check
 
@@ -29,11 +29,11 @@ Deliver filesystem-backed retrieval tools under `core/tools/` that mirror T2 loc
 | **I. Deterministic Ground Truth** | **PASS** | Runner pairs verdicts against `LabeledLocation.expected` only; tools return business fields without labels; no live agent or Postgres ([001/contracts/frozen-export.md](../001-shared-core/contracts/frozen-export.md)) |
 | **II. Acceptance-Spec Before Implementation** | **PASS** | Contracts in [contracts/](./contracts/); acceptance suite planned under `tests/autonomous/` before implementation tasks in Phase 2 (`tasks.md`) |
 | **III. Frozen-Interface / Frozen-Export Discipline** | **PASS** | No edits to committed `export/`, tier runners, or adversarial gate; additive `core/tools/`, `runners/autonomous/`, cache entries, and tests only (FR-024) |
-| **IV. Reproducibility and Offline Verification** | **PASS** | `uv` + `uv.lock`; default `CACHE_MODE=offline`; 30 committed cache entries for full replay; CI without `MODEL_API_KEY` |
+| **IV. Reproducibility and Offline Verification** | **PASS** | `uv` + `uv.lock`; default `CACHE_MODE=offline`; 10 committed cache entries for full replay; CI without `MODEL_API_KEY` |
 | **V. Vocabulary and Wording Discipline** | **PASS** | Reader-facing *autonomous retrieval evaluation*; developer-facing `autonomous` runner_id; DPDP domain terms; no retired scaffolding terms |
 | **VI. Currency Before Communication** | **PASS** | No new statute claims; retention floors read from committed export only |
 | **VII. Git Flow and Human Merge Gate** | **PASS** | Branch `004-autonomous-retrieval-eval`; PR + human merge; agent does not merge to `main` |
-| **VIII. Dependency and Cost Discipline** | **PASS** | No database/pgvector; no new deps; bounded matrix: 6 subjects × N=5 × 1 runner |
+| **VIII. Dependency and Cost Discipline** | **PASS** | No database/pgvector; no new deps; bounded matrix: 3 labeled subjects, 2 cache-backed × N=5 × 1 runner |
 | **IX. Tracked Artifacts, Not Ephemeral Chat** | **PASS** | spec/plan/research/data-model/contracts/quickstart committed under `specs/004-autonomous-retrieval-eval/` |
 | **X. Stop and Surface Over Silent Choices** | **PASS** | Research resolves tool naming, seam extension, trace schema, cache refresh, and cache cardinality; no unresolved NEEDS CLARIFICATION |
 
@@ -44,7 +44,7 @@ Deliver filesystem-backed retrieval tools under `core/tools/` that mirror T2 loc
 - **No Postgres** — filesystem export and cache only.
 - **No live agent in CI** — default `CACHE_MODE=offline`; refresh path documented in [quickstart.md](./quickstart.md) but excluded from merge gate.
 - **Bounded dependencies** — reuse Feature 001 stack; any addition beyond `pyyaml`/`pydantic` requires PR justification in Complexity Tracking.
-- **Bounded cardinality** — N=5 samples per case (`sample_index` 0–4); one autonomous runner; 6 export subjects; 30 cache entries.
+- **Bounded cardinality** — N=5 samples per case (`sample_index` 0–4); one autonomous runner; 3 labeled export subjects; 10 cache entries (subjects with locations only, matching Feature 002 seeding).
 - **No combinatorial blowup** — cache namespace partitioned by `runner_id` `autonomous`; variance is reporting over five samples, not separate runs.
 - **No tier/gate edits** — tier spine and adversarial gate remain frozen reference implementations.
 
@@ -62,7 +62,7 @@ Constitution Principle II requires acceptance tests before implementation. Phase
 | Config discipline | `test_acceptance_autonomous_config.py` | env-driven `MODEL_ID`, `CACHE_MODE` |
 | Cache offline | `test_acceptance_autonomous_cache_offline.py` | committed cache replay; miss errors |
 | Model seam extension | (covered by runner + cache tests) | optional `tool_registry` on `adjudicate`; `FakeModelSeam` update |
-| Committed cache | (covered by cache offline tests) | 30 entries under `cache/primary/autonomous/` |
+| Committed cache | (covered by cache offline tests) | 10 entries under `cache/primary/autonomous/` |
 
 **Definition of done**: acceptance tests fail for the right reason before autonomous code lands, then pass when the feature completes. Full `tests/autonomous/` suite green offline per SC-001.
 
@@ -99,7 +99,7 @@ core/
 ├── types.py             # add ToolCallTrace, AdjudicationSessionResult
 └── tools/               # NEW
     ├── __init__.py
-    ├── registry.py
+    ├── registry.py      # ToolRegistry Protocol stub (Phase 2); full dispatch in Phase 3
     ├── location_records.py
     ├── retention_floors.py
     └── governance_map.py
@@ -118,7 +118,7 @@ runners/
     └── types.py         # AutonomousSweepConfig, AutonomousSweepResult
 
 export/                  # unchanged committed frozen export
-cache/                   # expanded: 6 subjects × autonomous × sample 0..4
+cache/                   # expanded: 2 location-bearing subjects × autonomous × sample 0..4 (10 entries)
 
 tests/
 ├── core/                # Feature 001 (unchanged)
