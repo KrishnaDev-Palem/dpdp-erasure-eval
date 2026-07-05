@@ -6,7 +6,8 @@ import os
 from dataclasses import dataclass
 from typing import Protocol
 
-from core.types import ClassifierResult, ContextBundle, ModelVerdict
+from core.tools.registry import ToolRegistry
+from core.types import AdjudicationSessionResult, ClassifierResult, ContextBundle, ModelVerdict
 
 
 @dataclass(frozen=True)
@@ -21,7 +22,8 @@ class ModelSeam(Protocol):
         *,
         context: ContextBundle,
         case_id: str,
-    ) -> list[ModelVerdict]: ...
+        tool_registry: ToolRegistry | None = None,
+    ) -> list[ModelVerdict] | AdjudicationSessionResult: ...
 
     def classify_note(
         self,

@@ -22,6 +22,8 @@ pythonpath = ["."]
 markers = [
     "refresh: opt-in cache refresh tests requiring CACHE_MODE=refresh",
     "cache_miss: offline cache miss behavior tests",
+    "context_isolation: context-scoped label isolation tests",
+    "tool_isolation: tool-scoped label isolation tests",
 ]
 
 [tool.ruff]
