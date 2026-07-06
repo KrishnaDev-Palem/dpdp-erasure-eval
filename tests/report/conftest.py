@@ -39,6 +39,7 @@ def cache_dir() -> Path:
 def fake_seam() -> FakeModelSeam:
     return FakeModelSeam()
 
+
 WILSON_Z_95 = 1.96
 WILSON_TOLERANCE = 1e-9
 
@@ -105,9 +106,7 @@ def make_sample_rollups(scoring: AdjudicationScoringResult) -> list[SampleRollup
 
 def make_variance_summary(scoring: AdjudicationScoringResult) -> VarianceSummary:
     def _variance(metric: str, rate: Rate) -> RateVariance:
-        by_sample = [
-            RateAtSample(sample_index=index, rate=rate) for index in range(5)
-        ]
+        by_sample = [RateAtSample(sample_index=index, rate=rate) for index in range(5)]
         return RateVariance(
             metric=metric,  # type: ignore[arg-type]
             by_sample=by_sample,

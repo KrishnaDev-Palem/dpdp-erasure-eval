@@ -135,9 +135,7 @@ def main(argv: list[str] | None = None) -> int:
         "t1": lambda: _run_adjudication_command(run_sweep=run_t1_sweep, args=args),
         "t2": lambda: _run_adjudication_command(run_sweep=run_t2_sweep, args=args),
         "t3": lambda: _run_adjudication_command(run_sweep=run_t3_sweep, args=args),
-        "autonomous": lambda: _run_adjudication_command(
-            run_sweep=run_autonomous_sweep, args=args
-        ),
+        "autonomous": lambda: _run_adjudication_command(run_sweep=run_autonomous_sweep, args=args),
         "adversarial-gate": lambda: _run_gate_command(args),
     }
     return dispatch[args.command]()
