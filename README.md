@@ -12,12 +12,27 @@ adversarial scoring primitives, and T1/T2/T3 context assembly.
 ```bash
 git clone https://github.com/KrishnaDev-Palem/dpdp-erasure-eval.git
 cd dpdp-erasure-eval
-git checkout 001-shared-core
 uv sync --all-extras
-uv run pytest tests/core -v
+uv run pytest -v
 ```
 
 No `MODEL_API_KEY` is required. CI runs the same path in offline mode.
+
+## Running evaluations
+
+The `dpdp-eval` CLI runs each evaluation sweep from committed cache and emits
+adjudication or gate report tables (human-readable stdout, optional `--json`):
+
+```bash
+uv run dpdp-eval t1 --json
+uv run dpdp-eval t2
+uv run dpdp-eval t3
+uv run dpdp-eval autonomous --json
+uv run dpdp-eval adversarial-gate --json
+```
+
+Use `--sample-index N` (0..4, default 0) to select the primary rate table sample.
+See [`specs/005-cli-adjudication-report/quickstart.md`](specs/005-cli-adjudication-report/quickstart.md).
 
 ## Tier runners (Feature 002)
 

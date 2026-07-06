@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main, "001-*"]
+    branches: [main, "[0-9][0-9][0-9]-*"]
   pull_request:
-    branches: [main, "001-*"]
+    branches: [main, "[0-9][0-9][0-9]-*"]
 
 jobs:
   test:
@@ -20,7 +20,7 @@ jobs:
         run: uv run ruff check .
       - name: Ruff format
         run: uv run ruff format --check .
-      - name: Pytest core acceptance suite
-        run: uv run pytest tests/core -v
+      - name: Pytest full acceptance suite
+        run: uv run pytest -v
         env:
           CACHE_MODE: offline
