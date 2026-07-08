@@ -15,6 +15,13 @@ from report.wilson import wilson_interval
 from runners.autonomous.types import AutonomousSweepResult
 from runners.types import RateVariance, SampleRollup, TierSweepResult
 
+READER_FACING_TIER_NAMES: dict[str, str] = {
+    "t1": "request-only",
+    "t2": "records-augmented",
+    "t3": "rule-augmented",
+    "autonomous": "autonomous retrieval",
+}
+
 
 def _wrap_rate(rate: Rate, *, confidence_level: float) -> RateWithCI:
     interval = (
@@ -52,6 +59,10 @@ def _tier_label(result: TierSweepResult | AutonomousSweepResult) -> str:
     if isinstance(result, TierSweepResult):
         return result.tier
     return result.runner_id
+
+
+def _reader_facing_tier_name(tier: str) -> str:
+    return READER_FACING_TIER_NAMES.get(tier, tier)
 
 
 def build_tier_adjudication_report(
@@ -125,8 +136,9 @@ def build_cross_tier_comparison(
 
 def format_adjudication_report(tables: TierAdjudicationReportTables) -> str:
     """Render human-readable adjudication report tables."""
+    tier_name = _reader_facing_tier_name(tables.tier)
     lines: list[str] = [
-        f"Adjudication report — {tables.tier} (sample {tables.primary_sample_index})",
+        f"Adjudication report — {tier_name} (sample {tables.primary_sample_index})",
         f"Model: {tables.model_id}  Cache: {tables.cache_mode}",
         "",
         "Primary rates (Wilson 95% CI):",

@@ -170,3 +170,23 @@ def test_cross_tier_rates_match_embedded_scoring(
         assert row.over_erasure.rate.numerator == scoring.over_erasure_rate.numerator
         assert row.over_retention.rate.numerator == scoring.over_retention_rate.numerator
         assert row.mis_escalation.rate.numerator == scoring.mis_escalation_rate.numerator
+
+
+def test_cross_tier_comparison_uses_requested_sample_index(
+    fake_seam: FakeModelSeam,
+    export_dir,
+    cache_dir,
+) -> None:
+    t1 = run_t1_sweep(seam=fake_seam, export_dir=export_dir, cache_root=cache_dir)
+    t2 = run_t2_sweep(seam=fake_seam, export_dir=export_dir, cache_root=cache_dir)
+    t3 = run_t3_sweep(seam=fake_seam, export_dir=export_dir, cache_root=cache_dir)
+    autonomous = run_autonomous_sweep(seam=fake_seam, export_dir=export_dir, cache_root=cache_dir)
+    sample_index = 2
+    comparison = build_cross_tier_comparison(t1, t2, t3, autonomous, sample_index=sample_index)
+    assert comparison.sample_index == sample_index
+    sweeps = {"t1": t1, "t2": t2, "t3": t3, "autonomous": autonomous}
+    for row in comparison.rows:
+        scoring = sweeps[row.tier].samples[sample_index].scoring
+        assert row.over_erasure.rate.numerator == scoring.over_erasure_rate.numerator
+        assert row.over_retention.rate.numerator == scoring.over_retention_rate.numerator
+        assert row.mis_escalation.rate.numerator == scoring.mis_escalation_rate.numerator
