@@ -31,4 +31,4 @@
 
 ## Notes
 
-- Validation pass (iteration 1): All checklist items pass. FR sections reference module paths and function names consistent with Features 002–004 project convention; those anchors live in the Requirements section for contract traceability, not in Success Criteria. Wilson interval parameters defer to the existing gate-report pattern (95% confidence). Cross-tier CLI orchestration is explicitly out of scope; comparison is a report-layer function tested via acceptance suite. Existing partial artifacts preserved: `quickstart.md`, `contracts/adjudication-report.md`.
+- Validation pass (iteration 2, post-clarify 2026-07-07): All checklist items pass. Session clarifications integrated: `--output` JSON-always, library-only cross-tier, human stdout sections, explicit merge gate `uv run pytest tests/report tests/cli -v`, contract full-sync deferred to plan (FR-021). FR sections reference module paths and function names consistent with Features 002–004 project convention.
