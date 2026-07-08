@@ -88,6 +88,34 @@ def test_zero_denominator_rates_have_null_value_and_interval() -> None:
         assert rate_ci.rate.value is None
         assert rate_ci.interval is None
 
+    dumped = report.model_dump(mode="json")
+    for key in ("over_erasure", "over_retention", "mis_escalation"):
+        assert dumped["primary_metrics"][key]["rate"]["value"] is None
+        assert dumped["primary_metrics"][key]["interval"] is None
+
+
+def test_zero_denominator_human_stdout_shows_null() -> None:
+    from report.adjudication_tables import format_adjudication_report
+    from runners.types import TierSweepResult
+    from tests.report.conftest import make_sample_rollups, make_variance_summary
+
+    scoring = make_zero_denominator_adjudication_scoring()
+    sweep = TierSweepResult(
+        tier="t1",
+        runner_id="t1",
+        model_id="primary",
+        cache_mode="offline",
+        export_agent_sha="b" * 40,
+        samples=make_sample_rollups(scoring),
+        variance=make_variance_summary(scoring),
+    )
+    report = build_tier_adjudication_report(sweep)
+    human = format_adjudication_report(report)
+
+    for label in ("Over-erasure", "Over-retention", "Mis-escalation"):
+        line = next(ln for ln in human.splitlines() if label in ln)
+        assert "null" in line, f"expected null rate display for {label}, got: {line!r}"
+
 
 def test_tier_report_includes_confusion_matrix_and_five_sample_rollups() -> None:
     sweep = make_tier_sweep_result()

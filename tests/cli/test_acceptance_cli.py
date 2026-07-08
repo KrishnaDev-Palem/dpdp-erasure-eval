@@ -71,11 +71,47 @@ def test_adversarial_gate_subcommand_exits_zero_and_emits_json_keys() -> None:
     assert set(payload.keys()) >= GATE_JSON_KEYS
 
 
-def test_cli_human_output_when_json_not_set() -> None:
+def test_cli_adjudication_human_stdout_includes_required_sections() -> None:
     result = _run_cli("t1")
     assert result.returncode == 0, result.stderr
-    assert "Adjudication report" in result.stdout
-    assert "Over-erasure" in result.stdout
+    for marker in (
+        "Adjudication report",
+        "Over-erasure",
+        "Over-retention",
+        "Mis-escalation",
+        "Confusion matrix",
+        "Cross-sample variance",
+    ):
+        assert marker in result.stdout
+
+
+def test_cli_adjudication_human_stdout_section_order() -> None:
+    result = _run_cli("t1")
+    assert result.returncode == 0, result.stderr
+    out = result.stdout
+
+    title = out.index("Adjudication report")
+    rates_hdr = out.index("Primary rates (Wilson 95% CI)")
+    over_erasure = out.index("Over-erasure")
+    over_retention = out.index("Over-retention")
+    mis_escalation = out.index("Mis-escalation")
+    confusion = out.index("Confusion matrix")
+    variance = out.index("Cross-sample variance")
+
+    assert title < rates_hdr < over_erasure < over_retention < mis_escalation < confusion < variance
+    assert "sample_rollups" not in out
+
+
+def test_cli_gate_human_stdout_includes_required_sections() -> None:
+    result = _run_cli("adversarial-gate")
+    assert result.returncode == 0, result.stderr
+    for marker in (
+        "Adversarial gate report",
+        "Overall rates",
+        "Detection",
+        "False-alarm",
+    ):
+        assert marker in result.stdout
 
 
 def test_cli_output_writes_json_file(tmp_path: Path) -> None:
@@ -91,3 +127,35 @@ def test_cli_sample_index_flag() -> None:
     assert result.returncode == 0, result.stderr
     payload = json.loads(result.stdout)
     assert payload["primary_sample_index"] == 2
+
+
+def test_cli_cache_root_override_uses_custom_path(tmp_path: Path) -> None:
+    empty_cache = tmp_path / "empty_cache"
+    empty_cache.mkdir()
+    result = _run_cli("t1", "--cache-root", str(empty_cache))
+    assert result.returncode != 0
+    combined = (result.stderr + result.stdout).lower()
+    assert "cache" in combined or "miss" in combined
+
+
+def test_cli_export_dir_override_uses_custom_path(tmp_path: Path) -> None:
+    bad_export = tmp_path / "bad_export"
+    bad_export.mkdir()
+    result = _run_cli("t1", "--export-dir", str(bad_export))
+    assert result.returncode != 0
+    combined = (result.stderr + result.stdout).lower()
+    assert "export" in combined or "provenance" in combined or "manifest" in combined
+
+
+def test_cli_explicit_paths_match_defaults() -> None:
+    result = _run_cli(
+        "t1",
+        "--export-dir",
+        str(REPO_ROOT / "export"),
+        "--cache-root",
+        str(REPO_ROOT / "cache"),
+        "--json",
+    )
+    assert result.returncode == 0, result.stderr
+    payload = json.loads(result.stdout)
+    assert payload["tier"] == "t1"

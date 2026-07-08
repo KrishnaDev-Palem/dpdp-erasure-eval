@@ -44,7 +44,7 @@ unset MODEL_API_KEY
 uv run pytest tests/report tests/cli -v
 ```
 
-**Expected**: All tests pass (16 tests as of plan date). No network calls. No API key warnings. Covers Wilson parity, rate fidelity, zero-denominator nulls, confusion matrix and five rollups, prohibited-field absence, four-row cross-tier comparison, offline CLI subcommands, JSON schema keys, human section headers, `--output` JSON file write, and `--sample-index`.
+**Expected**: All tests pass (22 tests). No network calls. No API key warnings. Covers Wilson parity, rate fidelity, zero-denominator nulls, confusion matrix and five rollups, prohibited-field absence, four-row cross-tier comparison, offline CLI subcommands, JSON schema keys, human section headers, `--output` JSON file write, `--sample-index`, `--export-dir` / `--cache-root` override behavior, adjudication human stdout section order, and zero-denominator `null` in human report output.
 
 ## Run all five CLI subcommands (offline)
 

@@ -47,17 +47,18 @@
 - [ ] T004 [P] Create or align `tests/cli/` harness: repo-root subprocess helper, offline env autouse fixture (`CACHE_MODE=offline`, no `MODEL_API_KEY`), and shared JSON key sets in `tests/cli/test_acceptance_cli.py` (FR-016)
 - [ ] T005 [P] [US4] Write failing `tests/report/test_acceptance_adjudication_report.py::test_wilson_bounds_match_hand_calculated_adjudication_fixture` asserting `report/wilson.py` bounds match independent hand calculation within `1e-9` — **SC-003 MUST live here in bootstrap, not post-implementation** (FR-003, SC-003)
 - [ ] T006 [P] [US4] Write failing `test_tier_report_rates_match_scoring_numerators` and `test_tier_report_wilson_intervals_match_hand_calculated` in `tests/report/test_acceptance_adjudication_report.py` for built-report rate fidelity and Wilson parity on all three standalone rates (FR-004, SC-003, SC-004)
-- [ ] T007 [P] [US4] Write failing `test_zero_denominator_rates_have_null_value_and_interval` in `tests/report/test_acceptance_adjudication_report.py` asserting `rate.value` and `interval` are both `null` when denominator is zero (FR-005, SC-007)
+- [ ] T007 [P] [US4] Write failing zero-denominator tests in `tests/report/test_acceptance_adjudication_report.py`: (a) `test_zero_denominator_rates_have_null_value_and_interval` — built report JSON/`model_dump` has `rate.value` and `interval` both `null` for all three standalone rates; (b) `test_zero_denominator_human_stdout_shows_null` — `format_adjudication_report(report)` human lines for `Over-erasure`, `Over-retention`, and `Mis-escalation` each contain the literal `null` (FR-005, SC-007)
 - [ ] T008 [P] [US1] Write failing `test_tier_report_includes_confusion_matrix_and_five_sample_rollups` in `tests/report/test_acceptance_adjudication_report.py` asserting confusion matrix passthrough, exactly five rollups (indices 0–4), and variance passthrough unchanged (FR-002, US1 scenarios 2–4)
 - [ ] T009 [P] [US4] Write failing `test_tier_report_no_blended_accuracy` in `tests/report/test_acceptance_adjudication_report.py` asserting prohibited fields (`accuracy`, `micro_f1`, `blended_score`, `blended_accuracy`) absent from serialized output (FR-006, SC-006)
 - [ ] T010 [P] [US2] Write failing `test_cross_tier_comparison_includes_all_four_runners` and `test_cross_tier_rates_match_embedded_scoring` in `tests/report/test_acceptance_adjudication_report.py` asserting four rows (t1, t2, t3, autonomous), sample-consistent metrics, and rate numerator fidelity (FR-007, SC-005)
 - [ ] T011 [P] [US2] Write failing cross-tier `sample_index` consistency test in `tests/report/test_acceptance_adjudication_report.py` asserting `build_cross_tier_comparison(..., sample_index=N)` uses sample N from all four sweeps (FR-007, US2 scenario 2)
 - [ ] T012 [P] [US3] Write failing parametrized `test_adjudication_subcommand_exits_zero_and_emits_json_keys` for `t1`, `t2`, `t3`, `autonomous` in `tests/cli/test_acceptance_cli.py` asserting offline exit 0 and required adjudication JSON keys per contracts/cli.md (FR-009, FR-012, FR-013, SC-002)
 - [ ] T013 [P] [US3] Write failing `test_adversarial_gate_subcommand_exits_zero_and_emits_json_keys` in `tests/cli/test_acceptance_cli.py` asserting gate JSON keys (`detection`, `false_alarm`, `per_family`, `sample_index`) via existing Feature 003 builders — not reimplemented (FR-011, SC-002)
-- [ ] T014 [P] [US3] Write failing human stdout tests in `tests/cli/test_acceptance_cli.py`: adjudication sections (`Adjudication report`, `Over-erasure`, `Over-retention`, `Mis-escalation`, `Confusion matrix`, `Cross-sample variance`) and gate headers (`Adversarial gate report`, `Overall rates`, `Detection`, `False-alarm`) (FR-010, FR-011)
+- [ ] T014 [P] [US3] Write failing human stdout tests in `tests/cli/test_acceptance_cli.py`: (a) `test_cli_adjudication_human_stdout_includes_required_sections` — presence of `Adjudication report`, `Over-erasure`, `Over-retention`, `Mis-escalation`, `Confusion matrix`, `Cross-sample variance`; (b) `test_cli_adjudication_human_stdout_section_order` — `stdout.index()` proves strict order: title (`Adjudication report`) → primary rates header (`Primary rates (Wilson 95% CI)`) → `Over-erasure` → `Over-retention` → `Mis-escalation` → confusion header (`Confusion matrix`) → variance header (`Cross-sample variance`); five sample rollups MUST NOT appear in stdout; (c) gate headers (`Adversarial gate report`, `Overall rates`, `Detection`, `False-alarm`) (FR-010, FR-011)
 - [ ] T015 [P] [US3] Write failing reader-facing vocabulary test in `tests/cli/test_acceptance_cli.py` asserting human title uses evaluation names (`request-only`, `records-augmented`, `rule-augmented`, `autonomous retrieval`) not bare developer ids (`t1`, `t2`, …) per FR-019 (FR-019)
 - [ ] T016 [P] [US3] Write failing `test_cli_output_writes_json_file` in `tests/cli/test_acceptance_cli.py` asserting `--output PATH` writes JSON while stdout stays human-readable without `--json`; add combined `--json --output` parity test (FR-012)
 - [ ] T017 [P] [US3] Write failing `test_cli_sample_index_flag` and invalid `--sample-index 9` argparse rejection test in `tests/cli/test_acceptance_cli.py` (FR-012, spec edge case)
+- [ ] T044 [P] [US3] Write failing `test_cli_export_dir_and_cache_root_override` in `tests/cli/test_acceptance_cli.py`: (a) `dpdp-eval t1 --cache-root <empty_tmp>` exits non-zero with cache-miss or cache-path error (proves custom cache root is honored, not default); (b) `dpdp-eval t1 --export-dir <invalid_tmp>` exits non-zero with export/provenance error (proves custom export dir is honored); (c) `dpdp-eval t1 --export-dir <repo_export> --cache-root <repo_cache>` exits 0 — sanity that explicit valid paths match default behavior (FR-012, US3 scenario 7)
 - [ ] T018 [P] [US4] Write failing config-discipline test in `tests/cli/test_acceptance_cli.py` asserting `MODEL_ID` and `CACHE_MODE` from environment appear in report metadata (`model_id`, `cache_mode`) — not hardcoded literals (FR-014, US4 scenario 5)
 - [ ] T019 [P] [US3] Write failing `--output` non-writable parent directory error test in `tests/cli/test_acceptance_cli.py` asserting clear path-named error and non-zero exit (spec edge case, contracts/cli.md)
 - [ ] T020 [P] [US3] Write failing deterministic replay test in `tests/cli/test_acceptance_cli.py` asserting identical JSON from two consecutive offline runs of the same subcommand (SC-009)
@@ -85,7 +86,7 @@ uv run pytest tests/report tests/cli -v --tb=short
 
 ### Tests (already written in Phase 1 — confirm still failing until implementation)
 
-> Tests T005–T020 MUST remain red until T022–T024 land. Do not implement `build_tier_adjudication_report` or CLI dispatch in this phase.
+> Tests T005–T020 and T044 MUST remain red until T022–T024 land. Do not implement `build_tier_adjudication_report` or CLI dispatch in this phase.
 
 ### Implementation for Foundational Layer
 
@@ -118,7 +119,7 @@ uv run pytest tests/report/test_acceptance_adjudication_report.py::test_wilson_b
 ### Implementation for User Story 1
 
 - [ ] T025 [US1] Implement or align `build_tier_adjudication_report` in `report/adjudication_tables.py` per contracts/adjudication-report.md: `primary_metrics` and `confusion_matrix` from `sample_index`; all five `sample_rollups`; `variance` passthrough; no rate re-derivation (FR-002, FR-004)
-- [ ] T026 [US1] Implement or align `format_adjudication_report` in `report/adjudication_tables.py` with required human sections in order (title with reader-facing tier name + sample index, primary Wilson rate rows, confusion matrix, cross-sample variance); omit five rollups from human stdout (FR-010, FR-019)
+- [ ] T026 [US1] Implement or align `format_adjudication_report` in `report/adjudication_tables.py` with required human sections in order (title with reader-facing tier name + sample index, primary Wilson rate rows, confusion matrix, cross-sample variance); omit five rollups from human stdout; zero-denominator human lines render literal `null` per `_format_rate_ci`; section order matches FR-010 contract headers used by T014 order test (FR-010, FR-019, SC-007)
 - [ ] T027 [US1] Export adjudication builders and formatters from `report/__init__.py` (FR-001)
 
 **Checkpoint (US1 — adjudication report tables green)**:
@@ -173,7 +174,7 @@ uv run pytest tests/report/test_acceptance_adjudication_report.py -v -k cross_ti
 ### Implementation for User Story 3
 
 - [ ] T030 [P] [US3] Implement or align `cli/main.py` argparse subparsers for `t1`, `t2`, `t3`, `autonomous`, `adversarial-gate` with `_add_common_args` (`--json`, `--output`, `--sample-index`, `--export-dir`, `--cache-root`) per contracts/cli.md (FR-008, FR-009, FR-012)
-- [ ] T031 [US3] Implement or align `_run_adjudication_command` and `_emit_report` in `cli/main.py`: runner dispatch → `build_tier_adjudication_report` → human or JSON emit; `--output` always writes JSON regardless of `--json` (FR-009, FR-010, FR-012)
+- [ ] T031 [US3] Implement or align `_run_adjudication_command` and `_emit_report` in `cli/main.py`: runner dispatch → `build_tier_adjudication_report` → human or JSON emit; `--output` always writes JSON regardless of `--json`; pass `export_dir` and `cache_root` from parsed args to tier/autonomous runners (gate: `cache_root` at minimum) without hardcoded defaults when flags are set (FR-009, FR-010, FR-012)
 - [ ] T032 [US3] Implement or align `_run_gate_command` in `cli/main.py` wiring `run_adversarial_gate_sweep` → `build_gate_report` → `format_gate_report` without duplicating gate layout (FR-011)
 - [ ] T033 [US3] Fix `--output` help text and add non-writable parent directory validation with clear path-named error in `cli/main.py` per contracts/cli.md and research R8 (FR-012)
 - [ ] T034 [US3] Register or verify `dpdp-eval = cli.main:main` console script in `pyproject.toml` (FR-008)
@@ -265,7 +266,7 @@ Phase 7 Polish
 
 | Story | Priority | Depends On | Delivers |
 |-------|----------|------------|----------|
-| US4 | P2 | Phase 1 only | Failing acceptance suite before implementation (T005–T020) |
+| US4 | P2 | Phase 1 only | Failing acceptance suite before implementation (T005–T020, T044) |
 | US1 | P1 | Phase 2 types + wrap | Adjudication report tables + human formatter (T025–T027) |
 | US2 | P1 | Phase 3 US1 green | Cross-tier comparison library (T028–T029) |
 | US3 | P1 | Phase 3 US1 green | `dpdp-eval` CLI for all five evaluations (T030–T034) |
@@ -273,7 +274,7 @@ Phase 7 Polish
 
 ### Critical Sequencing Rules
 
-1. **Test-first (Principle II)**: T005–T020 (all acceptance tests) MUST complete before T022–T034 (report/CLI implementation).
+1. **Test-first (Principle II)**: T005–T020 and T044 (all acceptance tests) MUST complete before T022–T034 (report/CLI implementation).
 2. **SC-003 at bootstrap**: Hand-calculated Wilson parity for adjudication rates MUST be written in T005–T006 (Phase 1), **not** added after `build_tier_adjudication_report` lands.
 3. **Types before builders**: T022–T023 MUST complete before T025 `build_tier_adjudication_report`.
 4. **Single-sweep before cross-tier**: T025 MUST complete before T028 `build_cross_tier_comparison`.
@@ -297,11 +298,11 @@ Phase 7 Polish
 | FR-009 (five CLI subcommands) | T012, T030, T031, T032 |
 | FR-010 (adjudication human stdout sections) | T014, T026, T031 |
 | FR-011 (gate formatter reuse) | T013, T032 |
-| FR-012 (CLI flags semantics) | T016, T017, T030, T031, T033 |
+| FR-012 (CLI flags semantics) | T016, T017, T044, T030, T031, T033 |
 | FR-013 (offline CI merge gate) | T021, T037 |
 | FR-014 (env MODEL_ID, CACHE_MODE) | T018, T031 |
 | FR-015 (report acceptance suite) | T003, T005–T011 |
-| FR-016 (CLI acceptance suite) | T004, T012–T020 |
+| FR-016 (CLI acceptance suite) | T004, T012–T020, T044 |
 | FR-017 (quickstart guide) | T035, T036 |
 | FR-018 (feature branch only) | All tasks on `005-cli-adjudication-report` |
 | FR-019 (vocabulary discipline) | T015, T026, T038 |
@@ -309,11 +310,11 @@ Phase 7 Polish
 | FR-021 (contracts synced with spec) | T025, T030 (reference contracts/adjudication-report.md, contracts/cli.md) |
 | SC-001 (offline merge gate green) | T021, T037 |
 | SC-002 (five CLI subcommands exit 0) | T012, T013, T035 |
-| SC-003 (Wilson bounds match fixtures) | T005, T006, T026 |
+| SC-003 (Wilson bounds match fixtures) | T005, T006 |
 | SC-004 (rate numerator/denominator fidelity) | T006, T025 |
 | SC-005 (four-row cross-tier table) | T010, T011, T028 |
 | SC-006 (no blended accuracy fields) | T009, T039 |
-| SC-007 (zero-denominator null serialization) | T007, T023 |
+| SC-007 (zero-denominator null serialization) | T007, T023, T026 |
 | SC-008 (quickstart under 10 min) | T035 |
 | SC-009 (deterministic CLI replay) | T020, T042 |
 | SC-010 (CI pytest without secrets) | T037, T043 |
@@ -341,6 +342,7 @@ T014 human stdout section tests
 T015 reader-facing vocabulary test
 T016 test_cli_output_writes_json_file
 T017 test_cli_sample_index_flag + invalid index
+T044 test_cli_export_dir_and_cache_root_override
 T018 config-discipline test
 T019 --output non-writable path test
 T020 deterministic replay test
@@ -409,9 +411,9 @@ After Phase 3, Developer A wires CLI adjudication dispatch (T031) while Develope
 ## Notes
 
 - [P] tasks = different files, no dependencies on incomplete tasks in the same batch
-- US4 acceptance-suite-before-implementation is satisfied by Phase 1 tasks T005–T020 preceding all implementation (T022–T034)
+- US4 acceptance-suite-before-implementation is satisfied by Phase 1 tasks T005–T020 and T044 preceding all implementation (T022–T034)
 - **SC-003 bootstrap rule**: Wilson hand-calculated parity MUST NOT be deferred to post-implementation polish — it belongs in T005–T006
 - Extend `report/` additively beside Feature 003 gate modules; do not modify `core/`, tier runners, autonomous runner, gate runner, or `export/` (FR-020)
 - Cross-tier comparison is library-only — no `compare-tiers` CLI subcommand in v1 (FR-007)
 - Refresh path (`CACHE_MODE=refresh`) remains available via runners but is not CI-gated (FR-013)
-- Total tasks: **43** (Bootstrap 21, Foundational 3, US1 3, US2 2, US3 5, US5 2, Polish 7)
+- Total tasks: **44** (Bootstrap 22, Foundational 3, US1 3, US2 2, US3 5, US5 2, Polish 7)
