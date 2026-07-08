@@ -44,7 +44,7 @@ unset MODEL_API_KEY
 uv run pytest tests/report tests/cli -v
 ```
 
-**Expected**: All tests pass (22 tests). No network calls. No API key warnings. Covers Wilson parity, rate fidelity, zero-denominator nulls, confusion matrix and five rollups, prohibited-field absence, four-row cross-tier comparison, offline CLI subcommands, JSON schema keys, human section headers, `--output` JSON file write, `--sample-index`, `--export-dir` / `--cache-root` override behavior, adjudication human stdout section order, and zero-denominator `null` in human report output.
+**Expected**: All tests pass (38 tests). No network calls. No API key warnings. Covers Wilson parity, rate fidelity, zero-denominator nulls, confusion matrix and five rollups, prohibited-field absence, four-row cross-tier comparison, offline CLI subcommands, JSON schema keys, human section headers, `--output` JSON file write, `--sample-index`, `--export-dir` / `--cache-root` override behavior, adjudication human stdout section order, and zero-denominator `null` in human report output.
 
 ## Run all five CLI subcommands (offline)
 
@@ -137,7 +137,7 @@ uv run pytest tests/report/test_acceptance_adjudication_report.py::test_zero_den
 ## Spot-check: CLI human output sections
 
 ```bash
-uv run pytest tests/cli/test_acceptance_cli.py::test_cli_human_output_when_json_not_set -v
+uv run pytest tests/cli/test_acceptance_cli.py::test_cli_adjudication_human_stdout_includes_required_sections -v
 ```
 
 **Expected**: Human stdout contains `Adjudication report` and `Over-erasure`.

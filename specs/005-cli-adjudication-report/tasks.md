@@ -417,3 +417,16 @@ After Phase 3, Developer A wires CLI adjudication dispatch (T031) while Develope
 - Cross-tier comparison is library-only — no `compare-tiers` CLI subcommand in v1 (FR-007)
 - Refresh path (`CACHE_MODE=refresh`) remains available via runners but is not CI-gated (FR-013)
 - Total tasks: **44** (Bootstrap 22, Foundational 3, US1 3, US2 2, US3 5, US5 2, Polish 7)
+
+---
+
+## Phase 8: Convergence
+
+**Purpose**: Close spec/plan/test/documentation gaps found by `/speckit-converge` after Phase 7 completion. All merge-gate tests were green (32 passing) but several acceptance scenarios and docs were only partially satisfied.
+
+- [X] T045 [US5] Fix `specs/005-cli-adjudication-report/quickstart.md` spot-check test name (`test_cli_adjudication_human_stdout_includes_required_sections` not `test_cli_human_output_when_json_not_set`) and update merge-gate expected test count to 38 per FR-017 (partial)
+- [X] T046 [US2] Add `test_cross_tier_zero_denominator_rates_null` in `tests/report/test_acceptance_adjudication_report.py` asserting cross-tier rows emit `null` value and interval when denominator is zero at the selected sample per US2/AC4 and FR-005 (missing)
+- [X] T047 [US1] Strengthen `test_tier_report_includes_confusion_matrix_and_five_sample_rollups` to assert exact `confusion_matrix` cell passthrough and `report.variance == sweep.variance` per US1/AC2 and US1/AC4 (partial)
+- [X] T048 [US3] Add parametrized `test_cli_json_no_blended_accuracy_fields` in `tests/cli/test_acceptance_cli.py` asserting prohibited fields absent from JSON for all five subcommands per SC-006 and FR-006 (partial)
+- [X] T049 [US3] Extend `test_cli_sample_index_flag` to assert `len(sample_rollups) == 5` while `primary_sample_index` reflects `--sample-index` per US3/AC4 (partial)
+- [X] T050 [US5] Add feature merge-gate command `uv run pytest tests/report tests/cli -v` to repository `README.md` beside existing quick start per FR-017 (partial)

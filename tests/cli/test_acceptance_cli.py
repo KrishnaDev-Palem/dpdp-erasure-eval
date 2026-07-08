@@ -138,6 +138,7 @@ def test_cli_sample_index_flag() -> None:
     assert result.returncode == 0, result.stderr
     payload = json.loads(result.stdout)
     assert payload["primary_sample_index"] == 2
+    assert len(payload["sample_rollups"]) == 5
 
 
 def test_cli_cache_root_override_uses_custom_path(tmp_path: Path) -> None:
@@ -233,6 +234,20 @@ def test_cli_output_non_writable_parent_fails(tmp_path: Path) -> None:
     assert result.returncode != 0
     combined = result.stderr + result.stdout
     assert "missing_parent" in combined or str(bad_path) in combined
+
+
+@pytest.mark.parametrize(
+    "subcommand",
+    ["t1", "t2", "t3", "autonomous", "adversarial-gate"],
+)
+def test_cli_json_no_blended_accuracy_fields(subcommand: str) -> None:
+    result = _run_cli(subcommand, "--json")
+    assert result.returncode == 0, result.stderr
+    payload = json.loads(result.stdout)
+    prohibited = ("accuracy", "micro_f1", "blended_score", "blended_accuracy")
+    dumped = json.dumps(payload)
+    for field in prohibited:
+        assert f'"{field}"' not in dumped
 
 
 def test_cli_deterministic_replay() -> None:
