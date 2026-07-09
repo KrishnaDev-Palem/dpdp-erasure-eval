@@ -16,6 +16,12 @@ uv sync --all-extras
 uv run pytest -v
 ```
 
+Feature 005 merge gate (report + CLI only):
+
+```bash
+uv run pytest tests/report tests/cli -v
+```
+
 No `MODEL_API_KEY` is required. CI runs the same path in offline mode.
 
 ## Running evaluations

@@ -29,7 +29,7 @@ def _add_common_args(parser: argparse.ArgumentParser) -> None:
         "--output",
         type=Path,
         default=None,
-        help="Write JSON report to PATH (in addition to stdout when --json is set)",
+        help="Write JSON report to PATH (always JSON, regardless of --json)",
     )
     parser.add_argument(
         "--sample-index",
@@ -50,6 +50,18 @@ def _add_common_args(parser: argparse.ArgumentParser) -> None:
         default=None,
         help="Path to cache root (default: cache/)",
     )
+
+
+def _validate_output_path(output_path: Path) -> None:
+    parent = output_path.parent
+    if not parent.exists():
+        raise argparse.ArgumentTypeError(
+            f"cannot write to {output_path}: parent directory does not exist"
+        )
+    if output_path.exists() and not output_path.is_file():
+        raise argparse.ArgumentTypeError(
+            f"cannot write to {output_path}: path exists and is not a file"
+        )
 
 
 def _emit_report(
@@ -108,13 +120,13 @@ def main(argv: list[str] | None = None) -> int:
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    t1_parser = subparsers.add_parser("t1", help="Run T1 request-only tier sweep")
+    t1_parser = subparsers.add_parser("t1", help="Run request-only (T1) tier sweep")
     _add_common_args(t1_parser)
 
-    t2_parser = subparsers.add_parser("t2", help="Run T2 records-augmented tier sweep")
+    t2_parser = subparsers.add_parser("t2", help="Run records-augmented (T2) tier sweep")
     _add_common_args(t2_parser)
 
-    t3_parser = subparsers.add_parser("t3", help="Run T3 rule-augmented tier sweep")
+    t3_parser = subparsers.add_parser("t3", help="Run rule-augmented (T3) tier sweep")
     _add_common_args(t3_parser)
 
     autonomous_parser = subparsers.add_parser(
@@ -130,6 +142,13 @@ def main(argv: list[str] | None = None) -> int:
     _add_common_args(gate_parser)
 
     args = parser.parse_args(argv)
+
+    if args.output is not None:
+        try:
+            _validate_output_path(args.output)
+        except argparse.ArgumentTypeError as exc:
+            print(f"error: {exc}", file=sys.stderr)
+            return 1
 
     dispatch: dict[str, Any] = {
         "t1": lambda: _run_adjudication_command(run_sweep=run_t1_sweep, args=args),

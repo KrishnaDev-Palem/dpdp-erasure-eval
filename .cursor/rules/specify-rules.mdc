@@ -5,5 +5,5 @@ alwaysApply: true
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/004-autonomous-retrieval-eval/plan.md
+at specs/005-cli-adjudication-report/plan.md
 <!-- SPECKIT END -->

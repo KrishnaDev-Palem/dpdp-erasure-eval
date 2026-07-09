@@ -88,12 +88,43 @@ def test_zero_denominator_rates_have_null_value_and_interval() -> None:
         assert rate_ci.rate.value is None
         assert rate_ci.interval is None
 
+    dumped = report.model_dump(mode="json")
+    for key in ("over_erasure", "over_retention", "mis_escalation"):
+        assert dumped["primary_metrics"][key]["rate"]["value"] is None
+        assert dumped["primary_metrics"][key]["interval"] is None
+
+
+def test_zero_denominator_human_stdout_shows_null() -> None:
+    from report.adjudication_tables import format_adjudication_report
+    from runners.types import TierSweepResult
+    from tests.report.conftest import make_sample_rollups, make_variance_summary
+
+    scoring = make_zero_denominator_adjudication_scoring()
+    sweep = TierSweepResult(
+        tier="t1",
+        runner_id="t1",
+        model_id="primary",
+        cache_mode="offline",
+        export_agent_sha="b" * 40,
+        samples=make_sample_rollups(scoring),
+        variance=make_variance_summary(scoring),
+    )
+    report = build_tier_adjudication_report(sweep)
+    human = format_adjudication_report(report)
+
+    for label in ("Over-erasure", "Over-retention", "Mis-escalation"):
+        line = next(ln for ln in human.splitlines() if label in ln)
+        assert "null" in line, f"expected null rate display for {label}, got: {line!r}"
+
 
 def test_tier_report_includes_confusion_matrix_and_five_sample_rollups() -> None:
     sweep = make_tier_sweep_result()
     report = build_tier_adjudication_report(sweep, sample_index=0)
+    primary_scoring = sweep.samples[0].scoring
+    assert report.confusion_matrix == primary_scoring.confusion_matrix
     assert set(report.confusion_matrix.keys()) == set(VERDICT_LANES)
     assert len(report.sample_rollups) == 5
+    assert report.variance == sweep.variance
     assert report.variance.over_erasure.constant_across_samples is True
 
 
@@ -142,3 +173,60 @@ def test_cross_tier_rates_match_embedded_scoring(
         assert row.over_erasure.rate.numerator == scoring.over_erasure_rate.numerator
         assert row.over_retention.rate.numerator == scoring.over_retention_rate.numerator
         assert row.mis_escalation.rate.numerator == scoring.mis_escalation_rate.numerator
+
+
+def test_cross_tier_comparison_uses_requested_sample_index(
+    fake_seam: FakeModelSeam,
+    export_dir,
+    cache_dir,
+) -> None:
+    t1 = run_t1_sweep(seam=fake_seam, export_dir=export_dir, cache_root=cache_dir)
+    t2 = run_t2_sweep(seam=fake_seam, export_dir=export_dir, cache_root=cache_dir)
+    t3 = run_t3_sweep(seam=fake_seam, export_dir=export_dir, cache_root=cache_dir)
+    autonomous = run_autonomous_sweep(seam=fake_seam, export_dir=export_dir, cache_root=cache_dir)
+    sample_index = 2
+    comparison = build_cross_tier_comparison(t1, t2, t3, autonomous, sample_index=sample_index)
+    assert comparison.sample_index == sample_index
+    sweeps = {"t1": t1, "t2": t2, "t3": t3, "autonomous": autonomous}
+    for row in comparison.rows:
+        scoring = sweeps[row.tier].samples[sample_index].scoring
+        assert row.over_erasure.rate.numerator == scoring.over_erasure_rate.numerator
+        assert row.over_retention.rate.numerator == scoring.over_retention_rate.numerator
+        assert row.mis_escalation.rate.numerator == scoring.mis_escalation_rate.numerator
+
+
+def test_cross_tier_zero_denominator_rates_null() -> None:
+    from runners.autonomous.types import AutonomousSweepResult
+    from runners.types import TierSweepResult
+    from tests.report.conftest import make_sample_rollups, make_variance_summary
+
+    zero_scoring = make_zero_denominator_adjudication_scoring()
+    normal_scoring = make_hand_crafted_adjudication_scoring()
+
+    def _tier_sweep(tier: str, scoring) -> TierSweepResult:
+        return TierSweepResult(
+            tier=tier,
+            runner_id=tier,
+            model_id="primary",
+            cache_mode="offline",
+            export_agent_sha="c" * 40,
+            samples=make_sample_rollups(scoring),
+            variance=make_variance_summary(scoring),
+        )
+
+    t1 = _tier_sweep("t1", zero_scoring)
+    t2 = _tier_sweep("t2", normal_scoring)
+    t3 = _tier_sweep("t3", normal_scoring)
+    autonomous = AutonomousSweepResult(
+        runner_id="autonomous",
+        model_id="primary",
+        cache_mode="offline",
+        export_agent_sha="c" * 40,
+        samples=make_sample_rollups(normal_scoring),
+        variance=make_variance_summary(normal_scoring),
+    )
+    comparison = build_cross_tier_comparison(t1, t2, t3, autonomous, sample_index=0)
+    t1_row = next(row for row in comparison.rows if row.tier == "t1")
+    for rate_ci in (t1_row.over_erasure, t1_row.over_retention, t1_row.mis_escalation):
+        assert rate_ci.rate.value is None
+        assert rate_ci.interval is None
