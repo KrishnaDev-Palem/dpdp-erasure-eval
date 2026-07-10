@@ -15,3 +15,7 @@ class CacheMissError(Exception):
 
 class ModelResponseError(Exception):
     """Raised when a model response is invalid or incomplete."""
+
+
+class ConfigurationError(Exception):
+    """Raised when factory or credential resolution fails before network I/O."""
