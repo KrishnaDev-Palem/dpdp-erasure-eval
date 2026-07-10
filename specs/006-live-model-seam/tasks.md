@@ -36,12 +36,12 @@
 
 **Independent Test**: Baseline Features 001–005 suites green; new test modules import but fail on missing `create_model_seam` / adapter modules.
 
-- [ ] T001 Add runtime dependencies `anthropic>=0.49.0,<1` and `google-genai>=1.14.0,<2` to `pyproject.toml` and refresh `uv.lock` per plan.md Complexity Tracking (FR-002)
-- [ ] T002 Add `ConfigurationError` to `core/exceptions.py` for factory/credential resolution failures before network (FR-014, contracts/model-seam-factory.md)
-- [ ] T003 [P] Register `@pytest.mark.live` in `pyproject.toml` `[tool.pytest.ini_options].markers` with description "opt-in live provider smoke tests requiring API keys"; confirm `addopts = "-m 'not live'"` excludes live smoke from default `uv run pytest -v` (FR-010, research R8) — **pre-applied in remediation; verify during setup**
-- [ ] T004 [P] Create `tests/live/__init__.py` and skeleton `tests/live/test_live_smoke.py` with `@pytest.mark.live` tests marked `pytest.skip` until adapters land (FR-010)
-- [ ] T005 [P] Extend or create factory-test fixtures in `tests/core/conftest.py`: helpers to set/clear `MODEL_ID`, `CACHE_MODE`, `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`, `MODEL_API_KEY` via `monkeypatch` (FR-005)
-- [ ] T006 Verify Features 001–005 baseline: `uv run pytest tests/core tests/runners tests/gate tests/autonomous tests/report tests/cli -v` passes with zero API keys (FR-011, SC-001)
+- [X] T001 Add runtime dependencies `anthropic>=0.49.0,<1` and `google-genai>=1.14.0,<2` to `pyproject.toml` and refresh `uv.lock` per plan.md Complexity Tracking (FR-002)
+- [X] T002 Add `ConfigurationError` to `core/exceptions.py` for factory/credential resolution failures before network (FR-014, contracts/model-seam-factory.md)
+- [X] T003 [P] Register `@pytest.mark.live` in `pyproject.toml` `[tool.pytest.ini_options].markers` with description "opt-in live provider smoke tests requiring API keys"; confirm `addopts = "-m 'not live'"` excludes live smoke from default `uv run pytest -v` (FR-010, research R8) — **pre-applied in remediation; verify during setup**
+- [X] T004 [P] Create `tests/live/__init__.py` and skeleton `tests/live/test_live_smoke.py` with `@pytest.mark.live` tests marked `pytest.skip` until adapters land (FR-010)
+- [X] T005 [P] Extend or create factory-test fixtures in `tests/core/conftest.py`: helpers to set/clear `MODEL_ID`, `CACHE_MODE`, `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`, `MODEL_API_KEY` via `monkeypatch` (FR-005)
+- [X] T006 Verify Features 001–005 baseline: `uv run pytest tests/core tests/runners tests/gate tests/autonomous tests/report tests/cli -v` passes with zero API keys (FR-011, SC-001)
 
 **Checkpoint (Setup)**:
 
@@ -65,14 +65,14 @@ uv run pytest tests/core tests/runners tests/gate tests/autonomous tests/report 
 
 ### Tests for Foundational (MANDATORY — write first, ensure FAIL) ⚠️
 
-- [ ] T007 [P] Write failing `test_role_registry_lists_primary_claude_and_gemini_roles` and `test_live_roles_have_pinned_provider_model_ids` in `tests/core/test_acceptance_model_factory.py` asserting `claude-sonnet-5` → `claude-sonnet-5`, `gemini-3.5-flash` → `gemini-3.5-flash`, `primary` → offline-only (FR-002, FR-007, contracts/model-seam-factory.md)
-- [ ] T008 [P] Write failing credential tests in `tests/core/test_acceptance_provider_credentials.py`: (a) `test_anthropic_key_from_anthropic_api_key`; (b) `test_gemini_key_from_gemini_api_key`; (c) `test_legacy_model_api_key_fallback_emits_deprecation_warning`; (d) `test_provider_specific_key_wins_when_both_set`; (e) `test_missing_credential_raises_configuration_error_naming_required_vars` (FR-006, FR-014, US5)
+- [X] T007 [P] Write failing `test_role_registry_lists_primary_claude_and_gemini_roles` and `test_live_roles_have_pinned_provider_model_ids` in `tests/core/test_acceptance_model_factory.py` asserting `claude-sonnet-5` → `claude-sonnet-5`, `gemini-3.5-flash` → `gemini-3.5-flash`, `primary` → offline-only (FR-002, FR-007, contracts/model-seam-factory.md)
+- [X] T008 [P] Write failing credential tests in `tests/core/test_acceptance_provider_credentials.py`: (a) `test_anthropic_key_from_anthropic_api_key`; (b) `test_gemini_key_from_gemini_api_key`; (c) `test_legacy_model_api_key_fallback_emits_deprecation_warning`; (d) `test_provider_specific_key_wins_when_both_set`; (e) `test_missing_credential_raises_configuration_error_naming_required_vars` (FR-006, FR-014, US5)
 
 ### Implementation for Foundational
 
-- [ ] T009 [P] Implement `ModelRoleDescriptor` registry and lookup helpers in `core/model/roles.py` per data-model.md (roles: `primary`, `claude-sonnet-5`, `gemini-3.5-flash`)
-- [ ] T010 [P] Implement `resolve_provider_api_key(*, provider)` returning credential policy dataclass in `core/model/credentials.py` with precedence order from research R5
-- [ ] T011 Export `get_role_descriptor`, `resolve_provider_api_key`, and registry types from `core/model/__init__.py`
+- [X] T009 [P] Implement `ModelRoleDescriptor` registry and lookup helpers in `core/model/roles.py` per data-model.md (roles: `primary`, `claude-sonnet-5`, `gemini-3.5-flash`)
+- [X] T010 [P] Implement `resolve_provider_api_key(*, provider)` returning credential policy dataclass in `core/model/credentials.py` with precedence order from research R5
+- [X] T011 Export `get_role_descriptor`, `resolve_provider_api_key`, and registry types from `core/model/__init__.py`
 
 **Checkpoint (Foundational)**:
 
@@ -94,18 +94,18 @@ uv run pytest tests/core/test_acceptance_model_factory.py::test_role_registry_li
 
 ### Tests for User Story 1 (MANDATORY — write first, ensure FAIL) ⚠️
 
-- [ ] T012 [P] [US1] Write failing `test_offline_factory_returns_fake_model_seam` in `tests/core/test_acceptance_model_factory.py` asserting `create_model_seam()` with `CACHE_MODE=offline` returns `FakeModelSeam` instance (FR-003, US4 scenario 1)
-- [ ] T013 [P] [US1] Write failing `test_offline_factory_returns_fake_even_when_api_keys_set` in `tests/core/test_acceptance_model_factory.py` with `ANTHROPIC_API_KEY` and `GEMINI_API_KEY` set — still `FakeModelSeam` (FR-003, US4 scenario 1)
-- [ ] T014 [P] [US1] Write failing `test_offline_factory_respects_any_model_id` in `tests/core/test_acceptance_model_factory.py` parametrized over `primary`, `claude-sonnet-5`, `gemini-3.5-flash` — always `FakeModelSeam` in offline mode (US1 scenario 2)
-- [ ] T015 [P] [US1] Write failing `test_cli_uses_create_model_seam_not_hardcoded_fake` in `tests/cli/test_acceptance_cli.py` using `unittest.mock.patch` on `core.model.factory.create_model_seam` — assert called for `t2` subcommand; existing offline exit-0 tests unchanged (FR-005, US1 scenario 2)
-- [ ] T016 [US1] Write failing FakeModelSeam regression guard in `tests/core/test_acceptance_model_seam.py`: add `test_fake_model_seam_regression_unchanged` asserting existing adjudicate/classify_note/tool_registry contract tests still pass — no behavior change to `core/model/fake.py` (FR-003, US1 scenario 4)
-- [ ] T017 [P] [US1] Confirm existing offline cache-miss tests remain green without live fallback: run `uv run pytest -m cache_miss -v` and assert no code path invokes factory live adapters (US1 scenario 3, FR-003)
+- [X] T012 [P] [US1] Write failing `test_offline_factory_returns_fake_model_seam` in `tests/core/test_acceptance_model_factory.py` asserting `create_model_seam()` with `CACHE_MODE=offline` returns `FakeModelSeam` instance (FR-003, US4 scenario 1)
+- [X] T013 [P] [US1] Write failing `test_offline_factory_returns_fake_even_when_api_keys_set` in `tests/core/test_acceptance_model_factory.py` with `ANTHROPIC_API_KEY` and `GEMINI_API_KEY` set — still `FakeModelSeam` (FR-003, US4 scenario 1)
+- [X] T014 [P] [US1] Write failing `test_offline_factory_respects_any_model_id` in `tests/core/test_acceptance_model_factory.py` parametrized over `primary`, `claude-sonnet-5`, `gemini-3.5-flash` — always `FakeModelSeam` in offline mode (US1 scenario 2)
+- [X] T015 [P] [US1] Write failing `test_cli_uses_create_model_seam_not_hardcoded_fake` in `tests/cli/test_acceptance_cli.py` using `unittest.mock.patch` on `core.model.factory.create_model_seam` — assert called for `t2` subcommand; existing offline exit-0 tests unchanged (FR-005, US1 scenario 2)
+- [X] T016 [US1] Write failing FakeModelSeam regression guard in `tests/core/test_acceptance_model_seam.py`: add `test_fake_model_seam_regression_unchanged` asserting existing adjudicate/classify_note/tool_registry contract tests still pass — no behavior change to `core/model/fake.py` (FR-003, US1 scenario 4)
+- [X] T017 [P] [US1] Confirm existing offline cache-miss tests remain green without live fallback: run `uv run pytest -m cache_miss -v` and assert no code path invokes factory live adapters (US1 scenario 3, FR-003)
 
 ### Implementation for User Story 1
 
-- [ ] T018 [US1] Implement `create_model_seam(*, config=None)` offline branch in `core/model/factory.py` — always `FakeModelSeam()`; lazy-import live adapters only inside refresh branch; no SDK import at module load (contracts/model-seam-factory.md)
-- [ ] T019 [US1] Replace `FakeModelSeam()` with `create_model_seam()` in `cli/main.py` for `t1`, `t2`, `t3`, `autonomous`, and `adversarial-gate` subcommands (FR-005)
-- [ ] T020 [US1] Export `create_model_seam` from `core/model/__init__.py`
+- [X] T018 [US1] Implement `create_model_seam(*, config=None)` offline branch in `core/model/factory.py` — always `FakeModelSeam()`; lazy-import live adapters only inside refresh branch; no SDK import at module load (contracts/model-seam-factory.md)
+- [X] T019 [US1] Replace `FakeModelSeam()` with `create_model_seam()` in `cli/main.py` for `t1`, `t2`, `t3`, `autonomous`, and `adversarial-gate` subcommands (FR-005)
+- [X] T020 [US1] Export `create_model_seam` from `core/model/__init__.py`
 
 **Checkpoint (US1 — offline MVP)**:
 
@@ -128,21 +128,21 @@ uv run pytest -v
 
 ### Tests for User Story 3 (MANDATORY — write first, ensure FAIL) ⚠️
 
-- [ ] T021 [P] [US3] Write failing Anthropic tier `adjudicate` tests in `tests/core/test_acceptance_live_adapters.py` with mocked `anthropic` client — N verdicts for N locations, enum validation (US3 scenario 1, contracts/live-adapters.md)
-- [ ] T022 [P] [US3] Write failing Anthropic `classify_note` tests in `tests/core/test_acceptance_live_adapters.py` — text-only input, `{clean, adversarial}` outcome (US3 scenario 2)
-- [ ] T023 [P] [US3] Write failing Anthropic autonomous `adjudicate(..., tool_registry=...)` tests in `tests/core/test_acceptance_live_adapters.py` — returns `AdjudicationSessionResult` with ordered `tool_calls` trace (FR-008, US3 scenario 3)
-- [ ] T024 [P] [US3] Write failing Gemini tier adjudicate and classify_note tests in `tests/core/test_acceptance_live_adapters.py` with mocked `google.genai` client (US3 scenarios 1–2)
-- [ ] T025 [P] [US3] Write failing Gemini autonomous tool_registry session tests in `tests/core/test_acceptance_live_adapters.py` (FR-008)
-- [ ] T026 [P] [US3] Write failing `test_malformed_provider_response_raises_model_response_error` for both adapters in `tests/core/test_acceptance_live_adapters.py` — no partial return (FR-013)
-- [ ] T027 [US3] Write failing `test_adapters_use_registry_pinned_model_ids` asserting provider calls use ids from `core/model/roles.py` not hardcoded strings in adapter modules (FR-002, FR-007, US3 scenario 4)
-- [ ] T028 [P] [US3] Write failing `test_adapter_respects_max_tool_rounds` in `tests/core/test_acceptance_live_adapters.py` — exceed limit raises clear error (contracts/live-adapters.md)
+- [X] T021 [P] [US3] Write failing Anthropic tier `adjudicate` tests in `tests/core/test_acceptance_live_adapters.py` with mocked `anthropic` client — N verdicts for N locations, enum validation (US3 scenario 1, contracts/live-adapters.md)
+- [X] T022 [P] [US3] Write failing Anthropic `classify_note` tests in `tests/core/test_acceptance_live_adapters.py` — text-only input, `{clean, adversarial}` outcome (US3 scenario 2)
+- [X] T023 [P] [US3] Write failing Anthropic autonomous `adjudicate(..., tool_registry=...)` tests in `tests/core/test_acceptance_live_adapters.py` — returns `AdjudicationSessionResult` with ordered `tool_calls` trace (FR-008, US3 scenario 3)
+- [X] T024 [P] [US3] Write failing Gemini tier adjudicate and classify_note tests in `tests/core/test_acceptance_live_adapters.py` with mocked `google.genai` client (US3 scenarios 1–2)
+- [X] T025 [P] [US3] Write failing Gemini autonomous tool_registry session tests in `tests/core/test_acceptance_live_adapters.py` (FR-008)
+- [X] T026 [P] [US3] Write failing `test_malformed_provider_response_raises_model_response_error` for both adapters in `tests/core/test_acceptance_live_adapters.py` — no partial return (FR-013)
+- [X] T027 [US3] Write failing `test_adapters_use_registry_pinned_model_ids` asserting provider calls use ids from `core/model/roles.py` not hardcoded strings in adapter modules (FR-002, FR-007, US3 scenario 4)
+- [X] T028 [P] [US3] Write failing `test_adapter_respects_max_tool_rounds` in `tests/core/test_acceptance_live_adapters.py` — exceed limit raises clear error (contracts/live-adapters.md)
 
 ### Implementation for User Story 3
 
-- [ ] T029 [P] [US3] Implement `LiveAdapterConfig` frozen dataclass in `core/model/anthropic_adapter.py` per data-model.md (timeout default 120s, max_tool_rounds default 10)
-- [ ] T030 [US3] Implement `AnthropicModelSeam` in `core/model/anthropic_adapter.py`: lazy SDK import, tier adjudicate, classify_note, tool-use loop; Sonnet 5 sampling/thinking constraints per research R1 (FR-001)
-- [ ] T031 [US3] Implement `GeminiModelSeam` in `core/model/gemini_adapter.py`: lazy SDK import, tier adjudicate, classify_note, tool-use loop; Gemini 3.5 `thinking_level=low` default per research R2 (FR-001)
-- [ ] T032 [US3] Export `AnthropicModelSeam`, `GeminiModelSeam`, `LiveAdapterConfig` from `core/model/__init__.py`
+- [X] T029 [P] [US3] Implement `LiveAdapterConfig` frozen dataclass in `core/model/anthropic_adapter.py` per data-model.md (timeout default 120s, max_tool_rounds default 10)
+- [X] T030 [US3] Implement `AnthropicModelSeam` in `core/model/anthropic_adapter.py`: lazy SDK import, tier adjudicate, classify_note, tool-use loop; Sonnet 5 sampling/thinking constraints per research R1 (FR-001)
+- [X] T031 [US3] Implement `GeminiModelSeam` in `core/model/gemini_adapter.py`: lazy SDK import, tier adjudicate, classify_note, tool-use loop; Gemini 3.5 `thinking_level=low` default per research R2 (FR-001)
+- [X] T032 [US3] Export `AnthropicModelSeam`, `GeminiModelSeam`, `LiveAdapterConfig` from `core/model/__init__.py`
 
 **Checkpoint (US3 — adapter contracts)**:
 
@@ -164,18 +164,18 @@ uv run pytest tests/core/test_acceptance_live_adapters.py -v
 
 ### Tests for User Story 4 (MANDATORY — write first, ensure FAIL) ⚠️
 
-- [ ] T033 [P] [US4] Write failing `test_refresh_returns_anthropic_adapter_for_claude_role` in `tests/core/test_acceptance_model_factory.py` with mocked credential resolution — no HTTP (US4 scenario 2)
-- [ ] T034 [P] [US4] Write failing `test_refresh_returns_gemini_adapter_for_gemini_role` in `tests/core/test_acceptance_model_factory.py` (US4 scenario 2)
-- [ ] T035 [P] [US4] Write failing `test_refresh_primary_raises_configuration_error` in `tests/core/test_acceptance_model_factory.py` before any adapter construction (research R5, US4 scenario 3)
-- [ ] T036 [P] [US4] Write failing `test_refresh_unknown_model_id_raises_configuration_error` listing supported live roles in `tests/core/test_acceptance_model_factory.py` (US4 scenario 3)
-- [ ] T037 [P] [US4] Write failing `test_refresh_missing_credential_raises_before_network` in `tests/core/test_acceptance_model_factory.py` for each live role — error names `ANTHROPIC_API_KEY` or `GEMINI_API_KEY` (FR-014, US4 scenario 4)
-- [ ] T038 [P] [US4] Write failing `test_factory_resolution_performs_no_network_io` in `tests/core/test_acceptance_model_factory.py` — patch HTTP/SDK clients, assert never called during `create_model_seam()` (contracts/model-seam-factory.md)
-- [ ] T039 [US4] Write failing `test_runner_explicit_seam_injection_bypasses_factory` in `tests/runners/test_acceptance_t2_runner.py` (or shared runner test): pass explicit `FakeModelSeam` to `run_t2_sweep(seam=...)` — factory not invoked, sweep succeeds offline (US4 scenario 5, FR-005)
+- [X] T033 [P] [US4] Write failing `test_refresh_returns_anthropic_adapter_for_claude_role` in `tests/core/test_acceptance_model_factory.py` with mocked credential resolution — no HTTP (US4 scenario 2)
+- [X] T034 [P] [US4] Write failing `test_refresh_returns_gemini_adapter_for_gemini_role` in `tests/core/test_acceptance_model_factory.py` (US4 scenario 2)
+- [X] T035 [P] [US4] Write failing `test_refresh_primary_raises_configuration_error` in `tests/core/test_acceptance_model_factory.py` before any adapter construction (research R5, US4 scenario 3)
+- [X] T036 [P] [US4] Write failing `test_refresh_unknown_model_id_raises_configuration_error` listing supported live roles in `tests/core/test_acceptance_model_factory.py` (US4 scenario 3)
+- [X] T037 [P] [US4] Write failing `test_refresh_missing_credential_raises_before_network` in `tests/core/test_acceptance_model_factory.py` for each live role — error names `ANTHROPIC_API_KEY` or `GEMINI_API_KEY` (FR-014, US4 scenario 4)
+- [X] T038 [P] [US4] Write failing `test_factory_resolution_performs_no_network_io` in `tests/core/test_acceptance_model_factory.py` — patch HTTP/SDK clients, assert never called during `create_model_seam()` (contracts/model-seam-factory.md)
+- [X] T039 [US4] Write failing `test_runner_explicit_seam_injection_bypasses_factory` in `tests/runners/test_acceptance_t2_runner.py` (or shared runner test): pass explicit `FakeModelSeam` to `run_t2_sweep(seam=...)` — factory not invoked, sweep succeeds offline (US4 scenario 5, FR-005)
 
 ### Implementation for User Story 4
 
-- [ ] T040 [US4] Complete `create_model_seam()` refresh branch in `core/model/factory.py` wiring `roles.py`, `credentials.py`, and live adapters by `MODEL_ID` (FR-005, FR-007)
-- [ ] T041 [US4] Verify `runners/t1.py`, `runners/t2.py`, `runners/t3.py`, `runners/autonomous/runner.py`, `runners/adversarial_gate/runner.py` remain unchanged — no provider strings, no factory calls inside runners (FR-007, plan Scope Guardrails)
+- [X] T040 [US4] Complete `create_model_seam()` refresh branch in `core/model/factory.py` wiring `roles.py`, `credentials.py`, and live adapters by `MODEL_ID` (FR-005, FR-007)
+- [X] T041 [US4] Verify `runners/t1.py`, `runners/t2.py`, `runners/t3.py`, `runners/autonomous/runner.py`, `runners/adversarial_gate/runner.py` remain unchanged — no provider strings, no factory calls inside runners (FR-007, plan Scope Guardrails)
 
 **Checkpoint (US4 — factory refresh)**:
 
@@ -197,16 +197,16 @@ uv run pytest tests/core/test_acceptance_model_factory.py tests/core/test_accept
 
 ### Tests for User Story 2 (MANDATORY — write first, ensure FAIL) ⚠️
 
-- [ ] T042 [P] [US2] Write failing tier refresh integration test in `tests/runners/test_acceptance_cache_refresh.py`: `CacheStore.get_or_refresh` with factory-built seam (mocked SDK) on miss writes `raw_response.verdicts` at canonical key (US2 scenario 1, FR-004)
-- [ ] T043 [P] [US2] Write failing gate refresh test in `tests/gate/test_acceptance_gate_cache_offline.py`: extend with `test_classify_with_cache_refresh_miss_writes_classifier_result` using mocked live `classify_note` — persists `ClassifierResult` shape (US2 scenario 2)
-- [ ] T044 [P] [US2] Write failing autonomous refresh test in `tests/autonomous/test_acceptance_autonomous_cache_offline.py`: extend with `test_resolve_autonomous_entry_refresh_miss_writes_tool_calls` — `resolve_autonomous_entry` with `tool_registry` writes ordered `tool_calls` in cache entry (US2 scenario 3, FR-008)
-- [ ] T045 [US2] Write failing `test_refresh_cache_hit_replays_without_live_call` in `tests/runners/test_acceptance_cache_refresh.py` asserting cache hit in refresh mode does not invoke seam (US2 scenario 4, edge case)
-- [ ] T046 [P] [US2] Confirm existing `tests/runners/test_acceptance_cache_refresh.py` (`@pytest.mark.refresh`) still passes using explicit `FakeModelSeam` — refresh opt-in marker unchanged, no live keys in CI (FR-010, US2 scenario 5)
+- [X] T042 [P] [US2] Write failing tier refresh integration test in `tests/runners/test_acceptance_cache_refresh.py`: `CacheStore.get_or_refresh` with factory-built seam (mocked SDK) on miss writes `raw_response.verdicts` at canonical key (US2 scenario 1, FR-004)
+- [X] T043 [P] [US2] Write failing gate refresh test in `tests/gate/test_acceptance_gate_cache_offline.py`: extend with `test_classify_with_cache_refresh_miss_writes_classifier_result` using mocked live `classify_note` — persists `ClassifierResult` shape (US2 scenario 2)
+- [X] T044 [P] [US2] Write failing autonomous refresh test in `tests/autonomous/test_acceptance_autonomous_cache_offline.py`: extend with `test_resolve_autonomous_entry_refresh_miss_writes_tool_calls` — `resolve_autonomous_entry` with `tool_registry` writes ordered `tool_calls` in cache entry (US2 scenario 3, FR-008)
+- [X] T045 [US2] Write failing `test_refresh_cache_hit_replays_without_live_call` in `tests/runners/test_acceptance_cache_refresh.py` asserting cache hit in refresh mode does not invoke seam (US2 scenario 4, edge case)
+- [X] T046 [P] [US2] Confirm existing `tests/runners/test_acceptance_cache_refresh.py` (`@pytest.mark.refresh`) still passes using explicit `FakeModelSeam` — refresh opt-in marker unchanged, no live keys in CI (FR-010, US2 scenario 5)
 
 ### Implementation for User Story 2
 
-- [ ] T047 [US2] Verify refresh miss paths in `core/cache/store.py`, `runners/adversarial_gate/cache.py`, and `runners/autonomous/cache.py` call `seam.adjudicate` / `seam.classify_note` without modification. If T042–T045 fail, fix only at the seam boundary (`cli/main.py`, `core/model/factory.py`, test fixtures) — **do not** modify frozen cache helpers unless constitution amendment (research R6, plan Scope Guardrails)
-- [ ] T048 [US2] Add CLI refresh smoke helper comment or docstring in `cli/main.py` noting refresh is operator opt-in, excluded from CI merge gate (FR-010)
+- [X] T047 [US2] Verify refresh miss paths in `core/cache/store.py`, `runners/adversarial_gate/cache.py`, and `runners/autonomous/cache.py` call `seam.adjudicate` / `seam.classify_note` without modification. If T042–T045 fail, fix only at the seam boundary (`cli/main.py`, `core/model/factory.py`, test fixtures) — **do not** modify frozen cache helpers unless constitution amendment (research R6, plan Scope Guardrails)
+- [X] T048 [US2] Add CLI refresh smoke helper comment or docstring in `cli/main.py` noting refresh is operator opt-in, excluded from CI merge gate (FR-010)
 
 **Checkpoint (US2 — refresh integration)**:
 
@@ -229,13 +229,13 @@ uv run pytest tests/runners/test_acceptance_cache_refresh.py tests/gate/test_acc
 
 ### Tests for User Story 5 (MANDATORY — write first, ensure FAIL) ⚠️
 
-- [ ] T049 [P] [US5] Write failing `test_env_example_documents_provider_keys_and_cache_mode` in `tests/core/test_acceptance_provider_credentials.py` parsing `.env.example` for `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`, `MODEL_ID`, `CACHE_MODE`, and deprecated `MODEL_API_KEY` comment — no secret values (FR-009, US5 scenario 4)
-- [ ] T050 [P] [US5] Write failing `test_offline_pytest_never_requires_provider_keys` in `tests/core/test_acceptance_provider_credentials.py` asserting default CI subset runs without `ANTHROPIC_API_KEY`/`GEMINI_API_KEY`/`MODEL_API_KEY` (US5 scenario 5, SC-001)
+- [X] T049 [P] [US5] Write failing `test_env_example_documents_provider_keys_and_cache_mode` in `tests/core/test_acceptance_provider_credentials.py` parsing `.env.example` for `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`, `MODEL_ID`, `CACHE_MODE`, and deprecated `MODEL_API_KEY` comment — no secret values (FR-009, US5 scenario 4)
+- [X] T050 [P] [US5] Write failing `test_offline_pytest_never_requires_provider_keys` in `tests/core/test_acceptance_provider_credentials.py` asserting default CI subset runs without `ANTHROPIC_API_KEY`/`GEMINI_API_KEY`/`MODEL_API_KEY` (US5 scenario 5, SC-001)
 
 ### Implementation for User Story 5
 
-- [ ] T051 [US5] Update `.env.example` with `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`, `MODEL_ID`, `CACHE_MODE`, and deprecated `MODEL_API_KEY` note per contracts/model-seam-factory.md (FR-009)
-- [ ] T052 [US5] Align `DeprecationWarning` message in `core/model/credentials.py` to identify provider and preferred env var when legacy fallback used (FR-006, US5 scenario 3)
+- [X] T051 [US5] Update `.env.example` with `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`, `MODEL_ID`, `CACHE_MODE`, and deprecated `MODEL_API_KEY` note per contracts/model-seam-factory.md (FR-009)
+- [X] T052 [US5] Align `DeprecationWarning` message in `core/model/credentials.py` to identify provider and preferred env var when legacy fallback used (FR-006, US5 scenario 3)
 
 **Checkpoint (US5)**:
 
@@ -251,13 +251,13 @@ uv run pytest tests/core/test_acceptance_provider_credentials.py -v
 
 **Purpose**: Opt-in live smoke, full merge gate, quickstart validation, frozen-artifact guard.
 
-- [ ] T053 [P] Implement opt-in live smoke tests in `tests/live/test_live_smoke.py` with `@pytest.mark.live` — one adjudication per supported role; document skip when keys absent (FR-010, contracts/live-adapters.md)
-- [ ] T054 [P] Implement and verify CI exclusion of `@pytest.mark.live`: ensure `pyproject.toml` has `addopts = "-m 'not live'"` and `.github/workflows/ci.yml` runs `uv run pytest -v` (inherits addopts). Add a skipped or absent live test and confirm it does not run in default pytest. `@pytest.mark.refresh` tests remain FakeModelSeam-only and **do** run in merge gate (FR-010, FR-011) — **addopts pre-applied in remediation; verify during polish**
-- [ ] T055 Run full offline merge gate: `uv run pytest -v` with zero API keys — SC-001 (FR-011)
-- [ ] T056 Run Feature 006 contract subset per `specs/006-live-model-seam/quickstart.md`: `uv run pytest tests/core/test_acceptance_model_factory.py tests/core/test_acceptance_live_adapters.py tests/core/test_acceptance_provider_credentials.py -v`
-- [ ] T057 Run prerequisite regression: `uv run pytest tests/core tests/runners tests/gate tests/autonomous tests/report tests/cli -v` — Features 001–005 unchanged (FR-011)
-- [ ] T058 Confirm no modifications to `export/` or committed `cache/` entries in Feature 006 diff (FR-012)
-- [ ] T059 Execute quickstart spot-checks from `specs/006-live-model-seam/quickstart.md`: factory offline OK, refresh-without-keys credential guard, existing refresh marker suite (SC-002 operator path documented)
+- [X] T053 [P] Implement opt-in live smoke tests in `tests/live/test_live_smoke.py` with `@pytest.mark.live` — one adjudication per supported role; document skip when keys absent (FR-010, contracts/live-adapters.md)
+- [X] T054 [P] Implement and verify CI exclusion of `@pytest.mark.live`: ensure `pyproject.toml` has `addopts = "-m 'not live'"` and `.github/workflows/ci.yml` runs `uv run pytest -v` (inherits addopts). Add a skipped or absent live test and confirm it does not run in default pytest. `@pytest.mark.refresh` tests remain FakeModelSeam-only and **do** run in merge gate (FR-010, FR-011) — **addopts pre-applied in remediation; verify during polish**
+- [X] T055 Run full offline merge gate: `uv run pytest -v` with zero API keys — SC-001 (FR-011)
+- [X] T056 Run Feature 006 contract subset per `specs/006-live-model-seam/quickstart.md`: `uv run pytest tests/core/test_acceptance_model_factory.py tests/core/test_acceptance_live_adapters.py tests/core/test_acceptance_provider_credentials.py -v`
+- [X] T057 Run prerequisite regression: `uv run pytest tests/core tests/runners tests/gate tests/autonomous tests/report tests/cli -v` — Features 001–005 unchanged (FR-011)
+- [X] T058 Confirm no modifications to `export/` or committed `cache/` entries in Feature 006 diff (FR-012)
+- [X] T059 Execute quickstart spot-checks from `specs/006-live-model-seam/quickstart.md`: factory offline OK, refresh-without-keys credential guard, existing refresh marker suite (SC-002 operator path documented)
 
 ---
 
@@ -403,4 +403,4 @@ uv run pytest -v
 
 ### Format validation
 
-All 59 tasks use checklist format `- [ ] [TaskID] [P?] [Story?] Description with file path`.
+All 59 tasks use checklist format `- [X] [TaskID] [P?] [Story?] Description with file path`.
