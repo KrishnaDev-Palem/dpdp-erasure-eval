@@ -404,3 +404,10 @@ uv run pytest -v
 ### Format validation
 
 All 59 tasks use checklist format `- [X] [TaskID] [P?] [Story?] Description with file path`.
+
+## Phase 9: Convergence
+
+- [X] T060 Wire `request_timeout_seconds` into `GeminiModelSeam` client construction and API calls per data-model.md `LiveAdapterConfig` (partial)
+- [X] T061 Add acceptance test asserting default `uv run pytest` deselects `@pytest.mark.live` tests per FR-010/FR-011 and plan CI offline guarantees (partial)
+- [X] T062 Align gate refresh integration test with quickstart dual-provider path: use `gemini-3.5-flash` + `GeminiModelSeam` in `tests/gate/test_acceptance_gate_cache_offline.py` per SC-002/US2 (partial)
+- [X] T063 Update `README.md` with Feature 006 live model seam section linking refresh workflow to `specs/006-live-model-seam/quickstart.md` and documenting provider env vars per FR-010 (partial)

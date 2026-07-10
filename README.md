@@ -24,6 +24,24 @@ uv run pytest tests/report tests/cli -v
 
 No `MODEL_API_KEY` is required. CI runs the same path in offline mode.
 
+## Live model seam (Feature 006)
+
+Default runs use `FakeModelSeam` and committed cache — no provider API keys and no
+network. To regenerate cache entries locally with live models, set `CACHE_MODE=refresh`
+and the provider key for your target role:
+
+| `MODEL_ID` | Credential |
+|------------|------------|
+| `claude-sonnet-5` | `ANTHROPIC_API_KEY` |
+| `gemini-3.5-flash` | `GEMINI_API_KEY` |
+
+Copy `.env.example` to `.env` for variable names (no secrets in the repo). Refresh is
+operator opt-in and excluded from the CI merge gate; live smoke tests require
+`-m live` explicitly.
+
+See [`specs/006-live-model-seam/quickstart.md`](specs/006-live-model-seam/quickstart.md)
+for offline validation, credential guards, and refresh workflow examples.
+
 ## Running evaluations
 
 The `dpdp-eval` CLI runs each evaluation sweep from committed cache and emits
