@@ -46,7 +46,7 @@ Wire live provider adapters behind the existing `ModelSeam` protocol so `CACHE_M
 - **No cache helper changes** — `get_or_refresh`, `classify_with_cache`, `resolve_autonomous_entry` frozen from Feature 001–004.
 - **No live keys in CI** — adapter tests mock SDK clients; `@pytest.mark.live` excluded from workflow.
 - **No multi-model parallel sweeps** — out of scope v1.
-- **Refresh excluded from merge gate** — documented in [quickstart.md](./quickstart.md); existing `@pytest.mark.refresh` uses fake seam.
+- **Live provider refresh excluded from merge gate** — operator `CACHE_MODE=refresh` with API keys is local-only (documented in [quickstart.md](./quickstart.md)). CI runs `@pytest.mark.refresh` simulation tests with `FakeModelSeam` (offline, no keys). `@pytest.mark.live` excluded via `pyproject.toml` `addopts = "-m 'not live'"`.
 
 ## Test-First Sequencing
 
@@ -138,7 +138,7 @@ export/                      # unchanged frozen export
 | Factory contract | [contracts/model-seam-factory.md](./contracts/model-seam-factory.md) | Complete |
 | Live adapters contract | [contracts/live-adapters.md](./contracts/live-adapters.md) | Complete |
 | Quickstart | [quickstart.md](./quickstart.md) | Complete |
-| Tasks | `tasks.md` | Pending `/speckit-tasks` |
+| Tasks | [tasks.md](./tasks.md) | Complete |
 
 ## Refresh Path Architecture
 
@@ -204,4 +204,4 @@ Legacy committed-cache role `primary` remains offline-only; refresh with `MODEL_
 
 ## Next Step
 
-Run `/speckit-tasks` to generate dependency-ordered `tasks.md` with failing acceptance tests scheduled before implementation.
+Run `/speckit-implement` to execute dependency-ordered tasks in [tasks.md](./tasks.md).

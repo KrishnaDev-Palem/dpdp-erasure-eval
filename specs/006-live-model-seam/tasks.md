@@ -38,7 +38,7 @@
 
 - [ ] T001 Add runtime dependencies `anthropic>=0.49.0,<1` and `google-genai>=1.14.0,<2` to `pyproject.toml` and refresh `uv.lock` per plan.md Complexity Tracking (FR-002)
 - [ ] T002 Add `ConfigurationError` to `core/exceptions.py` for factory/credential resolution failures before network (FR-014, contracts/model-seam-factory.md)
-- [ ] T003 [P] Register `@pytest.mark.live` in `pyproject.toml` `[tool.pytest.ini_options].markers` with description "opt-in live provider smoke tests requiring API keys" (FR-010, research R8)
+- [ ] T003 [P] Register `@pytest.mark.live` in `pyproject.toml` `[tool.pytest.ini_options].markers` with description "opt-in live provider smoke tests requiring API keys"; confirm `addopts = "-m 'not live'"` excludes live smoke from default `uv run pytest -v` (FR-010, research R8) — **pre-applied in remediation; verify during setup**
 - [ ] T004 [P] Create `tests/live/__init__.py` and skeleton `tests/live/test_live_smoke.py` with `@pytest.mark.live` tests marked `pytest.skip` until adapters land (FR-010)
 - [ ] T005 [P] Extend or create factory-test fixtures in `tests/core/conftest.py`: helpers to set/clear `MODEL_ID`, `CACHE_MODE`, `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`, `MODEL_API_KEY` via `monkeypatch` (FR-005)
 - [ ] T006 Verify Features 001–005 baseline: `uv run pytest tests/core tests/runners tests/gate tests/autonomous tests/report tests/cli -v` passes with zero API keys (FR-011, SC-001)
@@ -197,22 +197,22 @@ uv run pytest tests/core/test_acceptance_model_factory.py tests/core/test_accept
 
 ### Tests for User Story 2 (MANDATORY — write first, ensure FAIL) ⚠️
 
-- [ ] T042 [P] [US2] Write failing tier refresh integration test in `tests/core/test_acceptance_cache.py` or `tests/runners/test_acceptance_cache_refresh.py`: `CacheStore.get_or_refresh` with factory-built seam (mocked SDK) on miss writes `raw_response.verdicts` at canonical key (US2 scenario 1, FR-004)
-- [ ] T043 [P] [US2] Write failing gate refresh test: `classify_with_cache` in `tests/gate/test_acceptance_gate_cache_refresh.py` (or extend existing refresh module) with mocked live `classify_note` — persists `ClassifierResult` shape (US2 scenario 2)
-- [ ] T044 [P] [US2] Write failing autonomous refresh test in `tests/autonomous/test_acceptance_autonomous_cache_refresh.py`: `resolve_autonomous_entry` with tool_registry writes ordered `tool_calls` in cache entry (US2 scenario 3, FR-008)
-- [ ] T045 [US2] Write failing `test_refresh_cache_hit_replays_without_live_call` asserting cache hit in refresh mode does not invoke seam (US2 scenario 4, edge case)
+- [ ] T042 [P] [US2] Write failing tier refresh integration test in `tests/runners/test_acceptance_cache_refresh.py`: `CacheStore.get_or_refresh` with factory-built seam (mocked SDK) on miss writes `raw_response.verdicts` at canonical key (US2 scenario 1, FR-004)
+- [ ] T043 [P] [US2] Write failing gate refresh test in `tests/gate/test_acceptance_gate_cache_offline.py`: extend with `test_classify_with_cache_refresh_miss_writes_classifier_result` using mocked live `classify_note` — persists `ClassifierResult` shape (US2 scenario 2)
+- [ ] T044 [P] [US2] Write failing autonomous refresh test in `tests/autonomous/test_acceptance_autonomous_cache_offline.py`: extend with `test_resolve_autonomous_entry_refresh_miss_writes_tool_calls` — `resolve_autonomous_entry` with `tool_registry` writes ordered `tool_calls` in cache entry (US2 scenario 3, FR-008)
+- [ ] T045 [US2] Write failing `test_refresh_cache_hit_replays_without_live_call` in `tests/runners/test_acceptance_cache_refresh.py` asserting cache hit in refresh mode does not invoke seam (US2 scenario 4, edge case)
 - [ ] T046 [P] [US2] Confirm existing `tests/runners/test_acceptance_cache_refresh.py` (`@pytest.mark.refresh`) still passes using explicit `FakeModelSeam` — refresh opt-in marker unchanged, no live keys in CI (FR-010, US2 scenario 5)
 
 ### Implementation for User Story 2
 
-- [ ] T047 [US2] Verify refresh miss paths in `core/cache/store.py`, `runners/adversarial_gate/cache.py`, and `runners/autonomous/cache.py` call `seam.adjudicate` / `seam.classify_note` without modification — fix only if acceptance tests reveal integration gap at CLI/seam boundary (research R6, plan Scope Guardrails)
+- [ ] T047 [US2] Verify refresh miss paths in `core/cache/store.py`, `runners/adversarial_gate/cache.py`, and `runners/autonomous/cache.py` call `seam.adjudicate` / `seam.classify_note` without modification. If T042–T045 fail, fix only at the seam boundary (`cli/main.py`, `core/model/factory.py`, test fixtures) — **do not** modify frozen cache helpers unless constitution amendment (research R6, plan Scope Guardrails)
 - [ ] T048 [US2] Add CLI refresh smoke helper comment or docstring in `cli/main.py` noting refresh is operator opt-in, excluded from CI merge gate (FR-010)
 
 **Checkpoint (US2 — refresh integration)**:
 
 ```bash
 uv run pytest -m refresh -v
-uv run pytest tests/core/test_acceptance_cache.py tests/gate tests/autonomous/test_acceptance_autonomous_cache_refresh.py -v --tb=short
+uv run pytest tests/runners/test_acceptance_cache_refresh.py tests/gate/test_acceptance_gate_cache_offline.py tests/autonomous/test_acceptance_autonomous_cache_offline.py -v --tb=short
 ```
 
 **Expected**: Refresh tests green with mocked seams. Full offline suite still green.
@@ -252,7 +252,7 @@ uv run pytest tests/core/test_acceptance_provider_credentials.py -v
 **Purpose**: Opt-in live smoke, full merge gate, quickstart validation, frozen-artifact guard.
 
 - [ ] T053 [P] Implement opt-in live smoke tests in `tests/live/test_live_smoke.py` with `@pytest.mark.live` — one adjudication per supported role; document skip when keys absent (FR-010, contracts/live-adapters.md)
-- [ ] T054 [P] Confirm CI workflow excludes `@pytest.mark.live` tests from merge gate (`.github/workflows/` or pytest config) — refresh marker tests remain FakeModelSeam-only (FR-010, FR-011)
+- [ ] T054 [P] Implement and verify CI exclusion of `@pytest.mark.live`: ensure `pyproject.toml` has `addopts = "-m 'not live'"` and `.github/workflows/ci.yml` runs `uv run pytest -v` (inherits addopts). Add a skipped or absent live test and confirm it does not run in default pytest. `@pytest.mark.refresh` tests remain FakeModelSeam-only and **do** run in merge gate (FR-010, FR-011) — **addopts pre-applied in remediation; verify during polish**
 - [ ] T055 Run full offline merge gate: `uv run pytest -v` with zero API keys — SC-001 (FR-011)
 - [ ] T056 Run Feature 006 contract subset per `specs/006-live-model-seam/quickstart.md`: `uv run pytest tests/core/test_acceptance_model_factory.py tests/core/test_acceptance_live_adapters.py tests/core/test_acceptance_provider_credentials.py -v`
 - [ ] T057 Run prerequisite regression: `uv run pytest tests/core tests/runners tests/gate tests/autonomous tests/report tests/cli -v` — Features 001–005 unchanged (FR-011)

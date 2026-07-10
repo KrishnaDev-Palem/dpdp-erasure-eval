@@ -97,7 +97,7 @@ else:
 uv run pytest -m refresh -v
 ```
 
-**Expected**: Refresh-path cache write/replay tests pass using `FakeModelSeam` — no live keys.
+**Expected**: Refresh-path cache write/replay tests pass using `FakeModelSeam` — no live keys. These simulation tests **run in CI**; only operator live refresh (below) is excluded.
 
 ## Refresh workflow (local operator — excluded from CI)
 
@@ -115,10 +115,12 @@ Supported roles and pinned provider ids (see [research.md](./research.md)):
 | `claude-sonnet-5` | `ANTHROPIC_API_KEY` | `claude-sonnet-5` |
 | `gemini-3.5-flash` | `GEMINI_API_KEY` | `gemini-3.5-flash` |
 
-Regenerate **one** cache entry on miss (example — adjust subject/runner as needed):
+Regenerate **one** cache entry on miss per runner path (examples — adjust subject/sample as needed). Use a writable cache root or temporary directory if experimenting — **do not commit live-generated entries to `main` without explicit review** (spec FR-012).
+
+### Tier sweep (T2)
 
 ```bash
-# PowerShell example: T2 single subject via CLI after implementation
+# PowerShell
 $env:CACHE_MODE = "refresh"
 $env:MODEL_ID = "claude-sonnet-5"
 uv run dpdp-eval t2 --sample-index 0
@@ -129,8 +131,6 @@ export MODEL_ID=claude-sonnet-5
 uv run dpdp-eval t2 --sample-index 0
 ```
 
-Use a writable cache root or temporary directory if experimenting — **do not commit live-generated entries to `main` without explicit review** (spec FR-012).
-
 Verify offline replay:
 
 ```bash
@@ -139,6 +139,38 @@ uv run dpdp-eval t2 --sample-index 0
 ```
 
 **Expected**: Same verdicts from written cache entry; no live call on hit.
+
+### Adversarial gate (classify_note path)
+
+```bash
+# PowerShell
+$env:CACHE_MODE = "refresh"
+$env:MODEL_ID = "gemini-3.5-flash"
+uv run dpdp-eval adversarial-gate --sample-index 0
+
+# Bash
+export CACHE_MODE=refresh
+export MODEL_ID=gemini-3.5-flash
+uv run dpdp-eval adversarial-gate --sample-index 0
+```
+
+**Expected**: On cache miss, live `classify_note` runs and a gate cache entry is written; offline replay returns the same classification.
+
+### Autonomous (tool_registry + tool_calls trace)
+
+```bash
+# PowerShell
+$env:CACHE_MODE = "refresh"
+$env:MODEL_ID = "claude-sonnet-5"
+uv run dpdp-eval autonomous --sample-index 0
+
+# Bash
+export CACHE_MODE=refresh
+export MODEL_ID=claude-sonnet-5
+uv run dpdp-eval autonomous --sample-index 0
+```
+
+**Expected**: On cache miss, live adjudication with tool-use writes `tool_calls` trace in the cache entry; offline replay matches.
 
 ## Opt-in live smoke (not in CI)
 

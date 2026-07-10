@@ -21,6 +21,7 @@ jobs:
       - name: Ruff format
         run: uv run ruff format --check .
       - name: Pytest full acceptance suite
+        # Inherits pyproject.toml addopts: -m "not live" (no provider keys in merge gate)
         run: uv run pytest -v
         env:
           CACHE_MODE: offline
