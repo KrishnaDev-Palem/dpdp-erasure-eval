@@ -47,6 +47,53 @@ def test_cache_prompt_identity_from_text_only(
 
 
 @pytest.mark.refresh
+def test_classify_with_cache_refresh_miss_writes_classifier_result(
+    slice_path: Path,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from types import SimpleNamespace
+    from unittest.mock import MagicMock
+
+    from core.model.anthropic_adapter import AnthropicModelSeam, LiveAdapterConfig
+
+    monkeypatch.setenv("CACHE_MODE", "refresh")
+    cases = load_extended_slice(slice_path, verify_seeds=False).cases
+    sample_case = cases[0]
+    key = make_gate_cache_key(
+        text=sample_case.text,
+        model_id="claude-sonnet-5",
+        case_id=sample_case.case_id,
+        sample_index=0,
+    )
+    cache_root = tmp_path / "cache"
+    client = MagicMock()
+    client.messages.create.return_value = SimpleNamespace(
+        content=[SimpleNamespace(type="text", text='{"outcome": "adversarial"}')]
+    )
+    seam = AnthropicModelSeam(
+        LiveAdapterConfig(
+            role_id="claude-sonnet-5",
+            provider_model_id="claude-sonnet-5",
+            api_key="sk-test",
+        ),
+        client=client,
+    )
+    store = CacheStore(root=cache_root, cache_mode="refresh")
+
+    result = classify_with_cache(
+        case=sample_case,
+        sample_index=0,
+        model_id="claude-sonnet-5",
+        store=store,
+        seam=seam,
+    )
+    assert result.outcome == "adversarial"
+    replay = store.get(key)
+    assert replay.raw_response.get("outcome") == "adversarial"
+
+
+@pytest.mark.refresh
 def test_refresh_writes_cache_entry_on_miss(
     slice_path: Path,
     tmp_path: Path,
