@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import subprocess
+import sys
 import warnings
 from pathlib import Path
 
@@ -78,3 +80,17 @@ def test_offline_pytest_never_requires_provider_keys(model_env: pytest.MonkeyPat
 
     seam = create_model_seam()
     assert seam is not None
+
+
+def test_default_pytest_excludes_live_marker(repo_root: Path) -> None:
+    """Merge gate must not collect @pytest.mark.live tests (FR-010, FR-011)."""
+    result = subprocess.run(
+        [sys.executable, "-m", "pytest", "tests/live", "--collect-only", "-q"],
+        cwd=repo_root,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    combined = f"{result.stdout}\n{result.stderr}".lower()
+    assert "deselected" in combined
+    assert "no tests collected" in combined
