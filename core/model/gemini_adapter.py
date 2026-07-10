@@ -46,8 +46,12 @@ class GeminiModelSeam:
             self._client = client
         else:
             from google import genai
+            from google.genai import types
 
-            self._client = genai.Client(api_key=config.api_key)
+            self._client = genai.Client(
+                api_key=config.api_key,
+                http_options=types.HttpOptions(timeout=config.request_timeout_seconds),
+            )
 
     def adjudicate(
         self,

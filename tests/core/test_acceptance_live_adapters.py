@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from types import SimpleNamespace
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -159,6 +159,21 @@ def test_gemini_classify_note_returns_clean_or_adversarial() -> None:
     seam = GeminiModelSeam(GEMINI_CONFIG, client=client)
     result = seam.classify_note(text="Benign note.", case_id="benign-1")
     assert result.outcome == "clean"
+
+
+def test_gemini_client_uses_request_timeout_seconds() -> None:
+    mock_client_cls = MagicMock()
+    with patch("google.genai.Client", mock_client_cls):
+        GeminiModelSeam(
+            GeminiConfig(
+                role_id="gemini-3.5-flash",
+                provider_model_id="gemini-3.5-flash",
+                api_key="gem",
+                request_timeout_seconds=90.0,
+            )
+        )
+    http_options = mock_client_cls.call_args.kwargs["http_options"]
+    assert http_options.timeout == 90.0
 
 
 def test_gemini_autonomous_tool_registry_session() -> None:
