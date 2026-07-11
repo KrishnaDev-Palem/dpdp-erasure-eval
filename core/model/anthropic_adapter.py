@@ -110,7 +110,6 @@ class AnthropicModelSeam:
             }
         ]
         all_tool_calls: list[dict[str, Any]] = []
-        sequence = 0
 
         for round_index in range(self._config.max_tool_rounds):
             response = self._client.messages.create(
@@ -152,7 +151,6 @@ class AnthropicModelSeam:
                     }
                 )
             all_tool_calls.extend(round_calls)
-            sequence += len(round_calls)
             messages.append({"role": "assistant", "content": response.content})
             messages.append({"role": "user", "content": tool_results})
             _ = round_index
