@@ -173,7 +173,7 @@ def test_gemini_client_uses_request_timeout_seconds() -> None:
             )
         )
     http_options = mock_client_cls.call_args.kwargs["http_options"]
-    assert http_options.timeout == 90.0
+    assert http_options.timeout == 90_000
 
 
 def test_gemini_autonomous_tool_registry_session() -> None:
