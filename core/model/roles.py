@@ -48,9 +48,7 @@ def get_role_descriptor(role_id: str) -> ModelRoleDescriptor:
     descriptor = _ROLE_REGISTRY.get(role_id)
     if descriptor is None:
         supported = ", ".join(sorted(LIVE_ROLE_IDS))
-        raise ConfigurationError(
-            f"Unknown MODEL_ID {role_id!r}. Supported live roles: {supported}"
-        )
+        raise ConfigurationError(f"Unknown MODEL_ID {role_id!r}. Supported live roles: {supported}")
     return descriptor
 
 

@@ -212,9 +212,7 @@ class GeminiModelSeam:
                 arguments = getattr(function_call, "args", None) or {}
                 if hasattr(arguments, "items"):
                     arguments = dict(arguments)
-                call_id = getattr(function_call, "id", None) or getattr(
-                    function_call, "name", ""
-                )
+                call_id = getattr(function_call, "id", None) or getattr(function_call, "name", "")
                 calls.append(
                     {
                         "id": call_id,
