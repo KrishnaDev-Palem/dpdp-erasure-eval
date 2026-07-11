@@ -50,7 +50,9 @@ class GeminiModelSeam:
 
             self._client = genai.Client(
                 api_key=config.api_key,
-                http_options=types.HttpOptions(timeout=config.request_timeout_seconds),
+                http_options=types.HttpOptions(
+                    timeout=int(config.request_timeout_seconds * 1000),
+                ),
             )
 
     def adjudicate(
