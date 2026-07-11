@@ -36,6 +36,23 @@ class _FakeToolRegistry:
         return {"records": [], "subject_id": arguments.get("subject_id", "")}
 
 
+class _MultiRoundFakeRegistry:
+    @property
+    def tool_names(self) -> frozenset[str]:
+        return frozenset({"get_location_records", "get_retention_floors"})
+
+    def invoke(self, tool_name: str, arguments: dict) -> dict:
+        if tool_name == "get_location_records":
+            return {"records": [], "subject_id": arguments.get("subject_id", "")}
+        return {"floor_count": 5, "floor_ids": []}
+
+
+_VERDICT_JSON = (
+    '{"verdicts": [{"location_id": "txn-004", "verdict": "retain"}, '
+    '{"location_id": "note-001", "verdict": "erase"}]}'
+)
+
+
 def _sample_context() -> ContextBundle:
     request = ErasureRequest(
         subject_id="mixed-fanout-subject",
@@ -82,6 +99,24 @@ def _gemini_text_response(text: str) -> SimpleNamespace:
     return SimpleNamespace(text=text, candidates=[candidate])
 
 
+def _anthropic_multi_round_tool_then_text(
+    *,
+    rounds: list[tuple[str, dict]],
+    verdict_json: str,
+) -> list[SimpleNamespace]:
+    responses: list[SimpleNamespace] = []
+    for index, (tool_name, arguments) in enumerate(rounds):
+        tool_block = SimpleNamespace(
+            type="tool_use",
+            id=f"tool-{index}",
+            name=tool_name,
+            input=arguments,
+        )
+        responses.append(SimpleNamespace(content=[tool_block]))
+    responses.append(SimpleNamespace(content=[SimpleNamespace(type="text", text=verdict_json)]))
+    return responses
+
+
 def _gemini_tool_then_text(*, tool_name: str, arguments: dict, verdict_json: str) -> list:
     tool_part = SimpleNamespace(
         text=None,
@@ -97,6 +132,33 @@ def _gemini_tool_then_text(*, tool_name: str, arguments: dict, verdict_json: str
         candidates=[SimpleNamespace(content=SimpleNamespace(parts=[text_part]))],
     )
     return [tool_response, text_response]
+
+
+def _gemini_multi_round_tool_then_text(
+    *,
+    rounds: list[tuple[str, dict]],
+    verdict_json: str,
+) -> list[SimpleNamespace]:
+    responses: list[SimpleNamespace] = []
+    for index, (tool_name, arguments) in enumerate(rounds):
+        tool_part = SimpleNamespace(
+            text=None,
+            function_call=SimpleNamespace(id=f"fc-{index}", name=tool_name, args=arguments),
+        )
+        responses.append(
+            SimpleNamespace(
+                text=None,
+                candidates=[SimpleNamespace(content=SimpleNamespace(parts=[tool_part]))],
+            )
+        )
+    text_part = SimpleNamespace(text=verdict_json, function_call=None)
+    responses.append(
+        SimpleNamespace(
+            text=verdict_json,
+            candidates=[SimpleNamespace(content=SimpleNamespace(parts=[text_part]))],
+        )
+    )
+    return responses
 
 
 def test_anthropic_tier_adjudicate_returns_verdict_per_location() -> None:
@@ -140,6 +202,41 @@ def test_anthropic_autonomous_adjudicate_returns_session_with_tool_calls() -> No
     assert len(session.tool_calls) == 1
     assert session.tool_calls[0].sequence == 0
     assert session.tool_calls[0].tool_name == "get_location_records"
+
+
+@pytest.mark.parametrize("adapter_cls", [AnthropicModelSeam, GeminiModelSeam])
+def test_multi_round_tool_calls_have_contiguous_sequences(adapter_cls) -> None:
+    rounds = [
+        ("get_location_records", {"subject_id": "mixed-fanout-subject"}),
+        ("get_retention_floors", {"subject_id": "mixed-fanout-subject"}),
+    ]
+    client = MagicMock()
+    if adapter_cls is AnthropicModelSeam:
+        client.messages.create.side_effect = _anthropic_multi_round_tool_then_text(
+            rounds=rounds,
+            verdict_json=_VERDICT_JSON,
+        )
+        config = CLAUDE_CONFIG
+    else:
+        client.models.generate_content.side_effect = _gemini_multi_round_tool_then_text(
+            rounds=rounds,
+            verdict_json=_VERDICT_JSON,
+        )
+        config = GEMINI_CONFIG
+
+    seam = adapter_cls(config, client=client)
+    session = seam.adjudicate(
+        context=_sample_context(),
+        case_id="mixed-fanout-subject",
+        tool_registry=_MultiRoundFakeRegistry(),
+    )
+    assert isinstance(session, AdjudicationSessionResult)
+    assert len(session.tool_calls) == 2
+    assert [trace.sequence for trace in session.tool_calls] == [0, 1]
+    assert [trace.tool_name for trace in session.tool_calls] == [
+        "get_location_records",
+        "get_retention_floors",
+    ]
 
 
 def test_gemini_tier_adjudicate_returns_verdict_per_location() -> None:
