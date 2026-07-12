@@ -205,6 +205,40 @@ def test_anthropic_autonomous_adjudicate_returns_session_with_tool_calls() -> No
 
 
 @pytest.mark.parametrize("adapter_cls", [AnthropicModelSeam, GeminiModelSeam])
+def test_autonomous_tool_registry_invokes_each_tool_once(adapter_cls) -> None:
+    """Live adapters must not re-invoke tools when building session traces."""
+    registry = MagicMock()
+    registry.tool_names = frozenset({"get_location_records", "get_retention_floors"})
+    registry.invoke.side_effect = lambda name, args: {"tool": name, "subject_id": args.get("subject_id")}
+
+    rounds = [
+        ("get_location_records", {"subject_id": "mixed-fanout-subject"}),
+        ("get_retention_floors", {"subject_id": "mixed-fanout-subject"}),
+    ]
+    client = MagicMock()
+    if adapter_cls is AnthropicModelSeam:
+        client.messages.create.side_effect = _anthropic_multi_round_tool_then_text(
+            rounds=rounds,
+            verdict_json=_VERDICT_JSON,
+        )
+        config = CLAUDE_CONFIG
+    else:
+        client.models.generate_content.side_effect = _gemini_multi_round_tool_then_text(
+            rounds=rounds,
+            verdict_json=_VERDICT_JSON,
+        )
+        config = GEMINI_CONFIG
+
+    session = adapter_cls(config, client=client).adjudicate(
+        context=_sample_context(),
+        case_id="mixed-fanout-subject",
+        tool_registry=registry,
+    )
+    assert isinstance(session, AdjudicationSessionResult)
+    assert registry.invoke.call_count == 2
+
+
+@pytest.mark.parametrize("adapter_cls", [AnthropicModelSeam, GeminiModelSeam])
 def test_multi_round_tool_calls_have_contiguous_sequences(adapter_cls) -> None:
     rounds = [
         ("get_location_records", {"subject_id": "mixed-fanout-subject"}),

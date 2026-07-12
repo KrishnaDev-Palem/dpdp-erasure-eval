@@ -7,7 +7,6 @@ import os
 import pytest
 
 from core.model import create_model_seam, load_model_config
-from core.model.factory import create_model_seam as factory_create
 from core.types import ContextBundle, ErasureRequest
 
 
@@ -39,7 +38,7 @@ def test_live_claude_adjudicate_smoke(monkeypatch: pytest.MonkeyPatch) -> None:
         pytest.skip("ANTHROPIC_API_KEY or MODEL_API_KEY required for live smoke")
     monkeypatch.setenv("CACHE_MODE", "refresh")
     monkeypatch.setenv("MODEL_ID", "claude-sonnet-5")
-    seam = factory_create(config=load_model_config())
+    seam = create_model_seam(config=load_model_config())
     verdicts = seam.adjudicate(context=_minimal_context(), case_id="smoke-subject")
     assert verdicts == []
 
