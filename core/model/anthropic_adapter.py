@@ -111,7 +111,7 @@ class AnthropicModelSeam:
         ]
         all_tool_calls: list[dict[str, Any]] = []
 
-        for round_index in range(self._config.max_tool_rounds):
+        for _ in range(self._config.max_tool_rounds):
             response = self._client.messages.create(
                 model=self._config.provider_model_id,
                 max_tokens=4096,
@@ -141,8 +141,10 @@ class AnthropicModelSeam:
             tool_results: list[dict[str, Any]] = []
             for block in tool_uses:
                 arguments = block.input if isinstance(block.input, dict) else {}
-                round_calls.append({"name": block.name, "arguments": arguments})
                 result = tool_registry.invoke(block.name, arguments)
+                round_calls.append(
+                    {"name": block.name, "arguments": arguments, "result": result}
+                )
                 tool_results.append(
                     {
                         "type": "tool_result",
@@ -153,7 +155,6 @@ class AnthropicModelSeam:
             all_tool_calls.extend(round_calls)
             messages.append({"role": "assistant", "content": response.content})
             messages.append({"role": "user", "content": tool_results})
-            _ = round_index
 
         raise ModelResponseError(
             f"Exceeded max_tool_rounds={self._config.max_tool_rounds} for case {case_id!r}"

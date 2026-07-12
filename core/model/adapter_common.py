@@ -126,7 +126,11 @@ def run_tool_registry_loop(
             raise ModelResponseError(f"Invalid tool name {tool_name!r}")
         if not isinstance(arguments, dict):
             raise ModelResponseError(f"Invalid tool arguments for {tool_name!r}")
-        result = tool_registry.invoke(tool_name, arguments)
+        cached_result = call.get("result")
+        if cached_result is not None:
+            result = cached_result
+        else:
+            result = tool_registry.invoke(tool_name, arguments)
         traces.append(
             ToolCallTrace(
                 sequence=starting_sequence + offset,

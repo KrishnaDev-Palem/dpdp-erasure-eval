@@ -113,7 +113,7 @@ class GeminiModelSeam:
         ]
         all_tool_calls: list[dict[str, Any]] = []
 
-        for round_index in range(self._config.max_tool_rounds):
+        for _ in range(self._config.max_tool_rounds):
             response = self._client.models.generate_content(
                 model=self._config.provider_model_id,
                 contents=contents,
@@ -145,8 +145,8 @@ class GeminiModelSeam:
                 call_id = call.get("id", name)
                 if not isinstance(name, str) or not isinstance(arguments, dict):
                     raise ModelResponseError(f"Invalid function call for case {case_id!r}")
-                round_calls.append({"name": name, "arguments": arguments})
                 result = tool_registry.invoke(name, arguments)
+                round_calls.append({"name": name, "arguments": arguments, "result": result})
                 function_responses.append(
                     {
                         "name": name,
@@ -157,7 +157,6 @@ class GeminiModelSeam:
             all_tool_calls.extend(round_calls)
             contents.append(response)
             contents.extend(function_responses)
-            _ = round_index
 
         raise ModelResponseError(
             f"Exceeded max_tool_rounds={self._config.max_tool_rounds} for case {case_id!r}"
