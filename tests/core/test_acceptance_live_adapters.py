@@ -209,7 +209,10 @@ def test_autonomous_tool_registry_invokes_each_tool_once(adapter_cls) -> None:
     """Live adapters must not re-invoke tools when building session traces."""
     registry = MagicMock()
     registry.tool_names = frozenset({"get_location_records", "get_retention_floors"})
-    registry.invoke.side_effect = lambda name, args: {"tool": name, "subject_id": args.get("subject_id")}
+    registry.invoke.side_effect = lambda name, args: {
+        "tool": name,
+        "subject_id": args.get("subject_id"),
+    }
 
     rounds = [
         ("get_location_records", {"subject_id": "mixed-fanout-subject"}),

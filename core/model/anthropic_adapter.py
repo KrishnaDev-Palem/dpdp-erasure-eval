@@ -142,9 +142,7 @@ class AnthropicModelSeam:
             for block in tool_uses:
                 arguments = block.input if isinstance(block.input, dict) else {}
                 result = tool_registry.invoke(block.name, arguments)
-                round_calls.append(
-                    {"name": block.name, "arguments": arguments, "result": result}
-                )
+                round_calls.append({"name": block.name, "arguments": arguments, "result": result})
                 tool_results.append(
                     {
                         "type": "tool_result",
