@@ -8,6 +8,14 @@
 
 **Input**: User description: "Build Feature 007: complete Feature 006 SC-002 by seeding committed live-role cache and validating offline replay for Claude Sonnet 5 and Gemini 3.5 Flash. Regenerate live-model cache entries for each supported MODEL_ID role and replay them offline with identical results. Extend the minimal 006 quickstart proof into a durable, committed artifact set for thesis evaluation. Depends on Feature 006 live model seam. Runner paths: T2 tier sweep (claude-sonnet-5), adversarial gate (gemini-3.5-flash), autonomous (claude-sonnet-5). Cache under separate namespaces only. Offline replay CI-gated. Operator workflow documented in quickstart with cost estimates."
 
+## Clarifications
+
+### Session 2026-07-12
+
+- Q: Should the live-role cache entries be committed in this feature PR, or remain operator-generated with only a subset committed for replay testing? → A: Commit the full live-role cache set in this feature PR; CI replay tests run against committed entries.
+- Q: For the gemini-3.5-flash adversarial_gate cache — full extended-slice coverage or a representative subset? → A: Full parity: all ~90 slice cases × 5 samples (≈450 entries); offline gate sweep must replay with zero cache misses.
+- Q: For claude-sonnet-5 T2 and autonomous caches — full 10-entry parity per runner or a minimal miss-only seed? → A: Full 10-entry parity per runner (2 subjects × 5 samples for both T2 and autonomous).
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Committed Live-Role Cache for Thesis Evaluation (Priority: P1)
@@ -92,11 +100,11 @@ An evaluator reading the repository README needs a clear path to run evaluations
 
 ### Functional Requirements
 
-- **FR-001**: System MUST commit live-role cache entries under separate namespaces only: `cache/claude-sonnet-5/{t2,autonomous}/` and `cache/gemini-3.5-flash/adversarial_gate/`.
+- **FR-001**: System MUST commit the full live-role cache set in this feature's pull request, under separate namespaces only: `cache/claude-sonnet-5/{t2,autonomous}/` and `cache/gemini-3.5-flash/adversarial_gate/`. Deferring cache commitment to operator-local artifacts is not acceptable — CI replay tests run against committed entries.
 - **FR-002**: System MUST NOT modify, overwrite, or delete any files under `cache/primary/` or `export/` as part of this feature.
-- **FR-003**: T2 live-role cache MUST cover the same scored subject and sample matrix as `cache/primary/t2/`: 2 scored subjects × 5 samples (10 entries total).
-- **FR-004**: Adversarial-gate live-role cache MUST cover the same extended-slice case and sample matrix as `cache/primary/adversarial_gate/`: all slice cases × 5 samples (~450 entries total).
-- **FR-005**: Autonomous live-role cache MUST cover the same subject and sample matrix as `cache/primary/autonomous/`: 2 subjects × 5 samples (10 entries total), with `tool_calls` traces included in each entry.
+- **FR-003**: T2 live-role cache MUST cover the same scored subject and sample matrix as `cache/primary/t2/`: 2 scored subjects × 5 samples (10 entries total). Minimal miss-only or reduced-sample seeds do not satisfy acceptance.
+- **FR-004**: Adversarial-gate live-role cache MUST cover the same extended-slice case and sample matrix as `cache/primary/adversarial_gate/`: all ~90 slice cases × 5 samples (~450 entries total). Representative-subset or reduced-sample seeding does not satisfy acceptance; the offline gate sweep must replay with zero cache misses.
+- **FR-005**: Autonomous live-role cache MUST cover the same subject and sample matrix as `cache/primary/autonomous/`: 2 subjects × 5 samples (10 entries total), with `tool_calls` traces included in each entry. Minimal miss-only or reduced-sample seeds do not satisfy acceptance.
 - **FR-006**: System MUST use Feature 006 refresh infrastructure (`create_model_seam`, live adapters, `CACHE_MODE=refresh`) for cache generation — MUST NOT re-implement adapters or factory.
 - **FR-007**: System MUST add CI-gated acceptance tests that run with `CACHE_MODE=offline`, zero API keys, and `MODEL_ID` set to each live role, asserting T2, adversarial-gate, and autonomous sweeps complete with exit code 0 and deterministic results.
 - **FR-008**: System MUST add CI-gated acceptance tests (or CLI integration checks) verifying `dpdp-eval t2`, `dpdp-eval adversarial-gate`, and `dpdp-eval autonomous` subcommands succeed offline against committed live-role cache.
