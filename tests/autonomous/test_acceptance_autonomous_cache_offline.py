@@ -89,6 +89,75 @@ def test_offline_cache_miss_names_identifiers(
 
 
 @pytest.mark.refresh
+def test_resolve_autonomous_entry_refresh_miss_writes_tool_calls(
+    export_bundle,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from types import SimpleNamespace
+    from unittest.mock import MagicMock
+
+    from core.model.anthropic_adapter import AnthropicModelSeam, LiveAdapterConfig
+
+    monkeypatch.setenv("CACHE_MODE", "refresh")
+    subject = next(
+        item for item in export_bundle.subjects if item.subject_id == "mixed-fanout-subject"
+    )
+    context = build_t1(subject.request, subject)
+    registry = build_retrieval_tool_registry(export_bundle)
+    cache_root = tmp_path / "cache"
+    store = CacheStore(root=cache_root, cache_mode="refresh")
+
+    tool_block = SimpleNamespace(
+        type="tool_use",
+        id="tool-1",
+        name="get_location_records",
+        input={"subject_id": subject.subject_id},
+    )
+    text_block = SimpleNamespace(
+        type="text",
+        text=(
+            '{"verdicts": [{"location_id": "txn-004", "verdict": "retain"}, '
+            '{"location_id": "note-001", "verdict": "erase"}]}'
+        ),
+    )
+    client = MagicMock()
+    client.messages.create.side_effect = [
+        SimpleNamespace(content=[tool_block]),
+        SimpleNamespace(content=[text_block]),
+    ]
+
+    seam = AnthropicModelSeam(
+        LiveAdapterConfig(
+            role_id="claude-sonnet-5",
+            provider_model_id="claude-sonnet-5",
+            api_key="sk-test",
+        ),
+        client=client,
+    )
+    session = resolve_autonomous_entry(
+        context=context,
+        subject_id=subject.subject_id,
+        sample_index=0,
+        model_id="claude-sonnet-5",
+        store=store,
+        seam=seam,
+        tool_registry=registry,
+    )
+    assert session.tool_calls
+    assert len(session.tool_calls) >= 1
+    key = make_cache_key(
+        context=context,
+        model_id="claude-sonnet-5",
+        runner_id=AUTONOMOUS_RUNNER_ID,
+        case_id=subject.subject_id,
+        sample_index=0,
+    )
+    entry = store.get(key)
+    assert entry.tool_calls
+
+
+@pytest.mark.refresh
 def test_refresh_path_available(
     export_bundle,
     tmp_path: Path,

@@ -65,3 +65,15 @@ def test_load_model_config_without_api_key() -> None:
     config = load_model_config()
     assert config.model_id
     assert config.cache_mode in {"offline", "refresh"}
+
+
+def test_fake_model_seam_regression_unchanged() -> None:
+    """Regression guard: FakeModelSeam contract unchanged from Feature 001."""
+    seam = FakeModelSeam(adjudication_verdicts={"txn-004": "retain", "note-001": "erase"})
+    context = _sample_context()
+    verdicts = seam.adjudicate(context=context, case_id="mixed-fanout-subject")
+    assert len(verdicts) == 2
+    assert {item.location_id for item in verdicts} == {"txn-004", "note-001"}
+
+    classify = seam.classify_note(text="test", case_id="case-1")
+    assert classify.outcome == "clean"

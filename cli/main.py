@@ -8,7 +8,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from core.model import FakeModelSeam
+from core.model import create_model_seam
 from report.adjudication_tables import build_tier_adjudication_report, format_adjudication_report
 from report.adversarial_tables import build_gate_report
 from report.format_gate import format_gate_report
@@ -84,7 +84,8 @@ def _run_adjudication_command(
     run_sweep: Any,
     args: argparse.Namespace,
 ) -> int:
-    seam = FakeModelSeam()
+    # Refresh with provider credentials is operator opt-in; excluded from CI merge gate.
+    seam = create_model_seam()
     sweep_kwargs: dict[str, Any] = {
         "seam": seam,
         "export_dir": args.export_dir,
@@ -99,7 +100,8 @@ def _run_adjudication_command(
 
 
 def _run_gate_command(args: argparse.Namespace) -> int:
-    seam = FakeModelSeam()
+    # Refresh with provider credentials is operator opt-in; excluded from CI merge gate.
+    seam = create_model_seam()
     result = run_adversarial_gate_sweep(
         seam=seam,
         cache_root=args.cache_root,

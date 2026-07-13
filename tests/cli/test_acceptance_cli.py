@@ -8,6 +8,7 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 
@@ -256,3 +257,24 @@ def test_cli_deterministic_replay() -> None:
     assert result1.returncode == 0, result1.stderr
     assert result2.returncode == 0, result2.stderr
     assert json.loads(result1.stdout) == json.loads(result2.stdout)
+
+
+def test_cli_uses_create_model_seam_not_hardcoded_fake() -> None:
+    with patch("cli.main.create_model_seam") as factory_mock:
+        from cli.main import _run_adjudication_command
+
+        args = type(
+            "Args",
+            (),
+            {
+                "export_dir": None,
+                "cache_root": None,
+                "sample_index": 0,
+                "json": True,
+                "output": None,
+            },
+        )()
+        from runners.t2 import run_t2_sweep
+
+        _run_adjudication_command(run_sweep=run_t2_sweep, args=args)
+    factory_mock.assert_called_once()
