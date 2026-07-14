@@ -42,6 +42,39 @@ operator opt-in and excluded from the CI merge gate; live smoke tests require
 See [`specs/006-live-model-seam/quickstart.md`](specs/006-live-model-seam/quickstart.md)
 for offline validation, credential guards, and refresh workflow examples.
 
+## Live-role evaluations (Feature 007)
+
+Committed cache under `cache/claude-sonnet-5/` and `cache/gemini-3.5-flash/` lets
+thesis readers reproduce live-model numbers offline with no API keys. Set
+`CACHE_MODE=offline` and the role for each evaluation path:
+
+| Evaluation path | Reader-facing name | `MODEL_ID` |
+|-----------------|-------------------|------------|
+| `dpdp-eval t2` | records-augmented | `claude-sonnet-5` |
+| `dpdp-eval adversarial-gate` | adversarial-gate | `gemini-3.5-flash` |
+| `dpdp-eval autonomous` | autonomous retrieval | `claude-sonnet-5` |
+
+```powershell
+# PowerShell
+$env:CACHE_MODE = "offline"
+$env:MODEL_ID = "claude-sonnet-5"
+uv run dpdp-eval t2 --json
+uv run dpdp-eval autonomous --json
+$env:MODEL_ID = "gemini-3.5-flash"
+uv run dpdp-eval adversarial-gate --json
+```
+
+```bash
+# Bash
+export CACHE_MODE=offline
+MODEL_ID=claude-sonnet-5 uv run dpdp-eval t2 --json
+MODEL_ID=claude-sonnet-5 uv run dpdp-eval autonomous --json
+MODEL_ID=gemini-3.5-flash uv run dpdp-eval adversarial-gate --json
+```
+
+To regenerate entries locally, see
+[`specs/007-live-role-cache-seed/quickstart.md`](specs/007-live-role-cache-seed/quickstart.md).
+
 ## Running evaluations
 
 The `dpdp-eval` CLI runs each evaluation sweep from committed cache and emits

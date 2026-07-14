@@ -385,6 +385,57 @@ def test_adapters_use_registry_pinned_model_ids() -> None:
     assert gemini_client.models.generate_content.call_args.kwargs["model"] == "gemini-3.5-flash"
 
 
+def _t1_context() -> ContextBundle:
+    """Autonomous sessions start from a T1 context with no seed locations."""
+    request = ErasureRequest(
+        subject_id="mixed-fanout-subject",
+        type="erasure",
+        basis="explicit_erasure_right",
+        as_of="2026-06-01",
+    )
+    return ContextBundle(tier="t1", request=request, locations=[])
+
+
+@pytest.mark.parametrize("adapter_cls", [AnthropicModelSeam, GeminiModelSeam])
+def test_autonomous_empty_context_locations_keeps_model_verdicts(adapter_cls) -> None:
+    """Regression (007 refresh): tool-discovered verdicts must not be filtered away
+    when the initial context has no seed locations."""
+    rounds = [("get_location_records", {"subject_id": "mixed-fanout-subject"})]
+    client = MagicMock()
+    if adapter_cls is AnthropicModelSeam:
+        client.messages.create.side_effect = _anthropic_multi_round_tool_then_text(
+            rounds=rounds,
+            verdict_json=_VERDICT_JSON,
+        )
+        config = CLAUDE_CONFIG
+    else:
+        client.models.generate_content.side_effect = _gemini_multi_round_tool_then_text(
+            rounds=rounds,
+            verdict_json=_VERDICT_JSON,
+        )
+        config = GEMINI_CONFIG
+
+    session = adapter_cls(config, client=client).adjudicate(
+        context=_t1_context(),
+        case_id="mixed-fanout-subject",
+        tool_registry=_FakeToolRegistry(),
+    )
+    assert isinstance(session, AdjudicationSessionResult)
+    assert {item.location_id for item in session.verdicts} == {"txn-004", "note-001"}
+
+
+def test_autonomous_empty_context_locations_rejects_empty_verdicts() -> None:
+    client = MagicMock()
+    client.messages.create.return_value = _anthropic_text_response('{"verdicts": []}')
+    seam = AnthropicModelSeam(CLAUDE_CONFIG, client=client)
+    with pytest.raises(ModelResponseError, match="Empty verdicts"):
+        seam.adjudicate(
+            context=_t1_context(),
+            case_id="mixed-fanout-subject",
+            tool_registry=_FakeToolRegistry(),
+        )
+
+
 def test_adapter_respects_max_tool_rounds() -> None:
     client = MagicMock()
     tool_block = SimpleNamespace(

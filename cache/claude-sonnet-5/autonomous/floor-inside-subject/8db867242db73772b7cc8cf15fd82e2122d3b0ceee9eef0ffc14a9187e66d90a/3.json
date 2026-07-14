@@ -1,0 +1,65 @@
+{
+  "case_id": "floor-inside-subject",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "8db867242db73772b7cc8cf15fd82e2122d3b0ceee9eef0ffc14a9187e66d90a",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "kyc-001",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-14T05:46:45Z",
+  "runner_id": "autonomous",
+  "sample_index": 3,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "floor-inside-subject"
+      },
+      "result_summary": {
+        "categories": [
+          "customer_note",
+          "kyc_record",
+          "securities_transaction"
+        ],
+        "entry_count": 3
+      },
+      "sequence": 0,
+      "tool_name": "get_governance_map"
+    },
+    {
+      "arguments": {
+        "subject_id": "floor-inside-subject"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "kyc-001"
+        ],
+        "subject_id": "floor-inside-subject"
+      },
+      "sequence": 1,
+      "tool_name": "get_location_records"
+    },
+    {
+      "arguments": {
+        "subject_id": "floor-inside-subject"
+      },
+      "result_summary": {
+        "floor_count": 5,
+        "floor_ids": [
+          "companies_act",
+          "gst",
+          "income_tax",
+          "pmla_kyc",
+          "sebi"
+        ]
+      },
+      "sequence": 2,
+      "tool_name": "get_retention_floors"
+    }
+  ]
+}
