@@ -93,7 +93,7 @@ one-shot < $10 operation.
    refresh, the operator re-runs the same sweep with `CACHE_MODE=offline` and compares the
    emitted JSON report (`--json` / `--output`) for byte-equal payloads. Parity holds by
    construction — offline reads the exact entries refresh wrote — so this is a
-   namespace/coverage smoke check, recorded in the quickstart SC-002 checklist.
+   namespace/coverage smoke check, recorded in the quickstart Feature 006 SC-002 checklist.
 2. **Offline replay determinism (CI-verified continuously)**: repeated offline runs against
    committed entries produce identical verdicts, classification outcomes, tool-call traces,
    and report payloads, with **zero cache misses and zero seam invocations**. This is what
@@ -115,8 +115,8 @@ duplicates cache-derived state and creates a second artifact to keep in sync.
 | File | Asserts |
 |------|---------|
 | `tests/runners/test_acceptance_live_role_t2_replay.py` | `run_t2_sweep` with `SweepConfig(model_id="claude-sonnet-5", cache_mode="offline")` against committed `cache/`: completes, zero seam calls, verdict/rate payload deterministic across two runs |
-| `tests/gate/test_acceptance_live_role_gate_replay.py` | `run_adversarial_gate_sweep` with `GateSweepConfig(model_id="gemini-3.5-flash")`: 90 cases × 5 samples resolved, zero misses/zero classify calls, outcomes deterministic |
-| `tests/autonomous/test_acceptance_live_role_autonomous_replay.py` | `resolve_autonomous_entry`-backed sweep with `model_id="claude-sonnet-5"`: sessions replay with `tool_calls` traces validating against `ToolCallTrace`, zero seam calls |
+| `tests/gate/test_acceptance_live_role_gate_replay.py` | `run_adversarial_gate_sweep` with `GateSweepConfig(model_id="gemini-3.5-flash", cache_mode="offline")`: 90 cases × 5 samples resolved, zero misses/zero classify calls, outcomes deterministic |
+| `tests/autonomous/test_acceptance_live_role_autonomous_replay.py` | `run_autonomous_sweep` with `model_id="claude-sonnet-5"`, `cache_mode="offline"`: sessions replay with `tool_calls` traces validating against `ToolCallTrace`, zero seam calls |
 | `tests/cli/test_acceptance_cli_live_roles.py` | Subprocess `dpdp-eval t2` / `autonomous` (env `MODEL_ID=claude-sonnet-5`) and `adversarial-gate` (env `MODEL_ID=gemini-3.5-flash`) with `CACHE_MODE=offline` and provider keys stripped from env: exit 0, JSON `model_id` echoes the role |
 
 Division of responsibility (CHK020): runner-suite tests exercise in-process sweep functions

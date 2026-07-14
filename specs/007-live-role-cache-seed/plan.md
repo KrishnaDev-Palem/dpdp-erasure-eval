@@ -11,7 +11,7 @@ Complete Feature 006 SC-002 by seeding and committing the full live-role cache s
 `cache/gemini-3.5-flash/adversarial_gate/` (450 entries) — using Feature 006 refresh
 infrastructure **unchanged** (`create_model_seam`, live adapters, `CACHE_MODE=refresh`,
 existing cache helpers). No new runtime code: deliverables are (1) an operator refresh
-runbook with cost estimates and an SC-002 completion checklist in [quickstart.md](./quickstart.md),
+runbook with cost estimates and a Feature 006 SC-002 completion checklist in [quickstart.md](./quickstart.md),
 (2) the committed cache tree per [contracts/committed-cache-tree.md](./contracts/committed-cache-tree.md),
 (3) keyless offline replay acceptance tests in `tests/runners`, `tests/gate`,
 `tests/autonomous`, and `tests/cli` per [contracts/offline-replay-tests.md](./contracts/offline-replay-tests.md),
@@ -38,7 +38,7 @@ local machine with provider billing (PowerShell and Bash runbooks)
 **Project Type**: Committed data artifacts + acceptance tests + operator docs over an
 existing library/CLI harness
 
-**Performance Goals**: All three offline replay paths complete in <5 min on a clean clone
+**Performance Goals**: All three offline replay paths complete in under 5 minutes total on a clean clone
 post-`uv sync` (SC-004); CI suite stays within existing budget
 
 **Constraints**: `cache/primary/` and `export/` diff-empty on this branch; entries generated
@@ -93,11 +93,11 @@ Constitution Principle II. Phase 2 `tasks.md` (via `/speckit-tasks`) MUST sequen
 | 3 | `tests/autonomous/test_acceptance_live_role_autonomous_replay.py` — fails on empty namespace | Operator seeds `cache/claude-sonnet-5/autonomous/` via Step 3 |
 | 4 | `tests/cli/test_acceptance_cli_live_roles.py` — fails until all namespaces seeded | Offline parity + namespace verification (Steps 4–5) |
 | 5 | — | README live-role section + quickstart link (FR-012) |
-| 6 | Full regression `uv run pytest -v` offline, keys unset | SC-002/SC-003 sign-off via quickstart checklist |
+| 6 | Full regression `uv run pytest -v` offline, keys unset | 007 SC-002 / SC-003 sign-off via Feature 006 SC-002 checklist |
 
 Note on ordering: test files land on the branch before cache entries are committed (they
 fail for the right reason — cache miss); the operator seeding steps are implementation.
-Human review of the cache diff (FR-015) happens at PR review, gated by the SC-002 checklist
+Human review of the cache diff (FR-015) happens at PR review, gated by the Feature 006 SC-002 checklist
 in [quickstart.md](./quickstart.md).
 
 **Definition of done**: SC-001–SC-005 — 470 committed entries at full parity; merge gate
@@ -112,7 +112,7 @@ specs/007-live-role-cache-seed/
 ├── plan.md              # This file
 ├── research.md          # Phase 0 — coverage counts, refresh shape, cost, checklist resolutions
 ├── data-model.md        # Phase 1 — namespace/entry/workflow entities (no new runtime types)
-├── quickstart.md        # Phase 1 — offline validation + operator runbook + SC-002 checklist
+├── quickstart.md        # Phase 1 — offline validation + operator runbook + Feature 006 SC-002 checklist
 ├── contracts/
 │   ├── committed-cache-tree.md
 │   └── offline-replay-tests.md
@@ -163,7 +163,7 @@ FR-003/004/005 and is not a complexity exception.)
 | Data model | [data-model.md](./data-model.md) | Complete |
 | Committed cache tree contract | [contracts/committed-cache-tree.md](./contracts/committed-cache-tree.md) | Complete |
 | Offline replay tests contract | [contracts/offline-replay-tests.md](./contracts/offline-replay-tests.md) | Complete |
-| Quickstart (runbook + SC-002 checklist) | [quickstart.md](./quickstart.md) | Complete |
+| Quickstart (runbook + Feature 006 SC-002 checklist) | [quickstart.md](./quickstart.md) | Complete |
 | Tasks | tasks.md | Pending `/speckit-tasks` |
 
 ## Seeding and Replay Flow
@@ -196,7 +196,7 @@ flowchart TD
     A -->|miss only| N1 & N3
     G -->|miss only| N2
 
-    V[Offline parity check + namespace diff<br/>quickstart Steps 4–5] --> PR[Human PR review<br/>SC-002 checklist]
+    V[Offline parity check + namespace diff<br/>quickstart Steps 4–5] --> PR[Human PR review<br/>Feature 006 SC-002 checklist]
     tree --> V
 
     subgraph ci [CI merge gate — offline, zero keys]

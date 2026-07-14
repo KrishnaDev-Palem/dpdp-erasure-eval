@@ -76,7 +76,7 @@ partially seeded (interrupted) ──re-run refresh──▶ fully seeded
 fully seeded ──offline parity check──▶ commit-ready (operator + reviewer checklist)
 ```
 
-**Commit-readiness criteria** (quickstart SC-002 checklist):
+**Commit-readiness criteria** (quickstart Feature 006 SC-002 checklist):
 1. Entry counts match the coverage matrix exactly.
 2. Offline re-run of the same sweep exits 0 with byte-equal `--json` payload.
 3. `git diff` touches only the two live-role namespaces (+ tests/docs).

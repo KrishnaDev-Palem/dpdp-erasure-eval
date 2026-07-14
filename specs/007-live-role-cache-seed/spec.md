@@ -31,8 +31,8 @@ An evaluator running thesis comparisons needs committed cache entries for each s
 1. **Given** committed cache under `cache/claude-sonnet-5/t2/` covering all scored T2 subjects × sample indices 0–4, **When** an operator runs the T2 sweep offline with `MODEL_ID=claude-sonnet-5`, **Then** the sweep completes without cache misses and produces deterministic verdicts from committed entries.
 2. **Given** committed cache under `cache/gemini-3.5-flash/adversarial_gate/` covering all extended-slice cases × sample indices 0–4, **When** an operator runs the adversarial-gate sweep offline with `MODEL_ID=gemini-3.5-flash`, **Then** the sweep completes without cache misses and produces deterministic classification outcomes.
 3. **Given** committed cache under `cache/claude-sonnet-5/autonomous/` covering all autonomous subjects × sample indices 0–4 with `tool_calls` traces, **When** an operator runs the autonomous sweep offline with `MODEL_ID=claude-sonnet-5`, **Then** the sweep completes without cache misses and replays tool-call traces per the autonomous cache contract.
-4. **Given** committed `cache/primary/` entries, **When** Feature 007 lands, **Then** no primary-namespace cache files are modified, overwritten, or deleted.
-5. **Given** committed `export/` content, **When** Feature 007 lands, **Then** frozen export remains unchanged.
+4. **Given** committed `cache/primary/` entries, **When** Feature 007 lands, **Then** no primary-namespace cache files are modified, overwritten, deleted, or added.
+5. **Given** committed `export/` content, **When** Feature 007 lands, **Then** frozen export remains unchanged (no modification, overwrite, deletion, or addition).
 
 ---
 
@@ -101,9 +101,9 @@ An evaluator reading the repository README needs a clear path to run evaluations
 ### Functional Requirements
 
 - **FR-001**: System MUST commit the full live-role cache set in this feature's pull request, under separate namespaces only: `cache/claude-sonnet-5/{t2,autonomous}/` and `cache/gemini-3.5-flash/adversarial_gate/`. Deferring cache commitment to operator-local artifacts is not acceptable — CI replay tests run against committed entries.
-- **FR-002**: System MUST NOT modify, overwrite, or delete any files under `cache/primary/` or `export/` as part of this feature.
+- **FR-002**: System MUST NOT modify, overwrite, delete, or add any files under `cache/primary/` or `export/` as part of this feature.
 - **FR-003**: T2 live-role cache MUST cover the same scored subject and sample matrix as `cache/primary/t2/`: 2 scored subjects × 5 samples (10 entries total). Minimal miss-only or reduced-sample seeds do not satisfy acceptance.
-- **FR-004**: Adversarial-gate live-role cache MUST cover the same extended-slice case and sample matrix as `cache/primary/adversarial_gate/`: all ~90 slice cases × 5 samples (~450 entries total). Representative-subset or reduced-sample seeding does not satisfy acceptance; the offline gate sweep must replay with zero cache misses.
+- **FR-004**: Adversarial-gate live-role cache MUST cover the same extended-slice case and sample matrix as `cache/primary/adversarial_gate/`: 90 slice cases × 5 samples (450 entries total; verified in research R1). Representative-subset or reduced-sample seeding does not satisfy acceptance; the offline gate sweep must replay with zero cache misses.
 - **FR-005**: Autonomous live-role cache MUST cover the same subject and sample matrix as `cache/primary/autonomous/`: 2 subjects × 5 samples (10 entries total), with `tool_calls` traces included in each entry. Minimal miss-only or reduced-sample seeds do not satisfy acceptance.
 - **FR-006**: System MUST use Feature 006 refresh infrastructure (`create_model_seam`, live adapters, `CACHE_MODE=refresh`) for cache generation — MUST NOT re-implement adapters or factory.
 - **FR-007**: System MUST add CI-gated acceptance tests that run with `CACHE_MODE=offline`, zero API keys, and `MODEL_ID` set to each live role, asserting T2, adversarial-gate, and autonomous sweeps complete with exit code 0 and deterministic results.
@@ -128,10 +128,10 @@ An evaluator reading the repository README needs a clear path to run evaluations
 
 ### Measurable Outcomes
 
-- **SC-001**: Feature 006 SC-002 is fully satisfied — committed cache exists for each supported live model role with full in-scope runner coverage (T2: 10 entries, gate: ~450 entries, autonomous: 10 entries) and offline replay produces identical results to refresh.
-- **SC-002**: Default CI (`uv run pytest -v`) passes with 100% success rate and zero provider API keys; `cache/primary/` and `export/` are unchanged by the feature branch.
+- **SC-001**: Feature 006 SC-002 is fully satisfied — committed cache exists for each supported live model role with full in-scope runner coverage (T2: 10 entries, gate: 450 entries, autonomous: 10 entries) and offline replay produces identical results to refresh.
+- **SC-002**: Default CI (`uv run pytest -v`) passes with 100% success rate and zero provider API keys; `cache/primary/` and `export/` are unchanged by the feature branch (no modification, overwrite, deletion, or addition).
 - **SC-003**: Features 001–006 regression acceptance suites remain green — no breaking changes to existing offline contracts.
-- **SC-004**: An evaluator following README and quickstart can run all three in-scope evaluation paths against live-role cache in under 5 minutes on a clean clone (offline, no keys).
+- **SC-004**: An evaluator following README and quickstart can run all three in-scope evaluation paths against live-role cache in under 5 minutes total on a clean clone (offline, no keys).
 - **SC-005**: Quickstart documents expected API-call counts: T2 refresh ≤10 adjudication calls, autonomous refresh ≤10 adjudication calls (with tool rounds), gate refresh ~450 classification calls.
 
 ## Assumptions

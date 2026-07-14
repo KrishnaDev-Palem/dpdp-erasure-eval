@@ -59,7 +59,7 @@ MODEL_ID=gemini-3.5-flash uv run dpdp-eval adversarial-gate --json
 ```
 
 **Expected**: each exits 0; JSON `model_id` echoes the role; results are identical across
-repeated runs; no cache miss errors. Target: all three complete in under 5 minutes on a
+repeated runs; no cache miss errors. Target: all three complete in under 5 minutes total on a
 clean clone after `uv sync` (SC-004).
 
 ## Part 2 — Operator refresh runbook (local only, excluded from CI)
@@ -181,7 +181,7 @@ git diff --stat main -- cache/primary export        # MUST print nothing
 
 Do not stage the `*-refresh.json` / `*-offline.json` scratch reports.
 
-## SC-002 completion checklist (Feature 006 → 007)
+## Feature 006 SC-002 completion checklist
 
 Check off before requesting PR review; the reviewer re-verifies each item on the diff.
 
