@@ -80,6 +80,7 @@ def parse_verdicts(
         raise ModelResponseError(f"Missing verdicts list for case {case_id!r}")
 
     by_location: dict[str, ModelVerdict] = {}
+    parsed: list[ModelVerdict] = []
     for item in raw_verdicts:
         if not isinstance(item, dict):
             raise ModelResponseError(f"Invalid verdict entry for case {case_id!r}")
@@ -89,11 +90,20 @@ def parse_verdicts(
             raise ModelResponseError(
                 f"Invalid verdict {verdict!r} for location {location_id!r} in case {case_id!r}"
             )
-        by_location[location_id] = ModelVerdict(
+        model_verdict = ModelVerdict(
             location_id=location_id,
             verdict=verdict,  # type: ignore[arg-type]
             detail=item.get("detail"),
         )
+        by_location[location_id] = model_verdict
+        parsed.append(model_verdict)
+
+    if not location_ids:
+        # Autonomous sessions start from a T1 context with no seed locations — the model
+        # discovers them via tools, so its returned verdicts are authoritative.
+        if not parsed:
+            raise ModelResponseError(f"Empty verdicts list for case {case_id!r}")
+        return parsed
 
     verdicts: list[ModelVerdict] = []
     for location_id in location_ids:

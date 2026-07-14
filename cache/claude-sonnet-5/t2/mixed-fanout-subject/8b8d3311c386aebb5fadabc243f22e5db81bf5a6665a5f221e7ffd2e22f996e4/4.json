@@ -1,0 +1,23 @@
+{
+  "case_id": "mixed-fanout-subject",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "8b8d3311c386aebb5fadabc243f22e5db81bf5a6665a5f221e7ffd2e22f996e4",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "txn-004",
+        "verdict": "escalate"
+      },
+      {
+        "detail": null,
+        "location_id": "note-001",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-14T05:03:31Z",
+  "runner_id": "t2",
+  "sample_index": 4,
+  "tool_calls": []
+}

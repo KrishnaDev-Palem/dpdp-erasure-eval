@@ -66,3 +66,14 @@
 - Check items off as completed: `[x]`
 - Add findings inline; unresolved items should feed `/speckit-clarify` or spec edits before `/speckit-plan`
 - Traceability: 37/37 items carry a spec-section or constitution reference / gap marker
+
+## Validation Notes
+
+**Iteration 2 (2026-07-14)**: Implementation complete — SC-001/SC-005 satisfied.
+
+- 470 committed live-role cache entries (10 T2 + 450 gate + 10 autonomous) with offline
+  replay tests green (`270 passed` merge gate with `MODEL_ID=primary`).
+- Protected paths unchanged (`cache/primary/`, `export/` diff-empty).
+- Pre-planning CHK items addressed via research.md R1–R9, contracts, and quickstart
+  operator observations (Gemini billing requirement, autonomous empty-verdict retry,
+  adapter bugfix for T1-context tool sessions per R9 boundary).

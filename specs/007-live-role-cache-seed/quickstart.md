@@ -81,6 +81,16 @@ Pricing basis: Sonnet 5 $2/$10 per MTok (intro through 2026-08-31), Gemini 3.5 F
 $1.50/$9 per MTok. Refresh is idempotent on re-run: cache hits replay for free; only misses
 call the provider — an interrupted sweep is resumed by simply re-running it.
 
+**Observed during 007 seeding (2026-07-14)**:
+- Gate refresh requires a billing-enabled `GEMINI_API_KEY`; free-tier quota (20
+  requests/day) is insufficient for the 450-entry sweep.
+- Autonomous refresh may occasionally raise `ModelResponseError` (empty verdicts
+  from the provider on a tool-use session); re-run the sweep — only the cache
+  miss is retried.
+- A Feature 006 adapter bugfix was required: autonomous sessions start from a T1
+  context with no seed locations, so model-returned verdicts must not be filtered
+  against an empty location list (`core/model/adapter_common.py`).
+
 ### Step 1 — T2 sweep (Claude Sonnet 5)
 
 ```powershell
@@ -185,16 +195,16 @@ Do not stage the `*-refresh.json` / `*-offline.json` scratch reports.
 
 Check off before requesting PR review; the reviewer re-verifies each item on the diff.
 
-- [ ] `cache/claude-sonnet-5/t2/` contains exactly 10 entries (2 subjects × samples 0–4)
-- [ ] `cache/gemini-3.5-flash/adversarial_gate/` contains exactly 450 entries (90 cases × 5 samples)
-- [ ] `cache/claude-sonnet-5/autonomous/` contains exactly 10 entries with `tool_calls` traces;
+- [x] `cache/claude-sonnet-5/t2/` contains exactly 10 entries (2 subjects × samples 0–4)
+- [x] `cache/gemini-3.5-flash/adversarial_gate/` contains exactly 450 entries (90 cases × 5 samples)
+- [x] `cache/claude-sonnet-5/autonomous/` contains exactly 10 entries with `tool_calls` traces;
       any empty trace confirmed as genuine no-tool-use session
-- [ ] Offline re-run of each sweep produced byte-equal JSON payload vs its refresh run (Step 4)
-- [ ] `git diff main -- cache/primary export` is empty (Step 5)
-- [ ] All entry files match the Feature 001 schema (path segments agree with embedded fields)
-- [ ] `uv run pytest -v` green offline with all provider keys unset
-- [ ] No secrets, `.env`, or scratch report files staged
-- [ ] README links to this quickstart and documents live-role offline evaluation
+- [x] Offline re-run of each sweep produced byte-equal JSON payload vs its refresh run (Step 4)
+- [x] `git diff main -- cache/primary export` is empty (Step 5)
+- [x] All entry files match the Feature 001 schema (path segments agree with embedded fields)
+- [x] `uv run pytest -v` green offline with all provider keys unset
+- [x] No secrets, `.env`, or scratch report files staged
+- [x] README links to this quickstart and documents live-role offline evaluation
 
 ## References
 
