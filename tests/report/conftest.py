@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 
 from core.model import FakeModelSeam
-from core.types import AdjudicationScoringResult, Rate
+from core.types import AdjudicationScoringResult, Rate, ToolCallTrace
 from runners.types import RateAtSample, RateVariance, SampleRollup, VarianceSummary
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -134,4 +134,56 @@ def make_tier_sweep_result():
         export_agent_sha="a" * 40,
         samples=samples,
         variance=make_variance_summary(scoring),
+    )
+
+
+def make_location_records_trace(
+    *,
+    subject_id: str = "subj-payment-inside-floors",
+    location_ids: list[str] | None = None,
+) -> ToolCallTrace:
+    return ToolCallTrace(
+        sequence=0,
+        tool_name="get_location_records",
+        arguments={"subject_id": subject_id},
+        result_summary={
+            "subject_id": subject_id,
+            "location_count": len(location_ids or ["cust-001"]),
+            "location_ids": location_ids or ["cust-001"],
+        },
+    )
+
+
+def make_retention_floors_trace(
+    *,
+    sequence: int = 1,
+    floor_ids: list[str] | None = None,
+) -> ToolCallTrace:
+    return ToolCallTrace(
+        sequence=sequence,
+        tool_name="get_retention_floors",
+        arguments={},
+        result_summary={
+            "floor_count": 5,
+            "floor_ids": floor_ids
+            or [
+                "companies_act",
+                "gst",
+                "income_tax",
+                "pmla_kyc",
+                "sebi",
+            ],
+        },
+    )
+
+
+def make_partial_retention_floors_trace(floor_ids: list[str]) -> ToolCallTrace:
+    return ToolCallTrace(
+        sequence=1,
+        tool_name="get_retention_floors",
+        arguments={},
+        result_summary={
+            "floor_count": len(floor_ids),
+            "floor_ids": floor_ids,
+        },
     )

@@ -8,10 +8,11 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from core.model import create_model_seam
+from core.model import create_model_seam, load_model_config
 from report.adjudication_tables import build_tier_adjudication_report, format_adjudication_report
 from report.adversarial_tables import build_gate_report
 from report.format_gate import format_gate_report
+from report.retrieval_split import build_retrieval_split_report, format_retrieval_split_report
 from runners.adversarial_gate.runner import run_adversarial_gate_sweep
 from runners.autonomous.runner import run_autonomous_sweep
 from runners.t1 import run_t1_sweep
@@ -99,6 +100,21 @@ def _run_adjudication_command(
     return 0
 
 
+def _run_retrieval_split_command(args: argparse.Namespace) -> int:
+    config = load_model_config()
+    report = build_retrieval_split_report(
+        export_dir=args.export_dir,
+        cache_root=args.cache_root,
+        model_id=config.model_id,
+        cache_mode=config.cache_mode,
+        sample_index=args.sample_index,
+    )
+    payload = report.model_dump(mode="json")
+    human = format_retrieval_split_report(report)
+    _emit_report(payload=payload, human_text=human, as_json=args.json, output_path=args.output)
+    return 0
+
+
 def _run_gate_command(args: argparse.Namespace) -> int:
     # Refresh with provider credentials is operator opt-in; excluded from CI merge gate.
     seam = create_model_seam()
@@ -143,6 +159,12 @@ def main(argv: list[str] | None = None) -> int:
     )
     _add_common_args(gate_parser)
 
+    retrieval_split_parser = subparsers.add_parser(
+        "autonomous-retrieval-split",
+        help="Classify autonomous incorrect verdicts into retrieval vs reasoning failures",
+    )
+    _add_common_args(retrieval_split_parser)
+
     args = parser.parse_args(argv)
 
     if args.output is not None:
@@ -158,6 +180,7 @@ def main(argv: list[str] | None = None) -> int:
         "t3": lambda: _run_adjudication_command(run_sweep=run_t3_sweep, args=args),
         "autonomous": lambda: _run_adjudication_command(run_sweep=run_autonomous_sweep, args=args),
         "adversarial-gate": lambda: _run_gate_command(args),
+        "autonomous-retrieval-split": lambda: _run_retrieval_split_command(args),
     }
     return dispatch[args.command]()
 
