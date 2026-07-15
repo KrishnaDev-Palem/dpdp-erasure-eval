@@ -24,7 +24,7 @@ def test_refresh_cache_hit_replays_without_live_call(
     monkeypatch.setenv("MODEL_ID", "primary")
 
     export = load_export(export_dir)
-    subject = next(item for item in export.subjects if item.subject_id == "mixed-fanout-subject")
+    subject = subject_with_tag(export.subjects, "mixed_fanout")
     context = build_t2(subject.request, subject)
     key = make_cache_key(
         context=context,
@@ -58,7 +58,7 @@ def test_tier_refresh_integration_with_factory_seam(
     monkeypatch.setenv("MODEL_ID", "claude-sonnet-5")
 
     export = load_export(export_dir)
-    subject = next(item for item in export.subjects if item.subject_id == "mixed-fanout-subject")
+    subject = subject_with_tag(export.subjects, "mixed_fanout")
     context = build_t2(subject.request, subject)
     key = make_cache_key(
         context=context,
@@ -71,14 +71,15 @@ def test_tier_refresh_integration_with_factory_seam(
     client = MagicMock()
     from types import SimpleNamespace
 
+    verdict_json = ", ".join(
+        f'{{"location_id": "{location.location_id}", "verdict": "{location.expected.verdict}"}}'
+        for location in subject.locations
+    )
     client.messages.create.return_value = SimpleNamespace(
         content=[
             SimpleNamespace(
                 type="text",
-                text=(
-                    '{"verdicts": [{"location_id": "txn-004", "verdict": "retain"}, '
-                    '{"location_id": "note-001", "verdict": "erase"}]}'
-                ),
+                text=f'{{"verdicts": [{verdict_json}]}}',
             )
         ]
     )

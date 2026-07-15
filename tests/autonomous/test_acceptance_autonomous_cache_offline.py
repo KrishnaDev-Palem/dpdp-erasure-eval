@@ -95,8 +95,10 @@ def test_resolve_autonomous_entry_refresh_miss_writes_tool_calls(
     from core.model.anthropic_adapter import AnthropicModelSeam, LiveAdapterConfig
 
     monkeypatch.setenv("CACHE_MODE", "refresh")
-    subject = next(
-        item for item in export_bundle.subjects if item.subject_id == "mixed-fanout-subject"
+    subject = subject_with_tag(export_bundle.subjects, "mixed_fanout")
+    verdict_json = ", ".join(
+        f'{{"location_id": "{location.location_id}", "verdict": "{location.expected.verdict}"}}'
+        for location in subject.locations
     )
     context = build_t1(subject.request, subject)
     registry = build_retrieval_tool_registry(export_bundle)
@@ -111,10 +113,7 @@ def test_resolve_autonomous_entry_refresh_miss_writes_tool_calls(
     )
     text_block = SimpleNamespace(
         type="text",
-        text=(
-            '{"verdicts": [{"location_id": "txn-004", "verdict": "retain"}, '
-            '{"location_id": "note-001", "verdict": "erase"}]}'
-        ),
+        text=f'{{"verdicts": [{verdict_json}]}}',
     )
     client = MagicMock()
     client.messages.create.side_effect = [

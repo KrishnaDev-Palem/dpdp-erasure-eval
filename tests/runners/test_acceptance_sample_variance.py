@@ -49,7 +49,7 @@ def test_offline_cache_miss_fails_explicitly(
     with pytest.raises(CacheMissError) as exc_info:
         run_t2_sweep(seam=fake_seam, export_dir=export_dir, cache_root=empty_cache)
     message = str(exc_info.value).lower()
-    assert "t1" in message or "mixed-fanout" in message or "floor-inside" in message
+    assert "t1" in message or "subj-" in message
     assert fake_seam.adjudicate_calls == []
 
 

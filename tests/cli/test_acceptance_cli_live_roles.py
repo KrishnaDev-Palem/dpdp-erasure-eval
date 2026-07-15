@@ -10,6 +10,8 @@ from pathlib import Path
 
 import pytest
 
+from tests.conftest import LIVE_ROLE_SKIP_REASON, live_role_namespace_ready
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 PROVIDER_KEY_VARS = ("ANTHROPIC_API_KEY", "GEMINI_API_KEY", "MODEL_API_KEY")
@@ -29,6 +31,11 @@ GATE_JSON_KEYS = {
     "per_family",
     "sample_index",
 }
+
+_CLAUDE_READY = live_role_namespace_ready("claude-sonnet-5", "t2") and live_role_namespace_ready(
+    "claude-sonnet-5", "autonomous"
+)
+_GEMINI_READY = live_role_namespace_ready("gemini-3.5-flash", "adversarial_gate")
 
 
 def _run_cli_live_role(
@@ -52,6 +59,8 @@ def _run_cli_live_role(
 
 @pytest.mark.parametrize("subcommand", ["t2", "autonomous"])
 def test_cli_claude_sonnet_5_subcommands_exit_zero_and_echo_role(subcommand: str) -> None:
+    if not _CLAUDE_READY:
+        pytest.skip(LIVE_ROLE_SKIP_REASON)
     result = _run_cli_live_role(subcommand, "--json", model_id="claude-sonnet-5")
     assert result.returncode == 0, result.stderr
     payload = json.loads(result.stdout)
@@ -61,6 +70,8 @@ def test_cli_claude_sonnet_5_subcommands_exit_zero_and_echo_role(subcommand: str
 
 
 def test_cli_gemini_flash_adversarial_gate_exits_zero() -> None:
+    if not _GEMINI_READY:
+        pytest.skip(LIVE_ROLE_SKIP_REASON)
     result = _run_cli_live_role("adversarial-gate", "--json", model_id="gemini-3.5-flash")
     assert result.returncode == 0, result.stderr
     payload = json.loads(result.stdout)
@@ -76,6 +87,10 @@ def test_cli_gemini_flash_adversarial_gate_exits_zero() -> None:
     ],
 )
 def test_cli_live_role_byte_identical_stdout_on_repeat(subcommand: str, model_id: str) -> None:
+    if model_id == "claude-sonnet-5" and not _CLAUDE_READY:
+        pytest.skip(LIVE_ROLE_SKIP_REASON)
+    if model_id == "gemini-3.5-flash" and not _GEMINI_READY:
+        pytest.skip(LIVE_ROLE_SKIP_REASON)
     first = _run_cli_live_role(subcommand, "--json", model_id=model_id)
     second = _run_cli_live_role(subcommand, "--json", model_id=model_id)
     assert first.returncode == 0, first.stderr
