@@ -1,0 +1,23 @@
+{
+  "case_id": "subj-wallet-instrument",
+  "model_id": "primary",
+  "prompt_hash": "78c705baa474809ad81e1e5952c8ab0a33c539fd6fbdf528b368bf4125f4bc4f",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-012",
+        "verdict": "retain"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-012",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T00:23:00Z",
+  "runner_id": "t1",
+  "sample_index": 4,
+  "tool_calls": []
+}

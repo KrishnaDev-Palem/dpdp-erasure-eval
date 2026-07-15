@@ -1,0 +1,39 @@
+{
+  "case_id": "subj-inactivity-only",
+  "model_id": "primary",
+  "prompt_hash": "9ac689aea70fd95c85a04605ff913e6c966a3bf9d3dad43a7711ea3ea6c7960d",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-016",
+        "verdict": "retain"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-017",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T00:23:00Z",
+  "runner_id": "autonomous",
+  "sample_index": 1,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "subj-inactivity-only"
+      },
+      "result_summary": {
+        "location_count": 2,
+        "location_ids": [
+          "cust-016",
+          "txn-017"
+        ],
+        "subject_id": "subj-inactivity-only"
+      },
+      "sequence": 0,
+      "tool_name": "get_location_records"
+    }
+  ]
+}

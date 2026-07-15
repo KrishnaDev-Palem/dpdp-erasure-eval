@@ -1,0 +1,23 @@
+{
+  "case_id": "subj-imps-instrument",
+  "model_id": "primary",
+  "prompt_hash": "626ce2f635c92ca2c0450a6a4680923dc2fb96b593c8567e519f2f8144956890",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-014",
+        "verdict": "retain"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-014",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T00:23:00Z",
+  "runner_id": "t3",
+  "sample_index": 3,
+  "tool_calls": []
+}

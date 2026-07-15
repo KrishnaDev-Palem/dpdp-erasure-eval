@@ -1,0 +1,23 @@
+{
+  "case_id": "subj-payment-outside-floors",
+  "model_id": "primary",
+  "prompt_hash": "b6bfe635d32220083d5d38b108c68f4ed235ae6af5d79ab20a9e83bb2e7826f3",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-002",
+        "verdict": "retain"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-002",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T00:23:00Z",
+  "runner_id": "t1",
+  "sample_index": 0,
+  "tool_calls": []
+}

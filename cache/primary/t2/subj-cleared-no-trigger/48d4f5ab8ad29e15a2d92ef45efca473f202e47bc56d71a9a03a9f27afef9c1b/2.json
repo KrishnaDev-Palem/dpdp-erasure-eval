@@ -1,0 +1,33 @@
+{
+  "case_id": "subj-cleared-no-trigger",
+  "model_id": "primary",
+  "prompt_hash": "48d4f5ab8ad29e15a2d92ef45efca473f202e47bc56d71a9a03a9f27afef9c1b",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-015",
+        "verdict": "retain"
+      },
+      {
+        "detail": null,
+        "location_id": "mkt-015",
+        "verdict": "erase"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-015",
+        "verdict": "retain"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-016",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T00:23:00Z",
+  "runner_id": "t2",
+  "sample_index": 2,
+  "tool_calls": []
+}

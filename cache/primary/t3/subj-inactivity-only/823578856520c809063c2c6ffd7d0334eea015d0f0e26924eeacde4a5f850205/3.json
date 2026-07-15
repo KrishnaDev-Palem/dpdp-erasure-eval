@@ -1,0 +1,23 @@
+{
+  "case_id": "subj-inactivity-only",
+  "model_id": "primary",
+  "prompt_hash": "823578856520c809063c2c6ffd7d0334eea015d0f0e26924eeacde4a5f850205",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-016",
+        "verdict": "retain"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-017",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T00:23:00Z",
+  "runner_id": "t3",
+  "sample_index": 3,
+  "tool_calls": []
+}

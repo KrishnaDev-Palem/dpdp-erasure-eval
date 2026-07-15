@@ -1,0 +1,23 @@
+{
+  "case_id": "subj-kyc-closed-inside-floor",
+  "model_id": "primary",
+  "prompt_hash": "0a224e845ef46420b2686dc8e29b9a1abac8afe35ab45e2027aac3c7b9a21b42",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-010",
+        "verdict": "retain"
+      },
+      {
+        "detail": null,
+        "location_id": "kyc-010",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T00:23:00Z",
+  "runner_id": "t2",
+  "sample_index": 4,
+  "tool_calls": []
+}

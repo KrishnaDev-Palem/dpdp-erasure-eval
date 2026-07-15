@@ -1,0 +1,23 @@
+{
+  "case_id": "subj-kyc-open-relationship",
+  "model_id": "primary",
+  "prompt_hash": "0840d2fc4394a4235998ac2cc1277fc47a58f6332ab488f06c962e59999e3874",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-009",
+        "verdict": "retain"
+      },
+      {
+        "detail": null,
+        "location_id": "kyc-009",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T00:23:00Z",
+  "runner_id": "t1",
+  "sample_index": 3,
+  "tool_calls": []
+}

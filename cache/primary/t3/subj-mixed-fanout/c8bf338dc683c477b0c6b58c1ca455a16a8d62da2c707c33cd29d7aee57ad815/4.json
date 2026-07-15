@@ -1,0 +1,28 @@
+{
+  "case_id": "subj-mixed-fanout",
+  "model_id": "primary",
+  "prompt_hash": "c8bf338dc683c477b0c6b58c1ca455a16a8d62da2c707c33cd29d7aee57ad815",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-004",
+        "verdict": "escalate"
+      },
+      {
+        "detail": null,
+        "location_id": "mkt-004",
+        "verdict": "erase"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-004",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T00:23:00Z",
+  "runner_id": "t3",
+  "sample_index": 4,
+  "tool_calls": []
+}
