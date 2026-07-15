@@ -14,6 +14,7 @@ from core.model.adapter_common import (
     extract_json_object,
     parse_classifier_result,
     parse_verdicts,
+    resolve_adjudication_location_ids,
     run_tool_registry_loop,
 )
 from core.tools.registry import ToolRegistry
@@ -57,7 +58,7 @@ class AnthropicModelSeam:
         case_id: str,
         tool_registry: ToolRegistry | None = None,
     ) -> list[ModelVerdict] | AdjudicationSessionResult:
-        location_ids = [str(location["location_id"]) for location in context.locations]
+        location_ids = resolve_adjudication_location_ids(context=context, case_id=case_id)
         if tool_registry is None:
             text = self._complete_text(
                 prompt=build_adjudication_prompt(context=context, case_id=case_id),
