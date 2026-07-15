@@ -8,6 +8,7 @@ from core.context import build_t2
 from core.export import load_export
 from core.model import FakeModelSeam
 from runners.t2 import run_t2_sweep
+from tests.core.conftest import subject_with_tag
 
 
 def test_t2_includes_location_records(
@@ -16,7 +17,7 @@ def test_t2_includes_location_records(
     cache_dir: Path,
 ) -> None:
     export = load_export(export_dir)
-    subject = next(item for item in export.subjects if item.subject_id == "mixed-fanout-subject")
+    subject = subject_with_tag(export.subjects, "mixed_fanout")
     bundle = build_t2(subject.request, subject)
     assert bundle.locations
     for location in bundle.locations:

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 from pathlib import Path
 
 import pytest
@@ -13,6 +14,7 @@ from core.model import FakeModelSeam
 from runners.pairing import PairingValidationError
 from runners.spine import run_tier_sweep
 from runners.types import SweepConfig
+from tests.core.conftest import subject_with_tag
 
 
 def _config(export_dir: Path, cache_dir: Path, **kwargs) -> SweepConfig:
@@ -105,7 +107,8 @@ def test_invalid_verdict_enum_rejected(
     from core.context import build_t2
 
     export = load_export(export_dir)
-    subject = next(item for item in export.subjects if item.subject_id == "mixed-fanout-subject")
+    subject = subject_with_tag(export.subjects, "mixed_fanout")
+    location_ids = [location.location_id for location in subject.locations]
     context = build_t2(subject.request, subject)
     key = make_cache_key(
         context=context,
@@ -115,6 +118,7 @@ def test_invalid_verdict_enum_rejected(
         sample_index=0,
     )
     bad_cache = tmp_path / "cache"
+    shutil.copytree(cache_dir / "primary", bad_cache / "primary")
     entry_path = (
         bad_cache
         / key.model_id
@@ -123,7 +127,7 @@ def test_invalid_verdict_enum_rejected(
         / key.prompt_hash
         / f"{key.sample_index}.json"
     )
-    entry_path.parent.mkdir(parents=True)
+
     payload = {
         "case_id": key.case_id,
         "model_id": key.model_id,
@@ -133,8 +137,11 @@ def test_invalid_verdict_enum_rejected(
         "recorded_at": "2026-07-01T12:00:00Z",
         "raw_response": {
             "verdicts": [
-                {"location_id": "txn-004", "verdict": "invalid", "detail": None},
-                {"location_id": "note-001", "verdict": "erase", "detail": None},
+                {"location_id": location_ids[0], "verdict": "invalid", "detail": None},
+                *[
+                    {"location_id": lid, "verdict": "erase", "detail": None}
+                    for lid in location_ids[1:]
+                ],
             ]
         },
         "tool_calls": [],
@@ -149,7 +156,7 @@ def test_invalid_verdict_enum_rejected(
         )
     message = str(exc_info.value)
     assert subject.subject_id in message
-    assert "txn-004" in message
+    assert location_ids[0] in message
     assert "0" in message or "sample_index" in message.lower()
 
 
@@ -163,7 +170,8 @@ def test_missing_verdict_rejected(
     from core.context import build_t2
 
     export = load_export(export_dir)
-    subject = next(item for item in export.subjects if item.subject_id == "mixed-fanout-subject")
+    subject = subject_with_tag(export.subjects, "mixed_fanout")
+    location_ids = [location.location_id for location in subject.locations]
     context = build_t2(subject.request, subject)
     key = make_cache_key(
         context=context,
@@ -173,6 +181,7 @@ def test_missing_verdict_rejected(
         sample_index=0,
     )
     bad_cache = tmp_path / "cache"
+    shutil.copytree(cache_dir / "primary", bad_cache / "primary")
     entry_path = (
         bad_cache
         / key.model_id
@@ -181,7 +190,7 @@ def test_missing_verdict_rejected(
         / key.prompt_hash
         / f"{key.sample_index}.json"
     )
-    entry_path.parent.mkdir(parents=True)
+
     payload = {
         "case_id": key.case_id,
         "model_id": key.model_id,
@@ -191,7 +200,7 @@ def test_missing_verdict_rejected(
         "recorded_at": "2026-07-01T12:00:00Z",
         "raw_response": {
             "verdicts": [
-                {"location_id": "txn-004", "verdict": "retain", "detail": None},
+                {"location_id": location_ids[0], "verdict": "retain", "detail": None},
             ]
         },
         "tool_calls": [],
@@ -206,7 +215,7 @@ def test_missing_verdict_rejected(
         )
     message = str(exc_info.value)
     assert subject.subject_id in message
-    assert "note-001" in message
+    assert location_ids[1] in message
 
 
 def test_cache_miss_identifies_subject_and_sample(
@@ -223,5 +232,5 @@ def test_cache_miss_identifies_subject_and_sample(
             config=_config(export_dir, empty_cache, tier="t2", runner_id="t2"),
         )
     message = str(exc_info.value)
-    assert "mixed-fanout-subject" in message or "floor-inside-subject" in message
+    assert "subj-" in message
     assert fake_seam.adjudicate_calls == []

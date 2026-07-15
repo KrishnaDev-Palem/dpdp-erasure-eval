@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 from pathlib import Path
 
 import pytest
@@ -17,13 +18,15 @@ from core.types import VERDICT_LANES, ExpectedLabel, ModelVerdict
 from runners.autonomous.runner import run_autonomous_sweep
 from runners.autonomous.types import AUTONOMOUS_RUNNER_ID
 from runners.pairing import PairingValidationError
+from tests.core.conftest import subject_with_tag
 
 
-def test_all_export_subjects_visited(fake_seam, autonomous_config) -> None:
+def test_all_export_subjects_visited(fake_seam, autonomous_config, export_dir) -> None:
+    export = load_export(export_dir)
     result = run_autonomous_sweep(seam=fake_seam, config=autonomous_config)
     assert result.runner_id == "autonomous"
     for sample in result.samples:
-        assert sample.total_subjects == 3
+        assert sample.total_subjects == len(export.subjects)
 
 
 def test_request_only_t1_initial_context(fake_seam, autonomous_config) -> None:
@@ -62,10 +65,12 @@ def test_offline_deterministic_replay(
         assert left.scoring.model_dump() == right.scoring.model_dump()
 
 
-def test_empty_locations_subject_visited_no_pairs(fake_seam, autonomous_config) -> None:
+def test_empty_locations_subject_visited_no_pairs(fake_seam, autonomous_config, export_dir) -> None:
+    export = load_export(export_dir)
+    location_count = sum(len(subject.locations) for subject in export.subjects)
     result = run_autonomous_sweep(seam=fake_seam, config=autonomous_config)
     assert fake_seam.adjudicate_calls == []
-    assert result.samples[0].scoring.total_cases == 3
+    assert result.samples[0].scoring.total_cases == location_count
 
 
 def test_hand_calculated_rate_parity(
@@ -110,11 +115,13 @@ def test_hand_calculated_rate_parity(
 def test_invalid_verdict_enum_rejected(
     fake_seam: FakeModelSeam,
     export_dir: Path,
+    cache_dir: Path,
     tmp_path: Path,
     autonomous_config,
 ) -> None:
     export = load_export(export_dir)
-    subject = next(item for item in export.subjects if item.subject_id == "mixed-fanout-subject")
+    subject = subject_with_tag(export.subjects, "mixed_fanout")
+    location_ids = [location.location_id for location in subject.locations]
     context = build_t1(subject.request, subject)
     key = make_cache_key(
         context=context,
@@ -124,6 +131,7 @@ def test_invalid_verdict_enum_rejected(
         sample_index=0,
     )
     bad_cache = tmp_path / "cache"
+    shutil.copytree(cache_dir / "primary", bad_cache / "primary")
     entry_path = (
         bad_cache
         / key.model_id
@@ -132,7 +140,7 @@ def test_invalid_verdict_enum_rejected(
         / key.prompt_hash
         / f"{key.sample_index}.json"
     )
-    entry_path.parent.mkdir(parents=True)
+
     payload = {
         "case_id": key.case_id,
         "model_id": key.model_id,
@@ -142,8 +150,11 @@ def test_invalid_verdict_enum_rejected(
         "recorded_at": "2026-07-01T12:00:00Z",
         "raw_response": {
             "verdicts": [
-                {"location_id": "txn-004", "verdict": "invalid", "detail": None},
-                {"location_id": "note-001", "verdict": "erase", "detail": None},
+                {"location_id": location_ids[0], "verdict": "invalid", "detail": None},
+                *[
+                    {"location_id": lid, "verdict": "erase", "detail": None}
+                    for lid in location_ids[1:]
+                ],
             ]
         },
         "tool_calls": [],
@@ -155,7 +166,7 @@ def test_invalid_verdict_enum_rejected(
         run_autonomous_sweep(seam=fake_seam, config=config)
     message = str(exc_info.value)
     assert subject.subject_id in message
-    assert "txn-004" in message
+    assert location_ids[0] in message
     assert "0" in message or "sample_index" in message.lower()
 
 

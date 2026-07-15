@@ -8,6 +8,7 @@ from core.context import build_t3
 from core.export import load_export
 from core.model import FakeModelSeam
 from runners.t3 import run_t3_sweep
+from tests.core.conftest import subject_with_tag
 
 
 def test_t3_includes_rules_corpus(
@@ -16,7 +17,7 @@ def test_t3_includes_rules_corpus(
     cache_dir: Path,
 ) -> None:
     export = load_export(export_dir)
-    subject = next(item for item in export.subjects if item.subject_id == "mixed-fanout-subject")
+    subject = subject_with_tag(export.subjects, "mixed_fanout")
     bundle = build_t3(subject.request, subject, export.rules)
     assert bundle.retention_floors
     assert bundle.governance_map

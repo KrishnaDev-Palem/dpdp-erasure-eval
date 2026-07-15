@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from core.context import build_t1, build_t2, build_t3
 from core.export import load_export
+from tests.core.conftest import subject_with_tag
 
 
 def _assert_no_expected(bundle) -> None:
@@ -15,14 +16,14 @@ def _assert_no_expected(bundle) -> None:
 
 def test_t1_context_has_no_expected() -> None:
     export = load_export()
-    subject = next(item for item in export.subjects if item.subject_id == "mixed-fanout-subject")
+    subject = subject_with_tag(export.subjects, "mixed_fanout")
     bundle = build_t1(subject.request, subject)
     _assert_no_expected(bundle)
 
 
 def test_t2_context_has_no_expected() -> None:
     export = load_export()
-    subject = next(item for item in export.subjects if item.subject_id == "mixed-fanout-subject")
+    subject = subject_with_tag(export.subjects, "mixed_fanout")
     bundle = build_t2(subject.request, subject)
     _assert_no_expected(bundle)
     assert bundle.locations
@@ -30,7 +31,7 @@ def test_t2_context_has_no_expected() -> None:
 
 def test_t3_context_has_no_expected() -> None:
     export = load_export()
-    subject = next(item for item in export.subjects if item.subject_id == "mixed-fanout-subject")
+    subject = subject_with_tag(export.subjects, "mixed_fanout")
     bundle = build_t3(subject.request, subject, export.rules)
     _assert_no_expected(bundle)
     assert bundle.retention_floors

@@ -49,10 +49,22 @@ def export_bundle(export_dir: Path):
     return load_export(export_dir)
 
 
+from core.types import AdjudicationSubject, ErasureRequest
+from tests.core.conftest import subject_with_tag
+
+
 @pytest.fixture
-def empty_locations_subject(export_bundle) -> AdjudicationSubject:
-    return next(
-        item for item in export_bundle.subjects if item.subject_id == "empty-locations-subject"
+def empty_locations_subject() -> AdjudicationSubject:
+    return AdjudicationSubject(
+        subject_id="synthetic-empty-subject",
+        tags=["under_determined"],
+        request=ErasureRequest(
+            subject_id="synthetic-empty-subject",
+            type="erasure",
+            basis="explicit_erasure_right",
+            as_of="2026-06-01",
+        ),
+        locations=[],
     )
 
 

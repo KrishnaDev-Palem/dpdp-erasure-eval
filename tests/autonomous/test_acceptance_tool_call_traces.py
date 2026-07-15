@@ -7,25 +7,26 @@ from pathlib import Path
 
 import pytest
 
-from core.cache import make_cache_key, read_cache
+from core.cache import make_cache_key, read_cache, write_cache
 from core.cache.store import CacheStore
 from core.context import build_t1
 from core.model import FakeModelSeam
 from core.tools import build_retrieval_tool_registry
-from core.types import ToolCallTrace
+from core.types import CacheEntry, ToolCallTrace
 from runners.autonomous.cache import resolve_autonomous_entry
 from runners.autonomous.types import AUTONOMOUS_RUNNER_ID
+from tests.core.conftest import subject_with_tag
 
 
 def test_tool_call_trace_model_validates_tool_name() -> None:
     trace = ToolCallTrace(
         sequence=0,
         tool_name="get_location_records",
-        arguments={"subject_id": "mixed-fanout-subject"},
+        arguments={"subject_id": "subj-mixed-fanout"},
         result_summary={
-            "subject_id": "mixed-fanout-subject",
-            "location_count": 2,
-            "location_ids": ["note-001", "txn-004"],
+            "subject_id": "subj-mixed-fanout",
+            "location_count": 3,
+            "location_ids": ["cust-004", "mkt-004", "txn-004"],
         },
     )
     assert trace.sequence == 0
@@ -46,9 +47,7 @@ def test_offline_replay_reads_stored_tool_calls(
     export_bundle,
     autonomous_config,
 ) -> None:
-    subject = next(
-        item for item in export_bundle.subjects if item.subject_id == "mixed-fanout-subject"
-    )
+    subject = subject_with_tag(export_bundle.subjects, "mixed_fanout")
     context = build_t1(subject.request, subject)
     registry = build_retrieval_tool_registry(export_bundle)
     store = CacheStore(root=autonomous_config.cache_root, cache_mode="offline")
@@ -71,9 +70,7 @@ def test_offline_replay_does_not_reexecute_tools(
     export_bundle,
     autonomous_config,
 ) -> None:
-    subject = next(
-        item for item in export_bundle.subjects if item.subject_id == "mixed-fanout-subject"
-    )
+    subject = subject_with_tag(export_bundle.subjects, "mixed_fanout")
     context = build_t1(subject.request, subject)
     registry = build_retrieval_tool_registry(export_bundle)
     store = CacheStore(root=autonomous_config.cache_root, cache_mode="offline")
@@ -92,19 +89,47 @@ def test_offline_replay_does_not_reexecute_tools(
 def test_empty_tool_calls_valid_when_no_tools_invoked(
     fake_seam: FakeModelSeam,
     export_bundle,
-    autonomous_config,
+    tmp_path: Path,
 ) -> None:
     subject = next(
-        item for item in export_bundle.subjects if item.subject_id == "floor-inside-subject"
+        item
+        for item in export_bundle.subjects
+        if item.subject_id == "subj-payment-inside-floors"
     )
     context = build_t1(subject.request, subject)
+    key = make_cache_key(
+        context=context,
+        model_id="primary",
+        runner_id=AUTONOMOUS_RUNNER_ID,
+        case_id=subject.subject_id,
+        sample_index=0,
+    )
+    cache_root = tmp_path / "cache"
+    write_cache(
+        CacheEntry(
+            key=key,
+            raw_response={
+                "verdicts": [
+                    {
+                        "location_id": location.location_id,
+                        "verdict": location.expected.verdict,
+                        "detail": None,
+                    }
+                    for location in subject.locations
+                ]
+            },
+            recorded_at="2026-07-01T12:00:00Z",
+            tool_calls=[],
+        ),
+        cache_root,
+    )
     registry = build_retrieval_tool_registry(export_bundle)
-    store = CacheStore(root=autonomous_config.cache_root, cache_mode="offline")
+    store = CacheStore(root=cache_root, cache_mode="offline")
     session = resolve_autonomous_entry(
         context=context,
         subject_id=subject.subject_id,
         sample_index=0,
-        model_id=autonomous_config.model_id,
+        model_id="primary",
         store=store,
         seam=fake_seam,
         tool_registry=registry,
@@ -120,16 +145,17 @@ def test_refresh_path_persists_tool_calls(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setenv("CACHE_MODE", "refresh")
-    subject = next(
-        item for item in export_bundle.subjects if item.subject_id == "mixed-fanout-subject"
-    )
+    subject = subject_with_tag(export_bundle.subjects, "mixed_fanout")
     context = build_t1(subject.request, subject)
     registry = build_retrieval_tool_registry(export_bundle)
     cache_root = tmp_path / "cache"
     store = CacheStore(root=cache_root, cache_mode="refresh")
+    location_ids = [location.location_id for location in subject.locations]
     seam = FakeModelSeam(
-        pairing_location_ids=["txn-004", "note-001"],
-        adjudication_verdicts={"txn-004": "retain", "note-001": "erase"},
+        pairing_location_ids=location_ids,
+        adjudication_verdicts={
+            location.location_id: location.expected.verdict for location in subject.locations
+        },
         planned_tool_calls=[
             ("get_location_records", {"subject_id": subject.subject_id}),
         ],
