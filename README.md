@@ -24,6 +24,57 @@ uv run pytest tests/report tests/cli -v
 
 No `MODEL_API_KEY` is required. CI runs the same path in offline mode.
 
+## Live model seam (Feature 006)
+
+Default runs use `FakeModelSeam` and committed cache — no provider API keys and no
+network. To regenerate cache entries locally with live models, set `CACHE_MODE=refresh`
+and the provider key for your target role:
+
+| `MODEL_ID` | Credential |
+|------------|------------|
+| `claude-sonnet-5` | `ANTHROPIC_API_KEY` |
+| `gemini-3.5-flash` | `GEMINI_API_KEY` |
+
+Copy `.env.example` to `.env` for variable names (no secrets in the repo). Refresh is
+operator opt-in and excluded from the CI merge gate; live smoke tests require
+`-m live` explicitly.
+
+See [`specs/006-live-model-seam/quickstart.md`](specs/006-live-model-seam/quickstart.md)
+for offline validation, credential guards, and refresh workflow examples.
+
+## Live-role evaluations (Feature 007)
+
+Committed cache under `cache/claude-sonnet-5/` and `cache/gemini-3.5-flash/` lets
+thesis readers reproduce live-model numbers offline with no API keys. Set
+`CACHE_MODE=offline` and the role for each evaluation path:
+
+| Evaluation path | Reader-facing name | `MODEL_ID` |
+|-----------------|-------------------|------------|
+| `dpdp-eval t2` | records-augmented | `claude-sonnet-5` |
+| `dpdp-eval adversarial-gate` | adversarial-gate | `gemini-3.5-flash` |
+| `dpdp-eval autonomous` | autonomous retrieval | `claude-sonnet-5` |
+
+```powershell
+# PowerShell
+$env:CACHE_MODE = "offline"
+$env:MODEL_ID = "claude-sonnet-5"
+uv run dpdp-eval t2 --json
+uv run dpdp-eval autonomous --json
+$env:MODEL_ID = "gemini-3.5-flash"
+uv run dpdp-eval adversarial-gate --json
+```
+
+```bash
+# Bash
+export CACHE_MODE=offline
+MODEL_ID=claude-sonnet-5 uv run dpdp-eval t2 --json
+MODEL_ID=claude-sonnet-5 uv run dpdp-eval autonomous --json
+MODEL_ID=gemini-3.5-flash uv run dpdp-eval adversarial-gate --json
+```
+
+To regenerate entries locally, see
+[`specs/007-live-role-cache-seed/quickstart.md`](specs/007-live-role-cache-seed/quickstart.md).
+
 ## Running evaluations
 
 The `dpdp-eval` CLI runs each evaluation sweep from committed cache and emits

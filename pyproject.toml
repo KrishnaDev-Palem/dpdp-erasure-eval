@@ -8,6 +8,8 @@ license = { text = "MIT" }
 dependencies = [
     "pydantic>=2.0,<3",
     "pyyaml>=6.0",
+    "anthropic>=0.49.0,<1",
+    "google-genai>=1.14.0,<2",
 ]
 
 [project.scripts]
@@ -22,7 +24,10 @@ dev = [
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+# Default merge gate excludes opt-in live provider smoke; run explicitly with -m live.
+addopts = "-m 'not live'"
 markers = [
+    "live: opt-in live provider smoke tests requiring API keys (excluded from CI)",
     "refresh: opt-in cache refresh tests requiring CACHE_MODE=refresh",
     "cache_miss: offline cache miss behavior tests",
     "context_isolation: context-scoped label isolation tests",
