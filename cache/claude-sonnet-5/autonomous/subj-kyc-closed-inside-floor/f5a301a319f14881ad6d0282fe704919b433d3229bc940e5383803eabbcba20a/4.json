@@ -1,0 +1,73 @@
+{
+  "case_id": "subj-kyc-closed-inside-floor",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "f5a301a319f14881ad6d0282fe704919b433d3229bc940e5383803eabbcba20a",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-010",
+        "verdict": "retain"
+      },
+      {
+        "detail": null,
+        "location_id": "kyc-010",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T02:42:59Z",
+  "runner_id": "autonomous",
+  "sample_index": 4,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "subj-kyc-closed-inside-floor"
+      },
+      "result_summary": {
+        "categories": [
+          "customer",
+          "kyc_document",
+          "marketing_consent",
+          "payment_transaction",
+          "securities_transaction"
+        ],
+        "entry_count": 5
+      },
+      "sequence": 0,
+      "tool_name": "get_governance_map"
+    },
+    {
+      "arguments": {
+        "subject_id": "subj-kyc-closed-inside-floor"
+      },
+      "result_summary": {
+        "location_count": 2,
+        "location_ids": [
+          "cust-010",
+          "kyc-010"
+        ],
+        "subject_id": "subj-kyc-closed-inside-floor"
+      },
+      "sequence": 1,
+      "tool_name": "get_location_records"
+    },
+    {
+      "arguments": {
+        "subject_id": "subj-kyc-closed-inside-floor"
+      },
+      "result_summary": {
+        "floor_count": 5,
+        "floor_ids": [
+          "companies_act",
+          "gst",
+          "income_tax",
+          "pmla_kyc",
+          "sebi"
+        ]
+      },
+      "sequence": 2,
+      "tool_name": "get_retention_floors"
+    }
+  ]
+}

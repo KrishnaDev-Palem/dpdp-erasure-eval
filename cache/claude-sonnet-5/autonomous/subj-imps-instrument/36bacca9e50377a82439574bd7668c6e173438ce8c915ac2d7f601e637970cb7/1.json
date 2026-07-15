@@ -1,0 +1,73 @@
+{
+  "case_id": "subj-imps-instrument",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "36bacca9e50377a82439574bd7668c6e173438ce8c915ac2d7f601e637970cb7",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-014",
+        "verdict": "escalate"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-014",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T02:38:01Z",
+  "runner_id": "autonomous",
+  "sample_index": 1,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "subj-imps-instrument"
+      },
+      "result_summary": {
+        "categories": [
+          "customer",
+          "kyc_document",
+          "marketing_consent",
+          "payment_transaction",
+          "securities_transaction"
+        ],
+        "entry_count": 5
+      },
+      "sequence": 0,
+      "tool_name": "get_governance_map"
+    },
+    {
+      "arguments": {
+        "subject_id": "subj-imps-instrument"
+      },
+      "result_summary": {
+        "location_count": 2,
+        "location_ids": [
+          "cust-014",
+          "txn-014"
+        ],
+        "subject_id": "subj-imps-instrument"
+      },
+      "sequence": 1,
+      "tool_name": "get_location_records"
+    },
+    {
+      "arguments": {
+        "subject_id": "subj-imps-instrument"
+      },
+      "result_summary": {
+        "floor_count": 5,
+        "floor_ids": [
+          "companies_act",
+          "gst",
+          "income_tax",
+          "pmla_kyc",
+          "sebi"
+        ]
+      },
+      "sequence": 2,
+      "tool_name": "get_retention_floors"
+    }
+  ]
+}

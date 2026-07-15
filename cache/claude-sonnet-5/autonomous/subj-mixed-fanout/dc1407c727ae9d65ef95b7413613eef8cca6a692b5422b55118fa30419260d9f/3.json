@@ -1,0 +1,79 @@
+{
+  "case_id": "subj-mixed-fanout",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "dc1407c727ae9d65ef95b7413613eef8cca6a692b5422b55118fa30419260d9f",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-004",
+        "verdict": "escalate"
+      },
+      {
+        "detail": null,
+        "location_id": "mkt-004",
+        "verdict": "erase"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-004",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T02:40:31Z",
+  "runner_id": "autonomous",
+  "sample_index": 3,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "subj-mixed-fanout"
+      },
+      "result_summary": {
+        "categories": [
+          "customer",
+          "kyc_document",
+          "marketing_consent",
+          "payment_transaction",
+          "securities_transaction"
+        ],
+        "entry_count": 5
+      },
+      "sequence": 0,
+      "tool_name": "get_governance_map"
+    },
+    {
+      "arguments": {
+        "subject_id": "subj-mixed-fanout"
+      },
+      "result_summary": {
+        "location_count": 3,
+        "location_ids": [
+          "cust-004",
+          "mkt-004",
+          "txn-004"
+        ],
+        "subject_id": "subj-mixed-fanout"
+      },
+      "sequence": 1,
+      "tool_name": "get_location_records"
+    },
+    {
+      "arguments": {
+        "subject_id": "subj-mixed-fanout"
+      },
+      "result_summary": {
+        "floor_count": 5,
+        "floor_ids": [
+          "companies_act",
+          "gst",
+          "income_tax",
+          "pmla_kyc",
+          "sebi"
+        ]
+      },
+      "sequence": 2,
+      "tool_name": "get_retention_floors"
+    }
+  ]
+}
