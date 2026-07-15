@@ -1,0 +1,18 @@
+{
+  "case_id": "subj-under-determined",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "1f418d46cb6e005b49aa35459cf1e612696805a44058d03055fbeba84c326fb0",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-005",
+        "verdict": "escalate"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T02:21:28Z",
+  "runner_id": "t1",
+  "sample_index": 1,
+  "tool_calls": []
+}

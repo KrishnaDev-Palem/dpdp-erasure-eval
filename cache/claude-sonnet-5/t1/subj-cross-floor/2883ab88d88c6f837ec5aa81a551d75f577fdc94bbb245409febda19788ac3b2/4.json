@@ -1,0 +1,23 @@
+{
+  "case_id": "subj-cross-floor",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "2883ab88d88c6f837ec5aa81a551d75f577fdc94bbb245409febda19788ac3b2",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-003",
+        "verdict": "escalate"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-003",
+        "verdict": "escalate"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T02:22:42Z",
+  "runner_id": "t1",
+  "sample_index": 4,
+  "tool_calls": []
+}
