@@ -1,0 +1,23 @@
+{
+  "case_id": "subj-marketing-active",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "ddb0cb570b51a7ff0ea79ff0904e31b5040f1969af7be5971b48005a4f7d4709",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-011",
+        "verdict": "escalate"
+      },
+      {
+        "detail": null,
+        "location_id": "mkt-011",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T02:25:46Z",
+  "runner_id": "t2",
+  "sample_index": 3,
+  "tool_calls": []
+}

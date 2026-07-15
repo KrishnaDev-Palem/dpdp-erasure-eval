@@ -1,0 +1,23 @@
+{
+  "case_id": "subj-kyc-open-relationship",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "c5755e13a989ac91f1c86ab427a291ba5289c11451126dbe98e43e08f4ea66cf",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-009",
+        "verdict": "retain"
+      },
+      {
+        "detail": null,
+        "location_id": "kyc-009",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T02:25:38Z",
+  "runner_id": "t2",
+  "sample_index": 3,
+  "tool_calls": []
+}
