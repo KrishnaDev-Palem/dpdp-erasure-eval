@@ -37,8 +37,7 @@ def test_refresh_writes_cache_entry_on_miss(
     cache_root = tmp_path / "cache"
     seam = FakeModelSeam(
         adjudication_verdicts={
-            location.location_id: location.expected.verdict
-            for location in subject.locations
+            location.location_id: location.expected.verdict for location in subject.locations
         }
     )
     store = CacheStore(root=cache_root, cache_mode="refresh")

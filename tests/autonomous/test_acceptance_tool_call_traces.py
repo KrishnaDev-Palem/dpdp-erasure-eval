@@ -92,9 +92,7 @@ def test_empty_tool_calls_valid_when_no_tools_invoked(
     tmp_path: Path,
 ) -> None:
     subject = next(
-        item
-        for item in export_bundle.subjects
-        if item.subject_id == "subj-payment-inside-floors"
+        item for item in export_bundle.subjects if item.subject_id == "subj-payment-inside-floors"
     )
     context = build_t1(subject.request, subject)
     key = make_cache_key(

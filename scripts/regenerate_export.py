@@ -134,8 +134,7 @@ def _transform_floors(agent_floors: dict[str, Any]) -> list[dict[str, Any]]:
     income_tax = next(item for item in transformed if item["floor_id"] == "income_tax")
     if "7" not in income_tax["minimum_period"]:
         raise ExportRegenerationError(
-            "Income Tax floor at pinned SHA is not 7 tax years: "
-            f"{income_tax['minimum_period']!r}"
+            f"Income Tax floor at pinned SHA is not 7 tax years: {income_tax['minimum_period']!r}"
         )
     return transformed
 
@@ -276,9 +275,7 @@ def regenerate_export(
     governance = _transform_governance(agent_governance)
     seeds = _transform_seeds(block3)
 
-    commit_url = (
-        "https://github.com/KrishnaDev-Palem/dpdp-erasure-agent/commit/" f"{pinned_sha}"
-    )
+    commit_url = f"https://github.com/KrishnaDev-Palem/dpdp-erasure-agent/commit/{pinned_sha}"
     manifest = {
         "export_version": EXPORT_VERSION,
         "generated_at": generated_at,
