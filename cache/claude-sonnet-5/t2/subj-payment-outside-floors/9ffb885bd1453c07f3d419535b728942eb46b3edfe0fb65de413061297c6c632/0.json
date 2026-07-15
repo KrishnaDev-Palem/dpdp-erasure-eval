@@ -1,0 +1,23 @@
+{
+  "case_id": "subj-payment-outside-floors",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "9ffb885bd1453c07f3d419535b728942eb46b3edfe0fb65de413061297c6c632",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-002",
+        "verdict": "retain"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-002",
+        "verdict": "escalate"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T02:23:21Z",
+  "runner_id": "t2",
+  "sample_index": 0,
+  "tool_calls": []
+}

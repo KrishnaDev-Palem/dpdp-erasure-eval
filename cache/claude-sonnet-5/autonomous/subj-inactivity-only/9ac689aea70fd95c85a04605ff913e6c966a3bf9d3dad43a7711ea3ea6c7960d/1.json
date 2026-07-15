@@ -1,0 +1,73 @@
+{
+  "case_id": "subj-inactivity-only",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "9ac689aea70fd95c85a04605ff913e6c966a3bf9d3dad43a7711ea3ea6c7960d",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-016",
+        "verdict": "escalate"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-017",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T02:38:14Z",
+  "runner_id": "autonomous",
+  "sample_index": 1,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "subj-inactivity-only"
+      },
+      "result_summary": {
+        "categories": [
+          "customer",
+          "kyc_document",
+          "marketing_consent",
+          "payment_transaction",
+          "securities_transaction"
+        ],
+        "entry_count": 5
+      },
+      "sequence": 0,
+      "tool_name": "get_governance_map"
+    },
+    {
+      "arguments": {
+        "subject_id": "subj-inactivity-only"
+      },
+      "result_summary": {
+        "location_count": 2,
+        "location_ids": [
+          "cust-016",
+          "txn-017"
+        ],
+        "subject_id": "subj-inactivity-only"
+      },
+      "sequence": 1,
+      "tool_name": "get_location_records"
+    },
+    {
+      "arguments": {
+        "subject_id": "subj-inactivity-only"
+      },
+      "result_summary": {
+        "floor_count": 5,
+        "floor_ids": [
+          "companies_act",
+          "gst",
+          "income_tax",
+          "pmla_kyc",
+          "sebi"
+        ]
+      },
+      "sequence": 2,
+      "tool_name": "get_retention_floors"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "case_id": "subj-inactivity-only",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "26d1f0f54d23484fdbc5139762f359b8c67f2bdf36b51430394bed9131524bed",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-016",
+        "verdict": "retain"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-017",
+        "verdict": "escalate"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T02:24:02Z",
+  "runner_id": "t2",
+  "sample_index": 0,
+  "tool_calls": []
+}

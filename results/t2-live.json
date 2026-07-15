@@ -1,0 +1,420 @@
+{
+  "tier": "t2",
+  "runner_id": "t2",
+  "model_id": "claude-sonnet-5",
+  "cache_mode": "refresh",
+  "export_agent_sha": "3562059939cbaac3dc3500593f2940ef34c54c53",
+  "primary_sample_index": 0,
+  "primary_metrics": {
+    "over_erasure": {
+      "rate": {
+        "numerator": 1,
+        "denominator": 34,
+        "value": 0.029411764705882353
+      },
+      "interval": {
+        "lower": 0.00521077192559663,
+        "upper": 0.1491590221634482,
+        "confidence_level": 0.95
+      }
+    },
+    "over_retention": {
+      "rate": {
+        "numerator": 0,
+        "denominator": 34,
+        "value": 0.0
+      },
+      "interval": {
+        "lower": 0.0,
+        "upper": 0.10151790621961015,
+        "confidence_level": 0.95
+      }
+    },
+    "mis_escalation": {
+      "rate": {
+        "numerator": 20,
+        "denominator": 34,
+        "value": 0.5882352941176471
+      },
+      "interval": {
+        "lower": 0.42221304146519273,
+        "upper": 0.7363426221431113,
+        "confidence_level": 0.95
+      }
+    }
+  },
+  "confusion_matrix": {
+    "erase": {
+      "erase": 3,
+      "retain": 1,
+      "escalate": 0
+    },
+    "retain": {
+      "erase": 0,
+      "retain": 8,
+      "escalate": 0
+    },
+    "escalate": {
+      "erase": 4,
+      "retain": 16,
+      "escalate": 2
+    }
+  },
+  "sample_rollups": [
+    {
+      "sample_index": 0,
+      "total_subjects": 16,
+      "scored_location_pairs": 34,
+      "metrics": {
+        "over_erasure": {
+          "rate": {
+            "numerator": 1,
+            "denominator": 34,
+            "value": 0.029411764705882353
+          },
+          "interval": {
+            "lower": 0.00521077192559663,
+            "upper": 0.1491590221634482,
+            "confidence_level": 0.95
+          }
+        },
+        "over_retention": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 34,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.10151790621961015,
+            "confidence_level": 0.95
+          }
+        },
+        "mis_escalation": {
+          "rate": {
+            "numerator": 20,
+            "denominator": 34,
+            "value": 0.5882352941176471
+          },
+          "interval": {
+            "lower": 0.42221304146519273,
+            "upper": 0.7363426221431113,
+            "confidence_level": 0.95
+          }
+        }
+      }
+    },
+    {
+      "sample_index": 1,
+      "total_subjects": 16,
+      "scored_location_pairs": 34,
+      "metrics": {
+        "over_erasure": {
+          "rate": {
+            "numerator": 1,
+            "denominator": 34,
+            "value": 0.029411764705882353
+          },
+          "interval": {
+            "lower": 0.00521077192559663,
+            "upper": 0.1491590221634482,
+            "confidence_level": 0.95
+          }
+        },
+        "over_retention": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 34,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.10151790621961015,
+            "confidence_level": 0.95
+          }
+        },
+        "mis_escalation": {
+          "rate": {
+            "numerator": 20,
+            "denominator": 34,
+            "value": 0.5882352941176471
+          },
+          "interval": {
+            "lower": 0.42221304146519273,
+            "upper": 0.7363426221431113,
+            "confidence_level": 0.95
+          }
+        }
+      }
+    },
+    {
+      "sample_index": 2,
+      "total_subjects": 16,
+      "scored_location_pairs": 34,
+      "metrics": {
+        "over_erasure": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 34,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.10151790621961015,
+            "confidence_level": 0.95
+          }
+        },
+        "over_retention": {
+          "rate": {
+            "numerator": 1,
+            "denominator": 34,
+            "value": 0.029411764705882353
+          },
+          "interval": {
+            "lower": 0.00521077192559663,
+            "upper": 0.1491590221634482,
+            "confidence_level": 0.95
+          }
+        },
+        "mis_escalation": {
+          "rate": {
+            "numerator": 17,
+            "denominator": 34,
+            "value": 0.5
+          },
+          "interval": {
+            "lower": 0.34069062628048985,
+            "upper": 0.6593093737195102,
+            "confidence_level": 0.95
+          }
+        }
+      }
+    },
+    {
+      "sample_index": 3,
+      "total_subjects": 16,
+      "scored_location_pairs": 34,
+      "metrics": {
+        "over_erasure": {
+          "rate": {
+            "numerator": 1,
+            "denominator": 34,
+            "value": 0.029411764705882353
+          },
+          "interval": {
+            "lower": 0.00521077192559663,
+            "upper": 0.1491590221634482,
+            "confidence_level": 0.95
+          }
+        },
+        "over_retention": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 34,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.10151790621961015,
+            "confidence_level": 0.95
+          }
+        },
+        "mis_escalation": {
+          "rate": {
+            "numerator": 16,
+            "denominator": 34,
+            "value": 0.47058823529411764
+          },
+          "interval": {
+            "lower": 0.31451251633111366,
+            "upper": 0.6326355957994516,
+            "confidence_level": 0.95
+          }
+        }
+      }
+    },
+    {
+      "sample_index": 4,
+      "total_subjects": 16,
+      "scored_location_pairs": 34,
+      "metrics": {
+        "over_erasure": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 34,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.10151790621961015,
+            "confidence_level": 0.95
+          }
+        },
+        "over_retention": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 34,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.10151790621961015,
+            "confidence_level": 0.95
+          }
+        },
+        "mis_escalation": {
+          "rate": {
+            "numerator": 18,
+            "denominator": 34,
+            "value": 0.5294117647058824
+          },
+          "interval": {
+            "lower": 0.3673644042005483,
+            "upper": 0.6854874836688863,
+            "confidence_level": 0.95
+          }
+        }
+      }
+    }
+  ],
+  "variance": {
+    "over_erasure": {
+      "metric": "over_erasure",
+      "by_sample": [
+        {
+          "sample_index": 0,
+          "rate": {
+            "numerator": 1,
+            "denominator": 34,
+            "value": 0.029411764705882353
+          }
+        },
+        {
+          "sample_index": 1,
+          "rate": {
+            "numerator": 1,
+            "denominator": 34,
+            "value": 0.029411764705882353
+          }
+        },
+        {
+          "sample_index": 2,
+          "rate": {
+            "numerator": 0,
+            "denominator": 34,
+            "value": 0.0
+          }
+        },
+        {
+          "sample_index": 3,
+          "rate": {
+            "numerator": 1,
+            "denominator": 34,
+            "value": 0.029411764705882353
+          }
+        },
+        {
+          "sample_index": 4,
+          "rate": {
+            "numerator": 0,
+            "denominator": 34,
+            "value": 0.0
+          }
+        }
+      ],
+      "constant_across_samples": false
+    },
+    "over_retention": {
+      "metric": "over_retention",
+      "by_sample": [
+        {
+          "sample_index": 0,
+          "rate": {
+            "numerator": 0,
+            "denominator": 34,
+            "value": 0.0
+          }
+        },
+        {
+          "sample_index": 1,
+          "rate": {
+            "numerator": 0,
+            "denominator": 34,
+            "value": 0.0
+          }
+        },
+        {
+          "sample_index": 2,
+          "rate": {
+            "numerator": 1,
+            "denominator": 34,
+            "value": 0.029411764705882353
+          }
+        },
+        {
+          "sample_index": 3,
+          "rate": {
+            "numerator": 0,
+            "denominator": 34,
+            "value": 0.0
+          }
+        },
+        {
+          "sample_index": 4,
+          "rate": {
+            "numerator": 0,
+            "denominator": 34,
+            "value": 0.0
+          }
+        }
+      ],
+      "constant_across_samples": false
+    },
+    "mis_escalation": {
+      "metric": "mis_escalation",
+      "by_sample": [
+        {
+          "sample_index": 0,
+          "rate": {
+            "numerator": 20,
+            "denominator": 34,
+            "value": 0.5882352941176471
+          }
+        },
+        {
+          "sample_index": 1,
+          "rate": {
+            "numerator": 20,
+            "denominator": 34,
+            "value": 0.5882352941176471
+          }
+        },
+        {
+          "sample_index": 2,
+          "rate": {
+            "numerator": 17,
+            "denominator": 34,
+            "value": 0.5
+          }
+        },
+        {
+          "sample_index": 3,
+          "rate": {
+            "numerator": 16,
+            "denominator": 34,
+            "value": 0.47058823529411764
+          }
+        },
+        {
+          "sample_index": 4,
+          "rate": {
+            "numerator": 18,
+            "denominator": 34,
+            "value": 0.5294117647058824
+          }
+        }
+      ],
+      "constant_across_samples": false
+    }
+  }
+}

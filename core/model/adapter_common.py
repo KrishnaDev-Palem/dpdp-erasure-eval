@@ -21,6 +21,32 @@ _VALID_VERDICTS: frozenset[str] = frozenset({"erase", "retain", "escalate"})
 _VALID_OUTCOMES: frozenset[str] = frozenset({"clean", "adversarial"})
 
 
+def resolve_adjudication_location_ids(
+    *,
+    context: ContextBundle,
+    case_id: str,
+) -> list[str]:
+    """Return location IDs the model must adjudicate for this context."""
+    location_ids = [str(location["location_id"]) for location in context.locations]
+    if location_ids or context.tier != "t1":
+        return location_ids
+
+    # T1 bundles are request-only (empty locations) but live adjudication still
+    # needs export location scope — same IDs tier runners pair against offline.
+    from pathlib import Path
+
+    from core.export.loader import load_export
+
+    export = load_export(Path("export"))
+    subject = next(
+        (item for item in export.subjects if item.subject_id == case_id),
+        None,
+    )
+    if subject is None:
+        return []
+    return [location.location_id for location in subject.locations]
+
+
 def build_adjudication_prompt(*, context: ContextBundle, case_id: str) -> str:
     payload = {
         "case_id": case_id,
@@ -30,7 +56,7 @@ def build_adjudication_prompt(*, context: ContextBundle, case_id: str) -> str:
         "retention_floors": [item.model_dump(mode="json") for item in context.retention_floors],
         "governance_map": [item.model_dump(mode="json") for item in context.governance_map],
     }
-    location_ids = [str(location["location_id"]) for location in context.locations]
+    location_ids = resolve_adjudication_location_ids(context=context, case_id=case_id)
     return (
         "Adjudicate erasure for each location. Return JSON only:\n"
         '{"verdicts": [{"location_id": "<id>", "verdict": "erase|retain|escalate"}]}\n'

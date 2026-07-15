@@ -1,0 +1,23 @@
+{
+  "case_id": "subj-kyc-closed-inside-floor",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "4c989304f194e30cf73d35ad183be516e86f85257bf170a37a949a126942af0c",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-010",
+        "verdict": "retain"
+      },
+      {
+        "detail": null,
+        "location_id": "kyc-010",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T02:30:07Z",
+  "runner_id": "t3",
+  "sample_index": 2,
+  "tool_calls": []
+}

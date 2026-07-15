@@ -1,0 +1,73 @@
+{
+  "case_id": "subj-securities-inside-floors",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "7f9707c9c6442bc6433cc5026ed3cc885009d4224ebb0a6bacdedb242450563e",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-007",
+        "verdict": "escalate"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-007",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T02:42:35Z",
+  "runner_id": "autonomous",
+  "sample_index": 4,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "subj-securities-inside-floors"
+      },
+      "result_summary": {
+        "categories": [
+          "customer",
+          "kyc_document",
+          "marketing_consent",
+          "payment_transaction",
+          "securities_transaction"
+        ],
+        "entry_count": 5
+      },
+      "sequence": 0,
+      "tool_name": "get_governance_map"
+    },
+    {
+      "arguments": {
+        "subject_id": "subj-securities-inside-floors"
+      },
+      "result_summary": {
+        "location_count": 2,
+        "location_ids": [
+          "cust-007",
+          "txn-007"
+        ],
+        "subject_id": "subj-securities-inside-floors"
+      },
+      "sequence": 1,
+      "tool_name": "get_location_records"
+    },
+    {
+      "arguments": {
+        "subject_id": "subj-securities-inside-floors"
+      },
+      "result_summary": {
+        "floor_count": 5,
+        "floor_ids": [
+          "companies_act",
+          "gst",
+          "income_tax",
+          "pmla_kyc",
+          "sebi"
+        ]
+      },
+      "sequence": 2,
+      "tool_name": "get_retention_floors"
+    }
+  ]
+}

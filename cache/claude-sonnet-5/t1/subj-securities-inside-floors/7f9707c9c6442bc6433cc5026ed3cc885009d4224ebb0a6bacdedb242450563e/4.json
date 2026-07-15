@@ -1,0 +1,23 @@
+{
+  "case_id": "subj-securities-inside-floors",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "7f9707c9c6442bc6433cc5026ed3cc885009d4224ebb0a6bacdedb242450563e",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-007",
+        "verdict": "escalate"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-007",
+        "verdict": "escalate"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T02:22:53Z",
+  "runner_id": "t1",
+  "sample_index": 4,
+  "tool_calls": []
+}

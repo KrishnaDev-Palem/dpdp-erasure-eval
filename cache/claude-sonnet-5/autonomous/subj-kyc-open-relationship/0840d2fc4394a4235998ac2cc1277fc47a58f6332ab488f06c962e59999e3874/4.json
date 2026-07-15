@@ -1,0 +1,73 @@
+{
+  "case_id": "subj-kyc-open-relationship",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "0840d2fc4394a4235998ac2cc1277fc47a58f6332ab488f06c962e59999e3874",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-009",
+        "verdict": "retain"
+      },
+      {
+        "detail": null,
+        "location_id": "kyc-009",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T02:42:54Z",
+  "runner_id": "autonomous",
+  "sample_index": 4,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "subj-kyc-open-relationship"
+      },
+      "result_summary": {
+        "categories": [
+          "customer",
+          "kyc_document",
+          "marketing_consent",
+          "payment_transaction",
+          "securities_transaction"
+        ],
+        "entry_count": 5
+      },
+      "sequence": 0,
+      "tool_name": "get_governance_map"
+    },
+    {
+      "arguments": {
+        "subject_id": "subj-kyc-open-relationship"
+      },
+      "result_summary": {
+        "location_count": 2,
+        "location_ids": [
+          "cust-009",
+          "kyc-009"
+        ],
+        "subject_id": "subj-kyc-open-relationship"
+      },
+      "sequence": 1,
+      "tool_name": "get_location_records"
+    },
+    {
+      "arguments": {
+        "subject_id": "subj-kyc-open-relationship"
+      },
+      "result_summary": {
+        "floor_count": 5,
+        "floor_ids": [
+          "companies_act",
+          "gst",
+          "income_tax",
+          "pmla_kyc",
+          "sebi"
+        ]
+      },
+      "sequence": 2,
+      "tool_name": "get_retention_floors"
+    }
+  ]
+}

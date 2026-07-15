@@ -1,0 +1,33 @@
+{
+  "case_id": "subj-cleared-no-trigger",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "5babc86eb5ac7daa48a5a506545abfb4e1575a47234f11fc7f2eb324512fd975",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-015",
+        "verdict": "escalate"
+      },
+      {
+        "detail": null,
+        "location_id": "mkt-015",
+        "verdict": "erase"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-015",
+        "verdict": "retain"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-016",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T02:29:13Z",
+  "runner_id": "t3",
+  "sample_index": 1,
+  "tool_calls": []
+}

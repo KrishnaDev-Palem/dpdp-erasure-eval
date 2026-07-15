@@ -4,13 +4,18 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 CACHE_DIR = REPO_ROOT / "cache"
 
-LIVE_ROLE_SKIP_REASON = (
-    "Live-role cache invalidated by Feature 008 export swap; "
-    "re-seed deferred to Feature 007 follow-up."
-)
+LIVE_ROLE_SKIP_REASON = "Committed live-role cache namespace is missing or empty."
+
+
+@pytest.fixture(autouse=True)
+def _default_primary_model_role(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Keep suite defaults on FakeModelSeam primary cache unless a test overrides."""
+    monkeypatch.setenv("MODEL_ID", "primary")
 
 
 def live_role_namespace_ready(*parts: str) -> bool:
