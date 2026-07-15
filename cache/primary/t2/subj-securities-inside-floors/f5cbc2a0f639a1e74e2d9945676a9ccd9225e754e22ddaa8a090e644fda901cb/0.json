@@ -1,0 +1,23 @@
+{
+  "case_id": "subj-securities-inside-floors",
+  "model_id": "primary",
+  "prompt_hash": "f5cbc2a0f639a1e74e2d9945676a9ccd9225e754e22ddaa8a090e644fda901cb",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-007",
+        "verdict": "retain"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-007",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T00:23:00Z",
+  "runner_id": "t2",
+  "sample_index": 0,
+  "tool_calls": []
+}

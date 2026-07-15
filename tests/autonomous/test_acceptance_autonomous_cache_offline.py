@@ -14,6 +14,7 @@ from core.model import FakeModelSeam
 from core.tools import build_retrieval_tool_registry
 from runners.autonomous.cache import resolve_autonomous_entry
 from runners.autonomous.types import AUTONOMOUS_RUNNER_ID
+from tests.core.conftest import subject_with_tag
 
 
 def test_offline_replay_via_autonomous_runner_id(
@@ -21,9 +22,7 @@ def test_offline_replay_via_autonomous_runner_id(
     export_bundle,
     autonomous_config,
 ) -> None:
-    subject = next(
-        item for item in export_bundle.subjects if item.subject_id == "mixed-fanout-subject"
-    )
+    subject = subject_with_tag(export_bundle.subjects, "mixed_fanout")
     context = build_t1(subject.request, subject)
     registry = build_retrieval_tool_registry(export_bundle)
     store = CacheStore(root=autonomous_config.cache_root, cache_mode="offline")
@@ -36,14 +35,12 @@ def test_offline_replay_via_autonomous_runner_id(
         seam=fake_seam,
         tool_registry=registry,
     )
-    assert len(session.raw_verdicts) == 2
+    assert len(session.raw_verdicts) == len(subject.locations)
     assert fake_seam.adjudicate_calls == []
 
 
 def test_cache_prompt_identity_from_t1_context_only(export_bundle) -> None:
-    subject = next(
-        item for item in export_bundle.subjects if item.subject_id == "mixed-fanout-subject"
-    )
+    subject = subject_with_tag(export_bundle.subjects, "mixed_fanout")
     context = build_t1(subject.request, subject)
     key = make_cache_key(
         context=context,
@@ -63,9 +60,7 @@ def test_offline_cache_miss_names_identifiers(
     export_bundle,
     tmp_path: Path,
 ) -> None:
-    subject = next(
-        item for item in export_bundle.subjects if item.subject_id == "mixed-fanout-subject"
-    )
+    subject = subject_with_tag(export_bundle.subjects, "mixed_fanout")
     context = build_t1(subject.request, subject)
     registry = build_retrieval_tool_registry(export_bundle)
     empty_cache = tmp_path / "cache"
@@ -83,7 +78,7 @@ def test_offline_cache_miss_names_identifiers(
         )
     message = str(exc_info.value).lower()
     assert "autonomous" in message
-    assert "mixed-fanout-subject" in message
+    assert subject.subject_id in message
     assert "sample_index=0" in message or "sample_index" in message
     assert fake_seam.adjudicate_calls == []
 
@@ -100,8 +95,10 @@ def test_resolve_autonomous_entry_refresh_miss_writes_tool_calls(
     from core.model.anthropic_adapter import AnthropicModelSeam, LiveAdapterConfig
 
     monkeypatch.setenv("CACHE_MODE", "refresh")
-    subject = next(
-        item for item in export_bundle.subjects if item.subject_id == "mixed-fanout-subject"
+    subject = subject_with_tag(export_bundle.subjects, "mixed_fanout")
+    verdict_json = ", ".join(
+        f'{{"location_id": "{location.location_id}", "verdict": "{location.expected.verdict}"}}'
+        for location in subject.locations
     )
     context = build_t1(subject.request, subject)
     registry = build_retrieval_tool_registry(export_bundle)
@@ -116,10 +113,7 @@ def test_resolve_autonomous_entry_refresh_miss_writes_tool_calls(
     )
     text_block = SimpleNamespace(
         type="text",
-        text=(
-            '{"verdicts": [{"location_id": "txn-004", "verdict": "retain"}, '
-            '{"location_id": "note-001", "verdict": "erase"}]}'
-        ),
+        text=f'{{"verdicts": [{verdict_json}]}}',
     )
     client = MagicMock()
     client.messages.create.side_effect = [
@@ -164,16 +158,16 @@ def test_refresh_path_available(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setenv("CACHE_MODE", "refresh")
-    subject = next(
-        item for item in export_bundle.subjects if item.subject_id == "mixed-fanout-subject"
-    )
+    subject = subject_with_tag(export_bundle.subjects, "mixed_fanout")
     context = build_t1(subject.request, subject)
     registry = build_retrieval_tool_registry(export_bundle)
     cache_root = tmp_path / "cache"
     store = CacheStore(root=cache_root, cache_mode="refresh")
     seam = FakeModelSeam(
-        pairing_location_ids=["txn-004", "note-001"],
-        adjudication_verdicts={"txn-004": "retain", "note-001": "erase"},
+        pairing_location_ids=[location.location_id for location in subject.locations],
+        adjudication_verdicts={
+            location.location_id: location.expected.verdict for location in subject.locations
+        },
     )
     session = resolve_autonomous_entry(
         context=context,

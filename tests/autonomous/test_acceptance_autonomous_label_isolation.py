@@ -11,6 +11,7 @@ from core.context import build_t1
 from core.tools import build_retrieval_tool_registry
 from runners.autonomous.cache import resolve_autonomous_entry
 from runners.autonomous.types import AUTONOMOUS_RUNNER_ID
+from tests.core.conftest import subject_with_tag
 
 
 def _assert_no_expected(payload) -> None:
@@ -18,20 +19,20 @@ def _assert_no_expected(payload) -> None:
     assert "expected" not in serialized
 
 
+def _mixed_fanout_subject(export_bundle):
+    return subject_with_tag(export_bundle.subjects, "mixed_fanout")
+
+
 @pytest.mark.context_isolation
 def test_t1_initial_context_has_no_expected(export_bundle) -> None:
-    subject = next(
-        item for item in export_bundle.subjects if item.subject_id == "mixed-fanout-subject"
-    )
+    subject = _mixed_fanout_subject(export_bundle)
     context = build_t1(subject.request, subject)
     _assert_no_expected(context.model_dump(mode="json"))
 
 
 @pytest.mark.context_isolation
 def test_autonomous_cache_key_context_has_no_expected(export_bundle) -> None:
-    subject = next(
-        item for item in export_bundle.subjects if item.subject_id == "mixed-fanout-subject"
-    )
+    subject = _mixed_fanout_subject(export_bundle)
     context = build_t1(subject.request, subject)
     key = make_cache_key(
         context=context,
@@ -53,9 +54,7 @@ def test_offline_cache_payload_has_no_expected(
 ) -> None:
     from core.cache.store import CacheStore
 
-    subject = next(
-        item for item in export_bundle.subjects if item.subject_id == "mixed-fanout-subject"
-    )
+    subject = _mixed_fanout_subject(export_bundle)
     context = build_t1(subject.request, subject)
     registry = build_retrieval_tool_registry(export_bundle)
     store = CacheStore(root=autonomous_config.cache_root, cache_mode=autonomous_config.cache_mode)
@@ -75,9 +74,10 @@ def test_offline_cache_payload_has_no_expected(
 @pytest.mark.tool_isolation
 def test_location_records_has_no_expected(export_bundle) -> None:
     registry = build_retrieval_tool_registry(export_bundle)
+    subject = _mixed_fanout_subject(export_bundle)
     result = registry.invoke(
         "get_location_records",
-        {"subject_id": "mixed-fanout-subject"},
+        {"subject_id": subject.subject_id},
     )
     _assert_no_expected(result)
     assert result["locations"]

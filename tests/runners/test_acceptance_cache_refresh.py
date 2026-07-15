@@ -11,6 +11,7 @@ from core.cache.store import CacheStore, make_cache_key
 from core.context import build_t2
 from core.export import load_export
 from core.model import FakeModelSeam
+from tests.core.conftest import subject_with_tag
 
 
 @pytest.mark.refresh
@@ -23,7 +24,7 @@ def test_refresh_cache_hit_replays_without_live_call(
     monkeypatch.setenv("MODEL_ID", "primary")
 
     export = load_export(export_dir)
-    subject = next(item for item in export.subjects if item.subject_id == "mixed-fanout-subject")
+    subject = subject_with_tag(export.subjects, "mixed_fanout")
     context = build_t2(subject.request, subject)
     key = make_cache_key(
         context=context,
@@ -57,7 +58,7 @@ def test_tier_refresh_integration_with_factory_seam(
     monkeypatch.setenv("MODEL_ID", "claude-sonnet-5")
 
     export = load_export(export_dir)
-    subject = next(item for item in export.subjects if item.subject_id == "mixed-fanout-subject")
+    subject = subject_with_tag(export.subjects, "mixed_fanout")
     context = build_t2(subject.request, subject)
     key = make_cache_key(
         context=context,
@@ -70,14 +71,15 @@ def test_tier_refresh_integration_with_factory_seam(
     client = MagicMock()
     from types import SimpleNamespace
 
+    verdict_json = ", ".join(
+        f'{{"location_id": "{location.location_id}", "verdict": "{location.expected.verdict}"}}'
+        for location in subject.locations
+    )
     client.messages.create.return_value = SimpleNamespace(
         content=[
             SimpleNamespace(
                 type="text",
-                text=(
-                    '{"verdicts": [{"location_id": "txn-004", "verdict": "retain"}, '
-                    '{"location_id": "note-001", "verdict": "erase"}]}'
-                ),
+                text=f'{{"verdicts": [{verdict_json}]}}',
             )
         ]
     )
@@ -108,7 +110,7 @@ def test_refresh_writes_cache_entry_on_miss(
     monkeypatch.setenv("MODEL_ID", "primary")
 
     export = load_export(export_dir)
-    subject = next(item for item in export.subjects if item.subject_id == "mixed-fanout-subject")
+    subject = subject_with_tag(export.subjects, "mixed_fanout")
     context = build_t2(subject.request, subject)
     key = make_cache_key(
         context=context,
@@ -121,8 +123,7 @@ def test_refresh_writes_cache_entry_on_miss(
     cache_root = tmp_path / "cache"
     seam = FakeModelSeam(
         adjudication_verdicts={
-            "txn-004": "retain",
-            "note-001": "erase",
+            location.location_id: location.expected.verdict for location in subject.locations
         }
     )
     store = CacheStore(root=cache_root, cache_mode="refresh")

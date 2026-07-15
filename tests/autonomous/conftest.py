@@ -10,7 +10,7 @@ import pytest
 from core.export import load_export
 from core.model import FakeModelSeam
 from core.scoring import score_adjudication
-from core.types import AdjudicationSubject, ExpectedLabel, ModelVerdict, Rate
+from core.types import AdjudicationSubject, ErasureRequest, ExpectedLabel, ModelVerdict, Rate
 from runners.autonomous.types import AutonomousSweepConfig
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -50,9 +50,17 @@ def export_bundle(export_dir: Path):
 
 
 @pytest.fixture
-def empty_locations_subject(export_bundle) -> AdjudicationSubject:
-    return next(
-        item for item in export_bundle.subjects if item.subject_id == "empty-locations-subject"
+def empty_locations_subject() -> AdjudicationSubject:
+    return AdjudicationSubject(
+        subject_id="synthetic-empty-subject",
+        tags=["under_determined"],
+        request=ErasureRequest(
+            subject_id="synthetic-empty-subject",
+            type="erasure",
+            basis="explicit_erasure_right",
+            as_of="2026-06-01",
+        ),
+        locations=[],
     )
 
 

@@ -1,0 +1,23 @@
+{
+  "case_id": "subj-securities-outside-floors",
+  "model_id": "primary",
+  "prompt_hash": "eee8ef98bc617516c131d28968b37aea2f909177bc5ed57e6f93eb2610c024f3",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-008",
+        "verdict": "retain"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-008",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T00:23:00Z",
+  "runner_id": "t3",
+  "sample_index": 2,
+  "tool_calls": []
+}

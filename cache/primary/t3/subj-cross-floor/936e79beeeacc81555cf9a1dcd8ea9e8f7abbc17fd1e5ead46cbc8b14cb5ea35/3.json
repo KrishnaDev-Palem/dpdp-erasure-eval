@@ -1,0 +1,23 @@
+{
+  "case_id": "subj-cross-floor",
+  "model_id": "primary",
+  "prompt_hash": "936e79beeeacc81555cf9a1dcd8ea9e8f7abbc17fd1e5ead46cbc8b14cb5ea35",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-003",
+        "verdict": "retain"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-003",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T00:23:00Z",
+  "runner_id": "t3",
+  "sample_index": 3,
+  "tool_calls": []
+}

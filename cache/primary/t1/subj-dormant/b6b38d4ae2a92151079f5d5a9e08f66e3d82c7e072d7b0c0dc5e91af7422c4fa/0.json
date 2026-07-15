@@ -1,0 +1,23 @@
+{
+  "case_id": "subj-dormant",
+  "model_id": "primary",
+  "prompt_hash": "b6b38d4ae2a92151079f5d5a9e08f66e3d82c7e072d7b0c0dc5e91af7422c4fa",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-006",
+        "verdict": "retain"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-006",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T00:23:00Z",
+  "runner_id": "t1",
+  "sample_index": 0,
+  "tool_calls": []
+}

@@ -1,0 +1,39 @@
+{
+  "case_id": "subj-securities-inside-floors",
+  "model_id": "primary",
+  "prompt_hash": "7f9707c9c6442bc6433cc5026ed3cc885009d4224ebb0a6bacdedb242450563e",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-007",
+        "verdict": "retain"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-007",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T00:23:00Z",
+  "runner_id": "autonomous",
+  "sample_index": 2,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "subj-securities-inside-floors"
+      },
+      "result_summary": {
+        "location_count": 2,
+        "location_ids": [
+          "cust-007",
+          "txn-007"
+        ],
+        "subject_id": "subj-securities-inside-floors"
+      },
+      "sequence": 0,
+      "tool_name": "get_location_records"
+    }
+  ]
+}

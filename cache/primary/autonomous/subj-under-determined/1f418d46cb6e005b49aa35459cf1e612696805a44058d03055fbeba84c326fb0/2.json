@@ -1,0 +1,33 @@
+{
+  "case_id": "subj-under-determined",
+  "model_id": "primary",
+  "prompt_hash": "1f418d46cb6e005b49aa35459cf1e612696805a44058d03055fbeba84c326fb0",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-005",
+        "verdict": "escalate"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T00:23:00Z",
+  "runner_id": "autonomous",
+  "sample_index": 2,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "subj-under-determined"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "cust-005"
+        ],
+        "subject_id": "subj-under-determined"
+      },
+      "sequence": 0,
+      "tool_name": "get_location_records"
+    }
+  ]
+}

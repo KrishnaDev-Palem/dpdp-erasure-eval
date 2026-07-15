@@ -1,0 +1,23 @@
+{
+  "case_id": "subj-marketing-active",
+  "model_id": "primary",
+  "prompt_hash": "e27e1f73b0173dc37b33c471d2ee11864509b5e00c987a124dee506dd8316896",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-011",
+        "verdict": "retain"
+      },
+      {
+        "detail": null,
+        "location_id": "mkt-011",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T00:23:00Z",
+  "runner_id": "t3",
+  "sample_index": 0,
+  "tool_calls": []
+}

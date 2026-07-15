@@ -1,0 +1,23 @@
+{
+  "case_id": "subj-etf-instrument",
+  "model_id": "primary",
+  "prompt_hash": "088afe9456de38ce589b978c6d64e686f41bb8c1eacda913313dd54fce35f5d7",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-013",
+        "verdict": "retain"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-013",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T00:23:00Z",
+  "runner_id": "t3",
+  "sample_index": 2,
+  "tool_calls": []
+}

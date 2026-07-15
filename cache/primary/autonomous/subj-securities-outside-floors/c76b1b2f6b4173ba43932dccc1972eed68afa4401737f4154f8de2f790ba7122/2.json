@@ -1,0 +1,39 @@
+{
+  "case_id": "subj-securities-outside-floors",
+  "model_id": "primary",
+  "prompt_hash": "c76b1b2f6b4173ba43932dccc1972eed68afa4401737f4154f8de2f790ba7122",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-008",
+        "verdict": "retain"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-008",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T00:23:00Z",
+  "runner_id": "autonomous",
+  "sample_index": 2,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "subj-securities-outside-floors"
+      },
+      "result_summary": {
+        "location_count": 2,
+        "location_ids": [
+          "cust-008",
+          "txn-008"
+        ],
+        "subject_id": "subj-securities-outside-floors"
+      },
+      "sequence": 0,
+      "tool_name": "get_location_records"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "case_id": "subj-etf-instrument",
+  "model_id": "primary",
+  "prompt_hash": "dfa74473121f8c789a901ad9f383ad0b14e62b6b5dbaf0e1d311d7c5c843a3b2",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-013",
+        "verdict": "retain"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-013",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T00:23:00Z",
+  "runner_id": "autonomous",
+  "sample_index": 1,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "subj-etf-instrument"
+      },
+      "result_summary": {
+        "location_count": 2,
+        "location_ids": [
+          "cust-013",
+          "txn-013"
+        ],
+        "subject_id": "subj-etf-instrument"
+      },
+      "sequence": 0,
+      "tool_name": "get_location_records"
+    }
+  ]
+}

@@ -4,13 +4,21 @@ from __future__ import annotations
 
 import json
 
+import pytest
+
 from core.model import FakeModelSeam
 from runners.adversarial_gate.runner import run_adversarial_gate_sweep
+from tests.conftest import LIVE_ROLE_SKIP_REASON, live_role_namespace_ready
 from tests.gate.conftest import CACHE_DIR, SLICE_PATH, make_gate_sweep_config
 
 LIVE_ROLE = "gemini-3.5-flash"
 SAMPLE_INDICES = [0, 1, 2, 3, 4]
 NAMESPACE = CACHE_DIR / LIVE_ROLE / "adversarial_gate"
+
+pytestmark = pytest.mark.skipif(
+    not live_role_namespace_ready(LIVE_ROLE, "adversarial_gate"),
+    reason=LIVE_ROLE_SKIP_REASON,
+)
 
 
 def _live_role_config():

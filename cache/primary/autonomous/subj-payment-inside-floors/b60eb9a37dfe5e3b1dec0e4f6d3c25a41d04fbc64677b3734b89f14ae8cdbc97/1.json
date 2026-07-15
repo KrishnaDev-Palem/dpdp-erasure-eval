@@ -1,0 +1,39 @@
+{
+  "case_id": "subj-payment-inside-floors",
+  "model_id": "primary",
+  "prompt_hash": "b60eb9a37dfe5e3b1dec0e4f6d3c25a41d04fbc64677b3734b89f14ae8cdbc97",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-001",
+        "verdict": "retain"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-001",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T00:23:00Z",
+  "runner_id": "autonomous",
+  "sample_index": 1,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "subj-payment-inside-floors"
+      },
+      "result_summary": {
+        "location_count": 2,
+        "location_ids": [
+          "cust-001",
+          "txn-001"
+        ],
+        "subject_id": "subj-payment-inside-floors"
+      },
+      "sequence": 0,
+      "tool_name": "get_location_records"
+    }
+  ]
+}

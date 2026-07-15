@@ -1,0 +1,23 @@
+{
+  "case_id": "subj-payment-inside-floors",
+  "model_id": "primary",
+  "prompt_hash": "d24b34612295f7db46c832a07f3a56430800171a34b16c9b083806422e3a87e0",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-001",
+        "verdict": "retain"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-001",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T00:23:00Z",
+  "runner_id": "t2",
+  "sample_index": 4,
+  "tool_calls": []
+}

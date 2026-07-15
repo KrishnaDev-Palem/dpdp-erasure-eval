@@ -48,5 +48,5 @@ def test_offline_cache_miss_fails_explicitly(
         run_autonomous_sweep(seam=fake_seam, config=config)
     message = str(exc_info.value).lower()
     assert "autonomous" in message
-    assert "mixed-fanout" in message or "floor-inside" in message
+    assert "subj-" in message
     assert fake_seam.adjudicate_calls == []

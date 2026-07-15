@@ -1,0 +1,45 @@
+{
+  "case_id": "subj-mixed-fanout",
+  "model_id": "primary",
+  "prompt_hash": "dc1407c727ae9d65ef95b7413613eef8cca6a692b5422b55118fa30419260d9f",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-004",
+        "verdict": "escalate"
+      },
+      {
+        "detail": null,
+        "location_id": "mkt-004",
+        "verdict": "erase"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-004",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T00:23:00Z",
+  "runner_id": "autonomous",
+  "sample_index": 2,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "subj-mixed-fanout"
+      },
+      "result_summary": {
+        "location_count": 3,
+        "location_ids": [
+          "cust-004",
+          "mkt-004",
+          "txn-004"
+        ],
+        "subject_id": "subj-mixed-fanout"
+      },
+      "sequence": 0,
+      "tool_name": "get_location_records"
+    }
+  ]
+}
