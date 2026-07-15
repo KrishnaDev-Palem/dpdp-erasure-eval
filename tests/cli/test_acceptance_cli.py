@@ -107,8 +107,7 @@ def test_autonomous_retrieval_split_subcommand_exits_zero_and_emits_json_keys() 
     assert set(payload.keys()) >= RETRIEVAL_SPLIT_JSON_KEYS
     assert payload["runner_id"] == "autonomous"
     assert payload["total_incorrect"] == (
-        payload["retrieval_failure"]["numerator"]
-        + payload["reasoning_failure"]["numerator"]
+        payload["retrieval_failure"]["numerator"] + payload["reasoning_failure"]["numerator"]
     )
 
 

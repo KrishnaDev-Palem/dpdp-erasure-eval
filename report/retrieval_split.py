@@ -220,10 +220,7 @@ def build_retrieval_split_report(
 def format_retrieval_split_report(report: RetrievalSplitReport) -> str:
     """Render human-readable retrieval split report."""
     lines = [
-        (
-            "Autonomous retrieval split report "
-            f"(sample {report.primary_sample_index})"
-        ),
+        (f"Autonomous retrieval split report (sample {report.primary_sample_index})"),
         f"Model: {report.model_id}  Cache: {report.cache_mode}",
         "",
         "Incorrect verdict split:",

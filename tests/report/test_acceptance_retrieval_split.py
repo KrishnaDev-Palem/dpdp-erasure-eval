@@ -27,11 +27,14 @@ def test_no_rule_fetch_classified_as_retrieval_failure() -> None:
         cited_floors=["pmla_kyc"],
     )
     tool_calls = [make_location_records_trace()]
-    assert classify_incorrect_verdict(
-        predicted="erase",
-        expected=expected,
-        tool_calls=tool_calls,
-    ) == "retrieval_failure"
+    assert (
+        classify_incorrect_verdict(
+            predicted="erase",
+            expected=expected,
+            tool_calls=tool_calls,
+        )
+        == "retrieval_failure"
+    )
 
 
 def test_partial_floor_fetch_classified_as_retrieval_failure() -> None:
@@ -45,11 +48,14 @@ def test_partial_floor_fetch_classified_as_retrieval_failure() -> None:
         make_location_records_trace(),
         make_partial_retention_floors_trace(["pmla_kyc", "gst", "income_tax"]),
     ]
-    assert classify_incorrect_verdict(
-        predicted="erase",
-        expected=expected,
-        tool_calls=tool_calls,
-    ) == "retrieval_failure"
+    assert (
+        classify_incorrect_verdict(
+            predicted="erase",
+            expected=expected,
+            tool_calls=tool_calls,
+        )
+        == "retrieval_failure"
+    )
     assert not governing_floors_retrieved(tool_calls, expected.cited_floors)
 
 
@@ -64,11 +70,14 @@ def test_governing_floor_fetch_classified_as_reasoning_failure() -> None:
         make_location_records_trace(),
         make_retention_floors_trace(),
     ]
-    assert classify_incorrect_verdict(
-        predicted="erase",
-        expected=expected,
-        tool_calls=tool_calls,
-    ) == "reasoning_failure"
+    assert (
+        classify_incorrect_verdict(
+            predicted="erase",
+            expected=expected,
+            tool_calls=tool_calls,
+        )
+        == "reasoning_failure"
+    )
     assert governing_floors_retrieved(tool_calls, expected.cited_floors)
 
 
