@@ -34,6 +34,19 @@ GATE_JSON_KEYS = {
     "sample_index",
 }
 
+RETRIEVAL_SPLIT_JSON_KEYS = {
+    "runner_id",
+    "model_id",
+    "cache_mode",
+    "export_agent_sha",
+    "primary_sample_index",
+    "total_incorrect",
+    "retrieval_failure",
+    "reasoning_failure",
+    "per_lane",
+    "sample_rollups",
+}
+
 
 @pytest.fixture(autouse=True)
 def _offline_cache_mode(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -81,6 +94,37 @@ def test_adversarial_gate_subcommand_exits_zero_and_emits_json_keys() -> None:
     assert result.returncode == 0, result.stderr
     payload = json.loads(result.stdout)
     assert set(payload.keys()) >= GATE_JSON_KEYS
+
+
+def test_autonomous_retrieval_split_subcommand_exits_zero_and_emits_json_keys() -> None:
+    result = _run_cli(
+        "autonomous-retrieval-split",
+        "--json",
+        env={"MODEL_ID": "claude-sonnet-5", "CACHE_MODE": "offline"},
+    )
+    assert result.returncode == 0, result.stderr
+    payload = json.loads(result.stdout)
+    assert set(payload.keys()) >= RETRIEVAL_SPLIT_JSON_KEYS
+    assert payload["runner_id"] == "autonomous"
+    assert payload["total_incorrect"] == (
+        payload["retrieval_failure"]["numerator"]
+        + payload["reasoning_failure"]["numerator"]
+    )
+
+
+def test_autonomous_retrieval_split_human_stdout_includes_required_sections() -> None:
+    result = _run_cli(
+        "autonomous-retrieval-split",
+        env={"MODEL_ID": "claude-sonnet-5", "CACHE_MODE": "offline"},
+    )
+    assert result.returncode == 0, result.stderr
+    for marker in (
+        "Autonomous retrieval split report",
+        "Retrieval failure",
+        "Reasoning failure",
+        "Per expected-verdict lane",
+    ):
+        assert marker in result.stdout
 
 
 def test_cli_adjudication_human_stdout_includes_required_sections() -> None:
@@ -239,10 +283,15 @@ def test_cli_output_non_writable_parent_fails(tmp_path: Path) -> None:
 
 @pytest.mark.parametrize(
     "subcommand",
-    ["t1", "t2", "t3", "autonomous", "adversarial-gate"],
+    ["t1", "t2", "t3", "autonomous", "adversarial-gate", "autonomous-retrieval-split"],
 )
 def test_cli_json_no_blended_accuracy_fields(subcommand: str) -> None:
-    result = _run_cli(subcommand, "--json")
+    env = (
+        {"MODEL_ID": "claude-sonnet-5", "CACHE_MODE": "offline"}
+        if subcommand == "autonomous-retrieval-split"
+        else None
+    )
+    result = _run_cli(subcommand, "--json", env=env)
     assert result.returncode == 0, result.stderr
     payload = json.loads(result.stdout)
     prohibited = ("accuracy", "micro_f1", "blended_score", "blended_accuracy")
