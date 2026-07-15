@@ -196,7 +196,7 @@ An evaluator onboarding to the harness needs a quickstart document that walks th
 ## Dependencies
 
 - Constitution: `.specify/memory/constitution.md` (Principles I–IV, VII, VIII).
-- Canonical planning: `Planning/dpdp_eval_harness_planning.md` (§4 autonomous retrieval evaluation, §5 adjudication scoring, §7 architecture, §8 feature breakdown, §9 guardrails).
+- Canonical planning: `docs/planning/dpdp_eval_harness_planning.md` (§4 autonomous retrieval evaluation, §5 adjudication scoring, §7 architecture, §8 feature breakdown, §9 guardrails).
 - ADR-0001: frozen export as deterministic ground truth (`docs/adr/0001-frozen-export-ground-truth.md`).
 - Feature 001 spec and contracts: `specs/001-shared-core/spec.md`, `specs/001-shared-core/contracts/cache.md` (`runner_id` `autonomous`, `tool_calls`), `specs/001-shared-core/contracts/model-seam.md`, `specs/001-shared-core/contracts/scoring.md`, `specs/001-shared-core/contracts/context-tiers.md`, `specs/001-shared-core/contracts/frozen-export.md`.
 - Feature 002 spec and runner patterns (reference only): `specs/002-context-tier-sweep/spec.md`, `specs/002-context-tier-sweep/contracts/runner-spine.md`, `specs/002-context-tier-sweep/contracts/sweep-result.md`, `specs/002-context-tier-sweep/contracts/tier-runner.md`.

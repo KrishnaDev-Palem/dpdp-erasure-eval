@@ -153,7 +153,7 @@ An evaluator onboarding to the harness needs a quickstart document that walks th
 
 - Feature 001 (shared core) is complete: export loader, provenance check, model seam, cache, adjudication scoring, and T1/T2/T3 context builders are available and covered by their own acceptance suite.
 - The committed frozen export and a sufficient committed cache (covering all subjects, three tiers, and sample indices 0–4 for offline CI) will be present or added as part of implementation; export content remains immutable after acceptance per ADR-0001 and constitution Principle III.
-- The canonical planning document (`Planning/dpdp_eval_harness_planning.md`) supplies tier definitions (§4.1), scoring semantics (§5), reproducibility mechanics (§7), feature breakdown (§8), and cost guardrails (§9); this spec consumes those via Feature 001 contracts rather than redefining them.
+- The canonical planning document (`docs/planning/dpdp_eval_harness_planning.md`) supplies tier definitions (§4.1), scoring semantics (§5), reproducibility mechanics (§7), feature breakdown (§8), and cost guardrails (§9); this spec consumes those via Feature 001 contracts rather than redefining them.
 - Primary model identity is configuration supplied at run time; the spec does not fix a model string, consistent with planning §11 and Feature 001 assumptions.
 - Per-sample aggregate scoring (one result per sample index covering the entire sweep) is the primary reporting unit; the variance summary rolls up across those five results rather than reporting per-subject variance tables in this feature.
 - Subjects with empty location lists are visited per the context-tier contract; they contribute zero location pairs, require no model invocation, and do not block the sweep.

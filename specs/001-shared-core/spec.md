@@ -179,7 +179,7 @@ An evaluator running the adjudication ablation needs helpers that build exactly 
 
 ## Dependencies
 
-- Canonical planning document `Planning/dpdp_eval_harness_planning.md` (§3, §5, §6, §7, §8) and project constitution `.specify/memory/constitution.md` are binding inputs.
+- Canonical planning document `docs/planning/dpdp_eval_harness_planning.md` (§3, §5, §6, §7, §8) and project constitution `.specify/memory/constitution.md` are binding inputs.
 - Ground-truth shapes and vocabulary are inherited from [dpdp-erasure-agent](https://github.com/KrishnaDev-Palem/dpdp-erasure-agent); the harness reads labels, it does not reinterpret them.
 - ADR-0001 (eval methodology and frozen-export ground-truth coupling) is expected to exist or be authored during planning for this feature.
 
