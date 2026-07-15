@@ -6,7 +6,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, model_validator
 
-from core.types import Rate, VERDICT_LANES, Verdict
+from core.types import VERDICT_LANES, Rate, Verdict
 
 RetrievalSplitBucket = Literal["retrieval_failure", "reasoning_failure"]
 
