@@ -196,7 +196,7 @@ They are not separate principles because they operationalize Principles IV and V
 ## Governance
 
 This constitution supersedes ad hoc practices for the DPDP Erasure Evaluation
-Harness. It is derived from `dpdp_eval_harness_planning.md` (canonical planning
+Harness. It is derived from `docs/planning/dpdp_eval_harness_planning.md` (canonical planning
 document), with §3 (Principles and non-negotiables) and §9 (Cost and scope
 guardrails) as the primary pointers and §1, §2, and §6 supplying authority where
 those sections cross-reference or imply them.

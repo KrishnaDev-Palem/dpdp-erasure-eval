@@ -201,7 +201,7 @@ An evaluator onboarding to the harness needs a quickstart document that walks th
 ## Dependencies
 
 - Constitution: `.specify/memory/constitution.md` (Principles I–IV, VII, VIII).
-- Canonical planning: `Planning/dpdp_eval_harness_planning.md` (§4.3 adversarial-gate evaluation, §5 adversarial scoring, §6 classifier protocol and slice shape, §7 architecture, §8 feature breakdown, §9 guardrails).
+- Canonical planning: `docs/planning/dpdp_eval_harness_planning.md` (§4.3 adversarial-gate evaluation, §5 adversarial scoring, §6 classifier protocol and slice shape, §7 architecture, §8 feature breakdown, §9 guardrails).
 - ADR-0001: frozen export as deterministic ground truth (`docs/adr/0001-frozen-export-ground-truth.md`).
 - Feature 001 spec assumptions and adversarial deferrals: `specs/001-shared-core/spec.md` (US3, Out of Scope).
 - Feature 002 spec out-of-scope boundaries: `specs/002-context-tier-sweep/spec.md`.
