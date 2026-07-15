@@ -9,7 +9,7 @@ import pytest
 
 from core.export import load_export
 from core.model import FakeModelSeam
-from core.types import AdjudicationSubject, Tier
+from core.types import AdjudicationSubject, ErasureRequest, Tier
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 EXPORT_DIR = REPO_ROOT / "export"
@@ -45,10 +45,6 @@ def fake_seam() -> FakeModelSeam:
 @pytest.fixture
 def export_bundle(export_dir: Path):
     return load_export(export_dir)
-
-
-from core.types import AdjudicationSubject, ErasureRequest
-from tests.core.conftest import subject_with_tag
 
 
 @pytest.fixture

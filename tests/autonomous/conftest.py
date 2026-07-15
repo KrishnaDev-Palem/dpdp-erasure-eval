@@ -10,7 +10,7 @@ import pytest
 from core.export import load_export
 from core.model import FakeModelSeam
 from core.scoring import score_adjudication
-from core.types import AdjudicationSubject, ExpectedLabel, ModelVerdict, Rate
+from core.types import AdjudicationSubject, ErasureRequest, ExpectedLabel, ModelVerdict, Rate
 from runners.autonomous.types import AutonomousSweepConfig
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -47,10 +47,6 @@ def fake_seam() -> FakeModelSeam:
 @pytest.fixture
 def export_bundle(export_dir: Path):
     return load_export(export_dir)
-
-
-from core.types import AdjudicationSubject, ErasureRequest
-from tests.core.conftest import subject_with_tag
 
 
 @pytest.fixture
