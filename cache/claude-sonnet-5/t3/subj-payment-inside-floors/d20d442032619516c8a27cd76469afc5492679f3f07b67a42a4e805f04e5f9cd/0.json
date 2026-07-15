@@ -1,0 +1,23 @@
+{
+  "case_id": "subj-payment-inside-floors",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "d20d442032619516c8a27cd76469afc5492679f3f07b67a42a4e805f04e5f9cd",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-001",
+        "verdict": "retain"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-001",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T02:26:49Z",
+  "runner_id": "t3",
+  "sample_index": 0,
+  "tool_calls": []
+}

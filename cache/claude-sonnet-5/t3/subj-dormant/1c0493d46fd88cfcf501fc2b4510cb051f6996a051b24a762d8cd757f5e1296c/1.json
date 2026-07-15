@@ -1,0 +1,23 @@
+{
+  "case_id": "subj-dormant",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "1c0493d46fd88cfcf501fc2b4510cb051f6996a051b24a762d8cd757f5e1296c",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "cust-006",
+        "verdict": "retain"
+      },
+      {
+        "detail": null,
+        "location_id": "txn-006",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-07-15T02:28:30Z",
+  "runner_id": "t3",
+  "sample_index": 1,
+  "tool_calls": []
+}
