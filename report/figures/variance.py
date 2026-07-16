@@ -10,7 +10,6 @@ from core.cache.store import CacheStore, make_cache_key
 from core.context.tiers import build_t1, build_t2, build_t3
 from core.export.loader import ExportBundle, load_export
 from core.types import ContextBundle, RulesCorpus, Tier, Verdict
-
 from report.figures.types import (
     AGREEMENT_BUCKETS,
     CONTEXT_TIERS,
