@@ -4,7 +4,7 @@
 
 **Created**: 2026-07-09
 
-**Status**: Draft
+**Status**: Accepted
 
 **Input**: User description: "Build Feature 006 live model seam wiring: implement real ModelSeam provider adapters behind the existing Protocol so CACHE_MODE=refresh can call live models and write cache entries, while default CACHE_MODE=offline and CI remain FakeModelSeam / committed-cache only with no network and no API keys required. Target models: Anthropic Claude Sonnet 5 and Google Gemini 3.5 Flash (exact API model ids pinned in plan/research). Credentials via ANTHROPIC_API_KEY and GEMINI_API_KEY; MODEL_ID selects active model role; refresh-path documentation in quickstart; offline acceptance tests stay green; do not modify frozen export/ or committed cache unless explicitly regenerating via documented refresh; do not break Features 001–005 offline contracts."
 

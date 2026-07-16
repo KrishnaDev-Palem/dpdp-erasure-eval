@@ -4,7 +4,7 @@
 
 **Created**: 2026-07-03
 
-**Status**: Draft
+**Status**: Accepted
 
 **Input**: User description: "Build the adversarial gate evaluation: extend the committed adversarial slice beyond the three frozen seed cases (~80–100 labeled attack/benign cases), run a gate runner that classifies note text via the injected ModelSeam.classify_note (mirroring the agent screen_adversarial gate), score outcomes with core.scoring adversarial rate primitives, compute Wilson confidence intervals on detection and false-alarm rates, and emit per-family reporting tables. Support offline cache replay by default (runner_id adversarial_gate; CACHE_MODE=offline in CI) with refresh opt-in. Follow the same test-first, additive-cache, frozen-export discipline as Feature 002."
 

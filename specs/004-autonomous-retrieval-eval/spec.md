@@ -4,7 +4,7 @@
 
 **Created**: 2026-07-04
 
-**Status**: Draft
+**Status**: Accepted
 
 **Input**: User description: "Build the autonomous retrieval evaluation (Feature 004): implement core/tools for filesystem-backed retrieval (records, retention floors, governance map) mirroring what T2/T3 pre-load into context; add an autonomous adjudication runner (runner_id autonomous) that sweeps all labeled export subjects via ModelSeam.adjudicate with tool-use enabled, logs tool-call traces in committed cache entries (tool_calls field per cache contract), pairs verdicts with ground truth from expected blocks only, and aggregates via core.scoring.score_adjudication. Support offline cache replay by default (CACHE_MODE=offline in CI) with refresh opt-in and N=5 samples (sample_index 0–4). Follow the same test-first, additive-cache, frozen-export discipline as Features 002 and 003. Do not modify tier runners, adversarial gate, or committed export content."
 

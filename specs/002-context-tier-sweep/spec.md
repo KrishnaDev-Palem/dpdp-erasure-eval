@@ -4,7 +4,7 @@
 
 **Created**: 2026-07-02
 
-**Status**: Draft
+**Status**: Accepted
 
 **Input**: User description: "Build T1, T2, and T3 adjudication runners that sweep all labeled subjects from the committed frozen export. Each runner loads export via core.export, builds tier-appropriate context via core.context (build_t1/t2/t3), obtains model verdicts via the injected ModelSeam (offline cache replay by default; refresh opt-in), pairs predictions with ground truth from expected blocks only, and aggregates results via core.scoring.score_adjudication. Support N=5 samples per case (sample_index 0–4) using cache keys with runner_id t1|t2|t3."
 
