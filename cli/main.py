@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from cli.report_figures import run_report_figures_command
 from core.model import create_model_seam, load_model_config
 from report.adjudication_tables import build_tier_adjudication_report, format_adjudication_report
 from report.adversarial_tables import build_gate_report
@@ -165,9 +166,67 @@ def main(argv: list[str] | None = None) -> int:
     )
     _add_common_args(retrieval_split_parser)
 
+    report_parser = subparsers.add_parser("report", help="Offline report generation commands")
+    report_subparsers = report_parser.add_subparsers(dest="report_command", required=True)
+
+    figures_parser = report_subparsers.add_parser(
+        "figures",
+        help="Generate publication-ready figures from committed scored results",
+    )
+    figures_parser.add_argument(
+        "--out",
+        type=Path,
+        default=Path("figures"),
+        help="Output directory for figure files (default: figures/)",
+    )
+    figures_parser.add_argument(
+        "--dpi",
+        type=int,
+        default=200,
+        help="Figure resolution in dots per inch (default: 200)",
+    )
+    figures_parser.add_argument(
+        "--format",
+        dest="figure_format",
+        choices=["png", "svg"],
+        default="png",
+        help="Output format (default: png)",
+    )
+    figures_parser.add_argument(
+        "--export-dir",
+        type=Path,
+        default=None,
+        help="Path to frozen export directory (default: export/)",
+    )
+    figures_parser.add_argument(
+        "--cache-root",
+        type=Path,
+        default=None,
+        help="Path to cache root (default: cache/)",
+    )
+    figures_parser.add_argument(
+        "--sample-index",
+        type=int,
+        default=0,
+        choices=[0, 1, 2, 3, 4],
+        help="Sample index (0..4) for primary rates (default: 0)",
+    )
+
     args = parser.parse_args(argv)
 
-    if args.output is not None:
+    if args.command == "report":
+        if args.report_command == "figures":
+            return run_report_figures_command(
+                out_dir=args.out,
+                dpi=args.dpi,
+                fmt=args.figure_format,
+                export_dir=args.export_dir,
+                cache_root=args.cache_root,
+                sample_index=args.sample_index,
+            )
+        raise SystemExit(f"unknown report subcommand: {args.report_command}")
+
+    if getattr(args, "output", None) is not None:
         try:
             _validate_output_path(args.output)
         except argparse.ArgumentTypeError as exc:
