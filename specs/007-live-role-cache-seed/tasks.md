@@ -234,3 +234,10 @@ on-ramp and sign-off.
 - Definition of done: SC-001–SC-005 — 470 committed entries at full parity, merge gate
   green offline with zero keys, `cache/primary/` and `export/` untouched, README +
   quickstart on-ramp complete
+
+---
+
+## Phase 8: Convergence
+
+- [x] T025 Open a pull request from `007-live-role-cache-seed` for human diff review of the 470 cache entries, protected-path invariant, and adapter bugfix per FR-015 and Constitution VII (no agent merge to `main`) — satisfied by merge of PR #8 to `main` (2026-07-14)
+- [x] T026 Mark CHK001–CHK037 as `[x]` in `specs/007-live-role-cache-seed/checklists/cache-seeding.md` to reflect post-implementation validation notes already recorded in that file per T023 (partial)
