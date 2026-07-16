@@ -249,9 +249,7 @@ def render_verdict_variance_by_tier(
     for tier in tiers:
         distribution = variance_by_tier[tier]
         total = distribution.total_cases or 1
-        bucket_matrix.append(
-            [distribution.bucket_counts[bucket] / total for bucket in buckets]
-        )
+        bucket_matrix.append([distribution.bucket_counts[bucket] / total for bucket in buckets])
 
     data = np.array(bucket_matrix)
     x = np.arange(len(tiers))
