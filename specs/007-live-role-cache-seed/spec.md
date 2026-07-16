@@ -4,7 +4,7 @@
 
 **Created**: 2026-07-12
 
-**Status**: Draft
+**Status**: Accepted
 
 **Input**: User description: "Build Feature 007: complete Feature 006 SC-002 by seeding committed live-role cache and validating offline replay for Claude Sonnet 5 and Gemini 3.5 Flash. Regenerate live-model cache entries for each supported MODEL_ID role and replay them offline with identical results. Extend the minimal 006 quickstart proof into a durable, committed artifact set for thesis evaluation. Depends on Feature 006 live model seam. Runner paths: T2 tier sweep (claude-sonnet-5), adversarial gate (gemini-3.5-flash), autonomous (claude-sonnet-5). Cache under separate namespaces only. Offline replay CI-gated. Operator workflow documented in quickstart with cost estimates."
 

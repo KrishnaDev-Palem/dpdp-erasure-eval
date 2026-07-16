@@ -4,7 +4,7 @@
 
 **Created**: 2026-07-01
 
-**Status**: Draft
+**Status**: Accepted
 
 **Input**: User description: "Feature 001-shared-core per planning doc §8: frozen-export loader + provenance check, the model seam, the cache, the scoring primitives, the per-tier context helpers. Definition of done: core suite green; export loads and verifies against the pinned SHA."
 

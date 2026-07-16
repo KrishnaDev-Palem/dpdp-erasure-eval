@@ -4,7 +4,7 @@
 
 **Created**: 2026-07-07
 
-**Status**: Draft
+**Status**: Accepted
 
 **Input**: User description: "Build Feature 005: CLI and Adjudication Report — the cross-cutting integration layer deferred from Features 001–004. Deliver adjudication reporting (Wilson CIs on standalone safety rates, per-lane confusion matrix, N=5 sample rollups, cross-sample variance, cross-tier comparison), a `dpdp-eval` CLI with tier/autonomous/gate subcommands, and acceptance suites for report and CLI — all offline in CI with no model API key."
 
