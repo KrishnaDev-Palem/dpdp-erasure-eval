@@ -1,5 +1,6 @@
 /figures/
 /.cursor/
+/.specify/
 .env
 __pycache__/
 *.py[cod]
