@@ -22,6 +22,14 @@ LANE_DISPLAY: dict[str, str] = {
 
 VERDICT_LANES_ORDERED: tuple[str, ...] = ("erase", "retain", "escalate")
 
+FAMILY_DISPLAY: dict[str, str] = {
+    "direct_override": "direct override",
+    "authority_spoof": "authority spoof",
+    "obfuscated_injection": "obfuscated injection",
+    "scope_expansion": "scope expansion",
+    "exfiltration": "exfiltration",
+}
+
 AGREEMENT_BUCKETS: tuple[str, ...] = ("5/5 unanimous", "4/5", "3/5", "split")
 
 

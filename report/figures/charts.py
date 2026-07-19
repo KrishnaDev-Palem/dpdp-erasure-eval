@@ -6,8 +6,18 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.colors import to_rgba
+from matplotlib.ticker import PercentFormatter
 
 from report.adjudication_types import TierAdjudicationReportTables
+from report.figures.layout import (
+    annotation_fits,
+    annotation_y,
+    heatmap_text_color,
+    horizontal_bar_annotation_x,
+    rate_axis_ticks,
+    rate_axis_upper_limit,
+)
 from report.figures.style import (
     COLOR_BAR,
     COLOR_BAR_EDGE,
@@ -25,6 +35,7 @@ from report.figures.style import (
 )
 from report.figures.types import (
     CONTEXT_TIERS,
+    FAMILY_DISPLAY,
     LANE_DISPLAY,
     TIER_DISPLAY,
     VERDICT_LANES_ORDERED,
@@ -75,16 +86,21 @@ def render_over_erasure_by_tier(
     values = [item.rate.value or 0.0 for item in rates]
     lowers = []
     uppers = []
+    upper_bounds = []
     for item in rates:
         if item.interval is None or item.interval.lower is None or item.interval.upper is None:
             interval = wilson_interval(item.rate)
         else:
             interval = item.interval
-        lowers.append((item.rate.value or 0.0) - (interval.lower or 0.0))
-        uppers.append((interval.upper or 0.0) - (item.rate.value or 0.0))
+        value = item.rate.value or 0.0
+        upper_bound = interval.upper or 0.0
+        lowers.append(value - (interval.lower or 0.0))
+        uppers.append(upper_bound - value)
+        upper_bounds.append(upper_bound)
 
     labels = [TIER_DISPLAY[tier] for tier in tiers]
     x = np.arange(len(tiers))
+    limit = rate_axis_upper_limit(max(upper_bounds, default=0.0))
 
     fig, ax = plt.subplots(figsize=SINGLE_CHART_SIZE)
     bars = ax.bar(
@@ -102,12 +118,20 @@ def render_over_erasure_by_tier(
     ax.set_ylabel("over-erasure rate")
     ax.set_xlabel("context tier")
     ax.set_title("Over-erasure rate by context tier (Wilson 95% CI)")
-    ax.set_ylim(0.0, max(max(values) * 1.25, 0.05) if values else 0.05)
+    ax.set_ylim(0.0, limit)
+    ax.set_yticks(rate_axis_ticks(limit))
+    ax.yaxis.set_major_formatter(PercentFormatter(xmax=1.0, decimals=0))
 
-    for bar, value in zip(bars, values, strict=True):
+    for bar, value, upper in zip(bars, values, uppers, strict=True):
+        baseline = annotation_y(value, upper)
+        if not annotation_fits(baseline, limit):
+            raise ValueError(
+                f"over-erasure annotation baseline {baseline:.4f} collides with "
+                f"axis limit {limit:.4f}; surface instead of clipping"
+            )
         ax.text(
             bar.get_x() + bar.get_width() / 2,
-            bar.get_height() + 0.01,
+            baseline,
             f"{value:.1%}",
             ha="center",
             va="bottom",
@@ -151,7 +175,8 @@ def render_confusion_heatmap(
     for row_idx in range(data.shape[0]):
         for col_idx in range(data.shape[1]):
             count = int(data[row_idx, col_idx])
-            text_color = "white" if count > data.max() * 0.55 else "black"
+            cell_rgba = im.cmap(im.norm(count))
+            text_color = heatmap_text_color(cell_rgba)
             ax.text(
                 col_idx,
                 row_idx,
@@ -184,39 +209,64 @@ def render_adversarial_detection_by_family(
     fmt: str,
 ) -> None:
     report: GateReportTables = data.report
-    families = [row.family for row in report.per_family]
+    labels = [FAMILY_DISPLAY.get(row.family, row.family) for row in report.per_family]
     values = [row.detection.rate.value or 0.0 for row in report.per_family]
+    counts = [
+        (row.detection.rate.numerator, row.detection.rate.denominator) for row in report.per_family
+    ]
     lowers = []
     uppers = []
+    upper_bounds = []
     for row in report.per_family:
         interval = row.detection.interval or wilson_interval(row.detection.rate)
         value = row.detection.rate.value or 0.0
+        upper_bound = interval.upper or 0.0
         lowers.append(value - (interval.lower or 0.0))
-        uppers.append((interval.upper or 0.0) - value)
+        uppers.append(upper_bound - value)
+        upper_bounds.append(upper_bound)
 
-    x = np.arange(len(families))
+    limit = rate_axis_upper_limit(max(upper_bounds, default=0.0))
+    y = np.arange(len(labels))
     fig, ax = plt.subplots(figsize=SINGLE_CHART_SIZE)
-    ax.bar(
-        x,
+    ax.barh(
+        y,
         values,
         color=COLOR_BAR,
         edgecolor=COLOR_BAR_EDGE,
         linewidth=0.8,
-        yerr=[lowers, uppers],
+        xerr=[lowers, uppers],
         capsize=4,
         error_kw={"ecolor": COLOR_ERROR, "linewidth": 1.0},
     )
-    ax.set_xticks(x)
-    ax.set_xticklabels(families, rotation=25, ha="right")
-    ax.set_ylabel("detection rate")
-    ax.set_xlabel("attack family")
+    ax.set_yticks(y)
+    ax.set_yticklabels(labels)
+    ax.invert_yaxis()
+    ax.set_xlabel("detection rate")
+    ax.set_ylabel("attack family")
     ax.set_title("Adversarial-gate detection rate by attack family (Wilson 95% CI)")
-    ax.set_ylim(0.0, 1.05)
+    ax.set_xlim(0.0, limit)
+    ax.set_xticks(rate_axis_ticks(limit, step=0.25))
+    ax.xaxis.set_major_formatter(PercentFormatter(xmax=1.0, decimals=0))
+
+    bar_rgba = to_rgba(COLOR_BAR)
+    for row_pos, value, upper, (numerator, denominator) in zip(
+        y, values, uppers, counts, strict=True
+    ):
+        text_x, placement = horizontal_bar_annotation_x(value, upper, limit)
+        ax.text(
+            text_x,
+            row_pos,
+            f"{numerator}/{denominator} ({value:.1%})",
+            ha="left",
+            va="center",
+            color=heatmap_text_color(bar_rgba) if placement == "inside" else COLOR_ERROR,
+            fontsize=FONT_SIZE_ANNOTATION,
+        )
 
     detection_rate = report.detection.rate.value
     false_alarm_rate = report.false_alarm.rate.value
     if detection_rate is not None:
-        ax.axhline(
+        ax.axvline(
             detection_rate,
             color=REFERENCE_LINE_DETECTION,
             linestyle="--",
@@ -224,14 +274,23 @@ def render_adversarial_detection_by_family(
             label=f"overall detection rate ({detection_rate:.1%})",
         )
     if false_alarm_rate is not None:
-        ax.axhline(
+        ax.axvline(
             false_alarm_rate,
             color=REFERENCE_LINE_FALSE_ALARM,
             linestyle=":",
             linewidth=1.2,
             label=f"overall false-alarm rate ({false_alarm_rate:.1%})",
         )
-    ax.legend(loc="lower right", frameon=True)
+    handles, legend_labels = ax.get_legend_handles_labels()
+    if handles:
+        fig.legend(
+            handles,
+            legend_labels,
+            loc="upper center",
+            bbox_to_anchor=(0.5, 0.0),
+            ncol=2,
+            frameon=False,
+        )
 
     _save_figure(path, dpi=dpi, fmt=fmt)
 
@@ -274,8 +333,11 @@ def render_verdict_variance_by_tier(
     ax.set_ylabel("share of cases")
     ax.set_xlabel("context tier")
     ax.set_title("Verdict variance by context tier (N=5 samples per case)")
-    ax.set_ylim(0.0, 1.05)
-    ax.legend(title="sample agreement", loc="upper right", frameon=True)
+    limit = rate_axis_upper_limit(float(data.max()) if data.size else 0.0)
+    ax.set_ylim(0.0, limit)
+    ax.set_yticks(rate_axis_ticks(limit, step=0.20))
+    ax.yaxis.set_major_formatter(PercentFormatter(xmax=1.0, decimals=0))
+    ax.legend(title="sample agreement", loc="upper right", frameon=True, framealpha=1.0)
     fig.text(
         0.01,
         0.01,
