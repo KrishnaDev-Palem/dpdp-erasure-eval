@@ -17,6 +17,7 @@ def _wrap_rate(rate: Rate, *, confidence_level: float) -> RateWithCI:
 def build_gate_report(
     scoring: AdversarialScoringResult,
     *,
+    export_agent_sha: str,
     confidence_level: float = 0.95,
     sample_index: int | None = None,
 ) -> GateReportTables:
@@ -29,6 +30,7 @@ def build_gate_report(
         if rate.denominator > 0
     ]
     return GateReportTables(
+        export_agent_sha=export_agent_sha,
         detection=_wrap_rate(scoring.detection_rate, confidence_level=confidence_level),
         false_alarm=_wrap_rate(scoring.false_alarm_rate, confidence_level=confidence_level),
         per_family=per_family,

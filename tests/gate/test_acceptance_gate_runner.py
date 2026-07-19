@@ -100,11 +100,19 @@ def test_deterministic_replay(
     assert first_dump == second_dump
 
     first_reports = [
-        build_gate_report(sample.scoring, sample_index=sample.sample_index).model_dump()
+        build_gate_report(
+            sample.scoring,
+            export_agent_sha="a" * 40,
+            sample_index=sample.sample_index,
+        ).model_dump()
         for sample in first.samples
     ]
     second_reports = [
-        build_gate_report(sample.scoring, sample_index=sample.sample_index).model_dump()
+        build_gate_report(
+            sample.scoring,
+            export_agent_sha="a" * 40,
+            sample_index=sample.sample_index,
+        ).model_dump()
         for sample in second.samples
     ]
     assert first_reports == second_reports

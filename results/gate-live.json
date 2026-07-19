@@ -1,4 +1,5 @@
 {
+  "export_agent_sha": "3562059939cbaac3dc3500593f2940ef34c54c53",
   "detection": {
     "rate": {
       "numerator": 44,

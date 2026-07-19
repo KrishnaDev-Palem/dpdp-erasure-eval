@@ -80,7 +80,11 @@ def make_complete_figure_inputs() -> FigureInputs:
             variance_by_tier=make_variance_by_tier(),
         ),
         gate=GateFigureData(
-            report=build_gate_report(gate_scoring, sample_index=0),
+            report=build_gate_report(
+                gate_scoring,
+                export_agent_sha="a" * 40,
+                sample_index=0,
+            ),
         ),
     )
 

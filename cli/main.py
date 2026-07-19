@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from cli.report_figures import run_report_figures_command
+from core.export.provenance import verify_provenance
 from core.model import create_model_seam, load_model_config
 from report.adjudication_tables import build_tier_adjudication_report, format_adjudication_report
 from report.adversarial_tables import build_gate_report
@@ -123,8 +124,13 @@ def _run_gate_command(args: argparse.Namespace) -> int:
         seam=seam,
         cache_root=args.cache_root,
     )
+    manifest = verify_provenance(args.export_dir)
     scoring = result.samples[args.sample_index].scoring
-    report = build_gate_report(scoring, sample_index=args.sample_index)
+    report = build_gate_report(
+        scoring,
+        export_agent_sha=manifest.agent_commit_sha,
+        sample_index=args.sample_index,
+    )
     payload = report.model_dump(mode="json")
     human = format_gate_report(report)
     _emit_report(payload=payload, human_text=human, as_json=args.json, output_path=args.output)

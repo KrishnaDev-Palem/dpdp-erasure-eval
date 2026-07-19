@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from core.exceptions import CacheMissError
+from core.export.provenance import verify_provenance
 from core.model.seam import load_model_config
 from report.adjudication_tables import build_tier_adjudication_report
 from report.adversarial_tables import build_gate_report
@@ -77,9 +78,11 @@ def load_figure_inputs(
 
     gate_data: GateFigureData | None = None
     try:
+        manifest = verify_provenance(export_path)
         gate_result = run_adversarial_gate_sweep(seam=seam, cache_root=cache_path)
         gate_report = build_gate_report(
             gate_result.samples[sample_index].scoring,
+            export_agent_sha=manifest.agent_commit_sha,
             sample_index=sample_index,
         )
         gate_data = GateFigureData(report=gate_report)
