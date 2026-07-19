@@ -83,9 +83,9 @@ no plotly, no pandas for this module.
 ## 8. Repo hygiene
 
 - Add `figures/` to `.gitignore` in this PR.
-- Publication copies will later be committed by hand to `assets/figures/` after visual review and final
+- Publication copies will later be committed by hand to `docs/figures/` after visual review and final
   regeneration against the final cache. That step is out of scope for this PR and is noted here only so the
-  gitignore choice is legible.
+  gitignore choice is legible. *(Retroactive correction: the publication path was corrected to `docs/figures/` when that path was settled during release preparation; the brief originally named `assets/figures/`.)*
 
 ## 9. Acceptance criteria
 

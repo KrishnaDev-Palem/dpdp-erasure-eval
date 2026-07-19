@@ -67,8 +67,12 @@ def test_partial_adjudication_only_skips_adversarial(tmp_path: Path, capsys) -> 
 
 
 def test_cli_partial_generation_exits_zero(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    monkeypatch.setenv("MODEL_ID", "claude-sonnet-5")
+    monkeypatch.setenv("CACHE_MODE", "offline")
     from cli.report_figures import LoadFigureInputsResult
 
     with patch(
@@ -87,9 +91,42 @@ def test_cli_partial_generation_exits_zero(
     assert sorted(path.name for path in tmp_path.iterdir()) == sorted(ADJUDICATION_FIGURES)
 
 
-def test_cli_missing_all_results_exits_nonzero(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+def test_cli_primary_model_id_exits_nonzero_without_writing_files(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    monkeypatch.delenv("MODEL_ID", raising=False)
+    from cli.main import main
+
+    exit_code = main(["report", "figures", "--out", str(tmp_path)])
+    captured = capsys.readouterr()
+    assert exit_code != 0
+    assert list(tmp_path.iterdir()) == []
+    assert "MODEL_ID resolves to 'primary'" in captured.err
+    assert "set MODEL_ID explicitly" in captured.err
+
+
+def test_cli_non_primary_model_id_runs_figures_command(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("MODEL_ID", "claude-sonnet-5")
+    monkeypatch.setenv("CACHE_MODE", "offline")
+    from cli.main import main
+
+    exit_code = main(["report", "figures", "--out", str(tmp_path)])
+    assert exit_code == 0
+    assert sorted(path.name for path in tmp_path.iterdir()) == sorted(ADJUDICATION_FIGURES)
+
+
+def test_cli_missing_all_results_exits_nonzero(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("MODEL_ID", "claude-sonnet-5")
+    monkeypatch.setenv("CACHE_MODE", "offline")
     from cli.report_figures import FigureInputs, LoadFigureInputsResult
 
     with patch(

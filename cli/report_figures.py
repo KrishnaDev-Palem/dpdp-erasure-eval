@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from core.exceptions import CacheMissError
+from core.export.provenance import verify_provenance
 from core.model.seam import load_model_config
 from report.adjudication_tables import build_tier_adjudication_report
 from report.adversarial_tables import build_gate_report
@@ -77,9 +78,11 @@ def load_figure_inputs(
 
     gate_data: GateFigureData | None = None
     try:
+        manifest = verify_provenance(export_path)
         gate_result = run_adversarial_gate_sweep(seam=seam, cache_root=cache_path)
         gate_report = build_gate_report(
             gate_result.samples[sample_index].scoring,
+            export_agent_sha=manifest.agent_commit_sha,
             sample_index=sample_index,
         )
         gate_data = GateFigureData(report=gate_report)
@@ -104,6 +107,15 @@ def run_report_figures_command(
     sample_index: int,
 ) -> int:
     """CLI handler for `report figures`."""
+    config = load_model_config()
+    if config.model_id == "primary":
+        print(
+            f"error: MODEL_ID resolves to {config.model_id!r}; "
+            "set MODEL_ID explicitly to a live role (e.g. claude-sonnet-5 or gemini-3.5-flash)",
+            file=sys.stderr,
+        )
+        return 1
+
     loaded = load_figure_inputs(
         export_dir=export_dir,
         cache_root=cache_root,

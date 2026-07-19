@@ -32,6 +32,7 @@ class FamilyDetectionRow(BaseModel):
 class GateReportTables(BaseModel):
     model_config = ConfigDict(frozen=True)
 
+    export_agent_sha: str
     detection: RateWithCI
     false_alarm: RateWithCI
     per_family: list[FamilyDetectionRow]

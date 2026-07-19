@@ -87,7 +87,7 @@ scaffolding terms "pillar" and "condition" are retired and are not to appear any
 | Frozen export | The committed, version-pinned snapshot of the answer key the harness reads. |
 
 The tiers are referenced as **T1 / T2 / T3** in developer-facing surfaces (commit scopes, runner names,
-suite names, this document's internals), the same way the agent used block-N labels internally.
+suite names, this document's internals), the same way the agent used its internal fixture labels.
 Reader-facing surfaces (the writeup, the README) use the descriptive names: **request-only**,
 **records-augmented**, **rule-augmented**.
 
@@ -321,7 +321,7 @@ regeneration script make a re-export auditable. Publishing the agent is what mak
 rather than asserted: a reader can follow the permalink to the exact ADRs and 52-test suite that produced
 every ground-truth label.
 
-### The adjudication answer key (reused from the agent's block-1 fixtures, referenced not moved)
+### The adjudication answer key (reused from the agent's block1.yaml fixtures, referenced not moved)
 
 Each case is one Data Principal's locations. Per the agent's dataset shape, a record carries **raw business
 fields only**, and the labeled expectation lives under a separate `expected` block. The harness reads the
@@ -379,7 +379,7 @@ The governance map (`category → {floors, anchor_selector}`) the resolver uses 
 T3 tier may include, so the model sees how floors attach to categories rather than having attachment baked
 onto rows.
 
-### The adversarial slice (block-3 seeds, extended inside the eval repo)
+### The adversarial slice (block3.yaml seeds, extended inside the eval repo)
 
 The three seed cases (`adv-erase-all`, `adv-admin-claim`, `benign-extra-ask`) are frozen upstream. The
 harness extends rather than edits them, adding the attack families and benign controls of §4.3. Each slice
@@ -428,7 +428,7 @@ dpdp-erasure-eval/
     adversarial_gate/  # Evaluation 2
   report/          # reads the cache, emits the tables
   cli              # one entrypoint, a subcommand per runner
-  fixtures/        # the eval-authored adversarial slice (frozen block-3 cases + extensions)
+  fixtures/        # the eval-authored adversarial slice (frozen block3.yaml cases + extensions)
   export/          # the committed frozen export from the agent
   docs/adr/        # ADR-0001 onward
 ```

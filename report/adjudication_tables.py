@@ -131,7 +131,11 @@ def build_cross_tier_comparison(
                 ),
             )
         )
-    return CrossTierComparisonTable(sample_index=sample_index, rows=rows)
+    return CrossTierComparisonTable(
+        export_agent_sha=t1.export_agent_sha,
+        sample_index=sample_index,
+        rows=rows,
+    )
 
 
 def format_adjudication_report(tables: TierAdjudicationReportTables) -> str:

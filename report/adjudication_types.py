@@ -71,6 +71,7 @@ class CrossTierComparisonTable(BaseModel):
 
     model_config = ConfigDict(frozen=True)
 
+    export_agent_sha: str
     sample_index: int
     rows: list[CrossTierMetricRow]
 

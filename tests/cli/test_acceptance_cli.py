@@ -28,6 +28,7 @@ ADJUDICATION_JSON_KEYS = {
 }
 
 GATE_JSON_KEYS = {
+    "export_agent_sha",
     "detection",
     "false_alarm",
     "per_family",

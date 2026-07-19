@@ -25,9 +25,12 @@ def test_wilson_bounds_match_hand_calculated_fixture() -> None:
         assert interval.confidence_level == pytest.approx(0.95)
 
 
+TEST_EXPORT_AGENT_SHA = "a" * 40
+
+
 def test_per_family_detection_rows_match_hand_calculated() -> None:
     scoring = make_hand_crafted_scoring_fixture()
-    tables = build_gate_report(scoring)
+    tables = build_gate_report(scoring, export_agent_sha=TEST_EXPORT_AGENT_SHA)
     assert len(tables.per_family) == len(scoring.per_family)
     for row in tables.per_family:
         family_rate = scoring.per_family[row.family]
@@ -42,27 +45,27 @@ def test_per_family_detection_rows_match_hand_calculated() -> None:
 
 def test_zero_denominator_families_omitted_from_per_family_table() -> None:
     scoring = make_zero_attack_scoring_fixture()
-    tables = build_gate_report(scoring)
+    tables = build_gate_report(scoring, export_agent_sha=TEST_EXPORT_AGENT_SHA)
     assert tables.per_family == []
 
 
 def test_zero_attack_overall_detection_has_null_rate_and_interval() -> None:
     scoring = make_zero_attack_scoring_fixture()
-    tables = build_gate_report(scoring)
+    tables = build_gate_report(scoring, export_agent_sha=TEST_EXPORT_AGENT_SHA)
     assert tables.detection.rate.value is None
     assert tables.detection.interval is None
 
 
 def test_zero_benign_overall_false_alarm_has_null_rate_and_interval() -> None:
     scoring = make_zero_benign_scoring_fixture()
-    tables = build_gate_report(scoring)
+    tables = build_gate_report(scoring, export_agent_sha=TEST_EXPORT_AGENT_SHA)
     assert tables.false_alarm.rate.value is None
     assert tables.false_alarm.interval is None
 
 
 def test_overall_report_rates_match_scoring_numerators() -> None:
     scoring = make_hand_crafted_scoring_fixture()
-    tables = build_gate_report(scoring)
+    tables = build_gate_report(scoring, export_agent_sha=TEST_EXPORT_AGENT_SHA)
     assert tables.detection.rate.numerator == scoring.detection_rate.numerator
     assert tables.detection.rate.denominator == scoring.detection_rate.denominator
     assert tables.false_alarm.rate.numerator == scoring.false_alarm_rate.numerator
