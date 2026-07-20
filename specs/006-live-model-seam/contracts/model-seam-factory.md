@@ -73,7 +73,8 @@ Network/provider failures from adapters propagate as exceptions with provider co
 - `GEMINI_API_KEY`
 - `MODEL_ID`
 - `CACHE_MODE`
-- `MODEL_API_KEY` (deprecated comment)
+
+Do not document the legacy `MODEL_API_KEY` alias in `.env.example`; runtime fallback may still accept it with a deprecation notice.
 
 ## CI exclusion
 

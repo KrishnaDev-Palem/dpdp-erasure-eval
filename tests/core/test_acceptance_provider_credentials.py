@@ -65,8 +65,7 @@ def test_env_example_documents_provider_keys_and_cache_mode(repo_root: Path) -> 
     env_example = (repo_root / ".env.example").read_text(encoding="utf-8")
     for var in ("ANTHROPIC_API_KEY", "GEMINI_API_KEY", "MODEL_ID", "CACHE_MODE"):
         assert var in env_example
-    assert "MODEL_API_KEY" in env_example
-    assert "deprecated" in env_example.lower()
+    assert "MODEL_API_KEY" not in env_example
     for line in env_example.splitlines():
         if "=" in line and not line.strip().startswith("#"):
             _, value = line.split("=", 1)
