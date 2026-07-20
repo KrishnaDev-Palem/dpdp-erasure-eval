@@ -2,11 +2,7 @@
 
 **Feature Branch**: `001-shared-core`
 
-**Created**: 2026-07-01
-
 **Status**: Accepted
-
-**Input**: User description: "Feature 001-shared-core per planning doc §8: frozen-export loader + provenance check, the model seam, the cache, the scoring primitives, the per-tier context helpers. Definition of done: core suite green; export loads and verifies against the pinned SHA."
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -49,7 +45,7 @@ An evaluator comparing model verdicts to ground truth needs scoring that surface
 
 An evaluator running the adversarial-gate evaluation (Feature 003) needs reusable **rate functions** on labeled pairs — not a runner, not the extended slice, not confidence intervals. Given any labeled cases (attack or benign) and classifier outcomes (flagged or not), the shared scoring module computes detection rate on attacks, false-alarm rate on benign controls, and supports a per-family breakdown cut. The three frozen seed cases from the export are sufficient fixtures for acceptance tests; the 80–100-case slice and live gate runner belong in Feature 003.
 
-**Why this priority**: Pure proportion math with zero live-model dependency; cheap to ship in 001 and prevents Feature 003 from re-implementing §5 scoring. Kept at P3/minimal so the adjudication spine (US1–US2) remains the MVP focus.
+**Why this priority**: Pure proportion math with zero live-model dependency; cheap to ship in 001 and prevents Feature 003 from re-implementing section 5 scoring. Kept at P3/minimal so the adjudication spine (US1–US2) remains the MVP focus.
 
 **Independent Test**: Feed a hand-crafted fixture of attack/benign labels and classifier outcomes (including the three frozen seeds) and verify detection rate, false-alarm rate, and per-family breakdown match hand-computed proportions — no slice extension, no runner, no API calls.
 
@@ -140,7 +136,7 @@ An evaluator running the adjudication ablation needs helpers that build exactly 
 - **FR-014**: The cache MUST store raw model responses keyed by model identity, evaluation setting, case identity, prompt identity, and sample index (N = 5).
 - **FR-015**: Default runs MUST replay from committed cache entries without live model calls; CI MUST be able to run fully offline.
 - **FR-016**: An explicit refresh path MUST be available to update cache entries from live model calls when credentials are present.
-- **FR-017**: Context helpers MUST assemble T1, T2, and T3 bundles per the tier definitions in planning §4.1, differing by exactly one context variable between adjacent tiers.
+- **FR-017**: Context helpers MUST assemble T1, T2, and T3 bundles per the tier definitions in planning section 4.1, differing by exactly one context variable between adjacent tiers.
 - **FR-018**: Context helpers MUST NOT leak ground-truth `expected` labels into model-facing context.
 - **FR-019**: All shared-core behavior MUST be covered by an acceptance suite that fails before implementation exists and passes when the feature is complete.
 - **FR-020**: Vocabulary in user-facing error messages and logged artifacts MUST use DPDP terminology and developer-facing tier labels (T1/T2/T3) per the locked vocabulary; `subject_id` MUST remain the field name for export compatibility.
@@ -175,11 +171,11 @@ An evaluator running the adjudication ablation needs helpers that build exactly 
 - The autonomous retrieval tools (`core/tools`) and tool-call trace logging are deferred to Feature 004; the cache design leaves room for trace entries but does not require them in this feature.
 - Confidence intervals for adversarial rates are computed by downstream reporting; this feature delivers rate primitives and per-family breakdown inputs sufficient for interval calculation in Feature 003.
 - Per-case sampling at N = 5 is enforced at the cache keying layer; full variance reporting across a sweep is exercised when runners land in Feature 002.
-- The primary model string is configuration confirmed at wiring time, not specified here, consistent with planning §11.
+- The primary model string is configuration confirmed at wiring time, not specified here, consistent with planning section 11.
 
 ## Dependencies
 
-- Canonical planning document `docs/planning/dpdp_eval_harness_planning.md` (§3, §5, §6, §7, §8) and project constitution `.specify/memory/constitution.md` are binding inputs.
+- Canonical planning document `docs/planning/dpdp_eval_harness_planning.md` (section 3, section 5, section 6, section 7, section 8) and project constitution `.specify/memory/constitution.md` are binding inputs.
 - Ground-truth shapes and vocabulary are inherited from [dpdp-erasure-agent](https://github.com/KrishnaDev-Palem/dpdp-erasure-agent); the harness reads labels, it does not reinterpret them.
 - ADR-0001 (eval methodology and frozen-export ground-truth coupling) is expected to exist or be authored during planning for this feature.
 

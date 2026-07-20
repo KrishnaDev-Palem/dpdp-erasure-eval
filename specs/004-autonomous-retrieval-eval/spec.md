@@ -2,11 +2,7 @@
 
 **Feature Branch**: `004-autonomous-retrieval-eval`
 
-**Created**: 2026-07-04
-
 **Status**: Accepted
-
-**Input**: User description: "Build the autonomous retrieval evaluation (Feature 004): implement core/tools for filesystem-backed retrieval (records, retention floors, governance map) mirroring what T2/T3 pre-load into context; add an autonomous adjudication runner (runner_id autonomous) that sweeps all labeled export subjects via ModelSeam.adjudicate with tool-use enabled, logs tool-call traces in committed cache entries (tool_calls field per cache contract), pairs verdicts with ground truth from expected blocks only, and aggregates via core.scoring.score_adjudication. Support offline cache replay by default (CACHE_MODE=offline in CI) with refresh opt-in and N=5 samples (sample_index 0–4). Follow the same test-first, additive-cache, frozen-export discipline as Features 002 and 003. Do not modify tier runners, adversarial gate, or committed export content."
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -68,7 +64,7 @@ An evaluator auditing autonomous retrieval behavior needs each committed cache e
 
 An evaluator assessing model non-determinism in autonomous retrieval needs the autonomous runner to execute the full subject sweep at five independent samples (`sample_index` 0 through 4). For each sample, the runner replays or records model responses under distinct cache keys, produces a complete aggregate adjudication result for that sample, and summarizes how key safety rates vary across the five samples.
 
-**Why this priority**: N=5 sampling is a settled planning guardrail (§5, §9). The autonomous runner applies the same cache keying discipline as tier runners, with request-only context driving prompt identity.
+**Why this priority**: N=5 sampling is a settled planning guardrail (section 5, section 9). The autonomous runner applies the same cache keying discipline as tier runners, with request-only context driving prompt identity.
 
 **Independent Test**: Seed committed cache entries for all five sample indices for at least one subject; run the autonomous runner offline; verify five per-sample scoring results are produced and a variance summary reports whether over-erasure, over-retention, and mis-escalation rates differ across samples.
 
@@ -188,7 +184,7 @@ An evaluator onboarding to the harness needs a quickstart document that walks th
 - Initial adjudication context is request-only (T1-equivalent); the model retrieves T2/T3-equivalent information exclusively via tools during the adjudication session.
 - Three retrieval tools cover the T2/T3 information layers: location records (T2), retention floors (T3), and governance map (T3). Exact tool naming is deferred to the plan phase; the spec requires functional parity with tier builders.
 - The model seam will be extended (or wrapped) to support tool-use during `adjudicate` for the autonomous runner; tier and gate runners continue using the existing seam operations unchanged.
-- Primary model identity is configuration supplied at run time; the spec does not fix a model string, consistent with planning §11.
+- Primary model identity is configuration supplied at run time; the spec does not fix a model string, consistent with planning section 11.
 - Per-sample aggregate scoring (one adjudication result per sample index covering the entire export) is the primary reporting unit; the variance summary rolls up across those five results.
 - Prompt hash for autonomous cache keys canonicalizes request-only context, consistent with T1 cache identity — not T3 full context or dynamic tool-call sequences.
 - Tool-call trace schema (fields per trace item) is defined in the plan/contracts phase; the spec requires ordered, auditable traces sufficient for offline review.
@@ -196,7 +192,7 @@ An evaluator onboarding to the harness needs a quickstart document that walks th
 ## Dependencies
 
 - Constitution: `.specify/memory/constitution.md` (Principles I–IV, VII, VIII).
-- Canonical planning: `docs/planning/dpdp_eval_harness_planning.md` (§4 autonomous retrieval evaluation, §5 adjudication scoring, §7 architecture, §8 feature breakdown, §9 guardrails).
+- Canonical planning: `docs/planning/dpdp_eval_harness_planning.md` (section 4 autonomous retrieval evaluation, section 5 adjudication scoring, section 7 architecture, section 8 feature breakdown, section 9 guardrails).
 - ADR-0001: frozen export as deterministic ground truth (`docs/adr/0001-frozen-export-ground-truth.md`).
 - Feature 001 spec and contracts: `specs/001-shared-core/spec.md`, `specs/001-shared-core/contracts/cache.md` (`runner_id` `autonomous`, `tool_calls`), `specs/001-shared-core/contracts/model-seam.md`, `specs/001-shared-core/contracts/scoring.md`, `specs/001-shared-core/contracts/context-tiers.md`, `specs/001-shared-core/contracts/frozen-export.md`.
 - Feature 002 spec and runner patterns (reference only): `specs/002-context-tier-sweep/spec.md`, `specs/002-context-tier-sweep/contracts/runner-spine.md`, `specs/002-context-tier-sweep/contracts/sweep-result.md`, `specs/002-context-tier-sweep/contracts/tier-runner.md`.
@@ -208,7 +204,7 @@ An evaluator onboarding to the harness needs a quickstart document that walks th
 - Adversarial-gate evaluation (Feature 003 — already shipped; MUST NOT be modified).
 - Editing existing committed export adjudication subjects or adversarial seed content (frozen-interface discipline).
 - Wilson confidence intervals or per-family adversarial reporting (Feature 003 reporting layer).
-- Command-line entrypoints and prose thesis writeup.
+- Command-line entrypoints and prose writeup.
 - Live agent calls, Postgres, or harness-side rule engines that regenerate labels.
 - Re-implementing adjudication rate proportion math in `core/scoring` (use existing primitives only).
 - Blended accuracy or other single headline scores that subsume over-erasure, over-retention, or mis-escalation rates.

@@ -25,4 +25,4 @@ Correct verdicts are excluded from the split counts. The bucket labels are `retr
 | CLI subcommand | `dpdp-eval autonomous-retrieval-split` (`cli/main.py`) |
 | Acceptance tests | `tests/report/test_acceptance_retrieval_split.py` |
 | Committed results | `results/autonomous-retrieval-split-live.json` |
-| Writeup section | `docs/writeup.md` §4 "Retrieval versus reasoning" |
+| Writeup section | `docs/writeup.md` section 4 "Retrieval versus reasoning" |

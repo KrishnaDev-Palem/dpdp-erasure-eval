@@ -2,15 +2,9 @@
 
 **Feature Branch**: `007-live-role-cache-seed`
 
-**Created**: 2026-07-12
-
 **Status**: Accepted
 
-**Input**: User description: "Build Feature 007: complete Feature 006 SC-002 by seeding committed live-role cache and validating offline replay for Claude Sonnet 5 and Gemini 3.5 Flash. Regenerate live-model cache entries for each supported MODEL_ID role and replay them offline with identical results. Extend the minimal 006 quickstart proof into a durable, committed artifact set for thesis evaluation. Depends on Feature 006 live model seam. Runner paths: T2 tier sweep (claude-sonnet-5), adversarial gate (gemini-3.5-flash), autonomous (claude-sonnet-5). Cache under separate namespaces only. Offline replay CI-gated. Operator workflow documented in quickstart with cost estimates."
-
 ## Clarifications
-
-### Session 2026-07-12
 
 - Q: Should the live-role cache entries be committed in this feature PR, or remain operator-generated with only a subset committed for replay testing? → A: Commit the full live-role cache set in this feature PR; CI replay tests run against committed entries.
 - Q: For the gemini-3.5-flash adversarial_gate cache — full extended-slice coverage or a representative subset? → A: Full parity: all ~90 slice cases × 5 samples (≈450 entries); offline gate sweep must replay with zero cache misses.
@@ -18,11 +12,11 @@
 
 ## User Scenarios & Testing *(mandatory)*
 
-### User Story 1 - Committed Live-Role Cache for Thesis Evaluation (Priority: P1)
+### User Story 1 - Committed Live-Role Cache for Evaluation (Priority: P1)
 
-An evaluator running thesis comparisons needs committed cache entries for each supported live model role — Claude Sonnet 5 and Gemini 3.5 Flash — so published evaluation numbers can be reproduced offline without provider API keys. The committed cache must cover the full evaluation matrix for the three in-scope runner paths (T2 tier sweep, adversarial gate, autonomous), matching the subject/case and sample coverage already established under the primary model role.
+An evaluator running evaluation comparisons needs committed cache entries for each supported live model role — Claude Sonnet 5 and Gemini 3.5 Flash — so published evaluation numbers can be reproduced offline without provider API keys. The committed cache must cover the full evaluation matrix for the three in-scope runner paths (T2 tier sweep, adversarial gate, autonomous), matching the subject/case and sample coverage already established under the primary model role.
 
-**Why this priority**: Feature 006 SC-002 proved refresh-and-replay for a single entry per role; this feature completes that success criterion at full sweep cardinality and makes live-model results durable artifacts for thesis evaluation.
+**Why this priority**: Feature 006 SC-002 proved refresh-and-replay for a single entry per role; this feature completes that success criterion at full sweep cardinality and makes live-model results durable artifacts for evaluation.
 
 **Independent Test**: Clone the repository with no API keys, set `MODEL_ID` to each live role and `CACHE_MODE=offline`, run T2, adversarial-gate, and autonomous sweeps; verify each completes with exit code 0 and deterministic results from committed live-role cache namespaces.
 
@@ -76,7 +70,7 @@ A CI merge gate and any clone-and-run evaluator need acceptance tests that prove
 
 An evaluator reading the repository README needs a clear path to run evaluations against committed live-role cache (not only the primary test-double role), with links to the Feature 007 quickstart for offline replay and optional refresh.
 
-**Why this priority**: README is the constitution-mandated on-ramp; thesis readers must discover how to reproduce live-model numbers without hunting through feature docs.
+**Why this priority**: README is the constitution-mandated on-ramp; readers must discover how to reproduce live-model numbers without hunting through feature docs.
 
 **Independent Test**: Follow README instructions with `MODEL_ID=claude-sonnet-5` or `gemini-3.5-flash` and `CACHE_MODE=offline`; verify evaluation commands complete using committed live-role cache.
 
@@ -156,7 +150,7 @@ An evaluator reading the repository README needs a clear path to run evaluations
 - T1 and T3 live-role cache seeding (unless incidentally required for shared library code — not a deliverable).
 - Multi-model parallel sweeps in a single CLI invocation.
 - Automated commit of live-generated cache without human review.
-- Prose thesis writeup or blog content.
+- Prose writeup or blog content.
 - Modifying frozen export content.
 - Re-implementing Feature 006 adapters or factory (bugfixes only if discovered during refresh).
 - Changing committed `cache/primary/` entries.

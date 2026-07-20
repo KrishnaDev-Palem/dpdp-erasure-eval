@@ -12,7 +12,7 @@ This guide validates the adversarial-gate acceptance contract after implementati
 - Clone of `dpdp-erasure-eval` on branch `003-adversarial-gate`
 - Feature 001 shared core passing (`tests/core/`)
 - Feature 002 tier runners passing (`tests/runners/`) — gate reuses cache/config patterns
-- No `MODEL_API_KEY` required for default validation
+- No provider API keys required for default validation
 
 ## Setup
 
@@ -123,12 +123,12 @@ uv run ruff format --check .
 Not run in CI. Use only when deliberately refreshing committed cache entries:
 
 ```bash
-# PowerShell
-$env:MODEL_API_KEY = "your-key-here"
+# PowerShell — set the provider key for the active MODEL_ID
+$env:ANTHROPIC_API_KEY = "your-key-here"
 $env:CACHE_MODE = "refresh"
 
 # Bash
-export MODEL_API_KEY=your-key-here
+export ANTHROPIC_API_KEY=your-key-here
 export CACHE_MODE=refresh
 ```
 
@@ -145,7 +145,7 @@ Reset to offline before merge:
 ```bash
 # PowerShell
 $env:CACHE_MODE = "offline"
-Remove-Item Env:MODEL_API_KEY -ErrorAction SilentlyContinue
+Remove-Item Env:ANTHROPIC_API_KEY, Env:GEMINI_API_KEY -ErrorAction SilentlyContinue
 ```
 
 ## Related artifacts

@@ -10,7 +10,7 @@ This guide validates the shared core acceptance contract after implementation. I
 - Python 3.11+
 - [uv](https://docs.astral.sh/uv/) installed
 - Clone of `dpdp-erasure-eval` on branch `001-shared-core`
-- No `MODEL_API_KEY` required for default validation
+- No provider API keys required for default validation
 
 ## Setup
 
@@ -71,10 +71,10 @@ uv run ruff format --check .
 
 ## Refresh path (optional, requires API key)
 
-Only when deliberately refreshing cache entries:
+Only when deliberately refreshing cache entries. Set the provider key for the active `MODEL_ID` (`ANTHROPIC_API_KEY` or `GEMINI_API_KEY`):
 
 ```bash
-set MODEL_API_KEY=your-key-here
+set ANTHROPIC_API_KEY=your-key-here
 set CACHE_MODE=refresh
 uv run pytest tests/core/test_acceptance_cache.py -k refresh -v
 ```

@@ -2,11 +2,7 @@
 
 **Feature Branch**: `006-live-model-seam`
 
-**Created**: 2026-07-09
-
 **Status**: Accepted
-
-**Input**: User description: "Build Feature 006 live model seam wiring: implement real ModelSeam provider adapters behind the existing Protocol so CACHE_MODE=refresh can call live models and write cache entries, while default CACHE_MODE=offline and CI remain FakeModelSeam / committed-cache only with no network and no API keys required. Target models: Anthropic Claude Sonnet 5 and Google Gemini 3.5 Flash (exact API model ids pinned in plan/research). Credentials via ANTHROPIC_API_KEY and GEMINI_API_KEY; MODEL_ID selects active model role; refresh-path documentation in quickstart; offline acceptance tests stay green; do not modify frozen export/ or committed cache unless explicitly regenerating via documented refresh; do not break Features 001–005 offline contracts."
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -93,7 +89,7 @@ An operator running refresh locally needs provider-specific API keys read from e
 1. **Given** refresh mode and the Claude Sonnet 5 model role, **When** `ANTHROPIC_API_KEY` is set, **Then** the Anthropic adapter authenticates successfully.
 2. **Given** refresh mode and the Gemini 3.5 Flash model role, **When** `GEMINI_API_KEY` is set, **Then** the Gemini adapter authenticates successfully.
 3. **Given** refresh mode, a supported model role, and only the legacy `MODEL_API_KEY` environment variable set (provider-specific key unset), **When** the factory resolves credentials, **Then** the legacy key is accepted as a fallback and a deprecation notice is emitted — refresh still succeeds.
-4. **Given** committed example environment file, **When** inspected, **Then** it lists `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`, `MODEL_ID`, `CACHE_MODE`, and notes that `MODEL_API_KEY` is deprecated — with no secret values.
+4. **Given** committed example environment file, **When** inspected, **Then** it lists `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`, `MODEL_ID`, and `CACHE_MODE` — with no secret values and without documenting the legacy `MODEL_API_KEY` alias.
 5. **Given** CI merge gate configuration, **When** tests run, **Then** no provider API keys are required or read.
 
 ---

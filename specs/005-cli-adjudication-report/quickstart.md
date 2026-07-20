@@ -15,7 +15,7 @@ This guide validates the integration-layer acceptance contract: adjudication rep
   - `tests/runners/` — tier sweeps
   - `tests/gate/` — adversarial gate
   - `tests/autonomous/` — autonomous retrieval
-- No `MODEL_API_KEY` required for default validation
+- No provider API keys required for default validation
 
 ## Setup
 
@@ -29,13 +29,13 @@ Ensure default cache mode is offline:
 ```powershell
 # PowerShell
 $env:CACHE_MODE = "offline"
-Remove-Item Env:MODEL_API_KEY -ErrorAction SilentlyContinue
+Remove-Item Env:ANTHROPIC_API_KEY, Env:GEMINI_API_KEY -ErrorAction SilentlyContinue
 ```
 
 ```bash
 # Bash
 export CACHE_MODE=offline
-unset MODEL_API_KEY
+unset ANTHROPIC_API_KEY GEMINI_API_KEY
 ```
 
 ## Merge gate (Feature 005 CI command)
@@ -161,16 +161,16 @@ uv run ruff format --check .
 
 ## Optional: refresh path (local only, not CI)
 
-Requires `MODEL_API_KEY` and `CACHE_MODE=refresh`. Excluded from merge gate.
+Requires a provider API key (`ANTHROPIC_API_KEY` or `GEMINI_API_KEY` for the active `MODEL_ID`) and `CACHE_MODE=refresh`. Excluded from merge gate.
 
 ```powershell
 $env:CACHE_MODE = "refresh"
-$env:MODEL_API_KEY = "<your-key>"
+$env:ANTHROPIC_API_KEY = "<your-key>"
 ```
 
 ```bash
 export CACHE_MODE=refresh
-export MODEL_API_KEY="<your-key>"
+export ANTHROPIC_API_KEY="<your-key>"
 ```
 
 Use only to regenerate cache entries after runner changes. Re-commit cache under review.
@@ -190,7 +190,7 @@ Use only to regenerate cache entries after runner changes. Re-commit cache under
 | `ProvenanceError` at sweep start | Export pin mismatch | Do not edit committed export; verify clone integrity |
 | CLI exits 0 but JSON missing `sample_rollups` | Wrong subcommand or stale build | Use adjudication subcommands (`t1`–`autonomous`); rebuild env with `uv sync` |
 | Gate human output missing family section | No families with non-zero attack cases in selected sample | Expected when all per-family denominators are zero; JSON still valid |
-| Tests pass locally but fail in CI | Network or API key leakage | Set `CACHE_MODE=offline`; unset `MODEL_API_KEY` |
+| Tests pass locally but fail in CI | Network or API key leakage | Set `CACHE_MODE=offline`; unset provider API keys |
 | `--output` file empty or missing | Non-writable parent directory | Create parent dir or choose writable path; CLI should error clearly |
 
 ## Success checklist

@@ -2,11 +2,7 @@
 
 **Feature Branch**: `003-adversarial-gate`
 
-**Created**: 2026-07-03
-
 **Status**: Accepted
-
-**Input**: User description: "Build the adversarial gate evaluation: extend the committed adversarial slice beyond the three frozen seed cases (~80–100 labeled attack/benign cases), run a gate runner that classifies note text via the injected ModelSeam.classify_note (mirroring the agent screen_adversarial gate), score outcomes with core.scoring adversarial rate primitives, compute Wilson confidence intervals on detection and false-alarm rates, and emit per-family reporting tables. Support offline cache replay by default (runner_id adversarial_gate; CACHE_MODE=offline in CI) with refresh opt-in. Follow the same test-first, additive-cache, frozen-export discipline as Feature 002."
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -14,7 +10,7 @@
 
 An evaluator measuring how a model classifies hostile versus legitimate requester notes needs an adversarial-gate runner that sweeps every case in the extended adversarial slice. For each case, the runner passes only the note text to the injected model seam (mirroring the agent's `screen_adversarial` gate), pairs each classifier outcome with the case's ground-truth label read from fixture metadata (not from the note text), and aggregates detection and false-alarm rates across the full slice.
 
-**Why this priority**: This is Evaluation 2 — the half of the thesis that shows a model doing well at the genuinely fuzzy task. Without a complete, reproducible gate sweep, the harness cannot report adversarial-gate evidence.
+**Why this priority**: This is Evaluation 2 — the half of the evaluation that shows a model doing well at the genuinely fuzzy task. Without a complete, reproducible gate sweep, the harness cannot report adversarial-gate evidence.
 
 **Independent Test**: Run the adversarial-gate runner against the committed extended slice in offline mode with a test double or committed cache entries; verify every slice case is visited, each classification is paired with the case label only, and aggregate metrics include detection rate and false-alarm rate computed via the shared adversarial scoring primitives.
 
@@ -30,7 +26,7 @@ An evaluator measuring how a model classifies hostile versus legitimate requeste
 
 ### User Story 2 - Extended Adversarial Slice Fixture (Priority: P1)
 
-An evaluator reproducing adversarial-gate numbers needs a committed, additive adversarial corpus that extends — but does not edit — the three frozen upstream seed cases. The slice contains roughly 80–100 labeled cases: approximately 40–50 attack cases across five attack families (approximately 8–10 per family) and approximately 40–50 benign controls matched roughly one to one, with hard negatives carrying the weight per planning §4.3.
+An evaluator reproducing adversarial-gate numbers needs a committed, additive adversarial corpus that extends — but does not edit — the three frozen upstream seed cases. The slice contains roughly 80–100 labeled cases: approximately 40–50 attack cases across five attack families (approximately 8–10 per family) and approximately 40–50 benign controls matched roughly one to one, with hard negatives carrying the weight per planning section 4.3.
 
 **Why this priority**: Rate precision and per-family breakdowns depend on slice size and family coverage. The three frozen seeds alone cannot support reportable confidence intervals or family-level findings.
 
@@ -51,7 +47,7 @@ An evaluator reproducing adversarial-gate numbers needs a committed, additive ad
 
 An evaluator publishing adversarial-gate findings needs reporting that accompanies point estimates with Wilson confidence intervals on detection and false-alarm rates, plus a per-attack-family detection breakdown table so findings like "robust to direct override, leaks on obfuscated injection" are supportable.
 
-**Why this priority**: Planning §5 requires both rates with confidence intervals and a per-family cut. Intervals are deferred from shared core (Feature 001) to this feature's reporting layer.
+**Why this priority**: Planning section 5 requires both rates with confidence intervals and a per-family cut. Intervals are deferred from shared core (Feature 001) to this feature's reporting layer.
 
 **Independent Test**: Feed a hand-crafted scoring result with known numerators and denominators into the reporting layer; verify Wilson interval bounds and per-family detection table cells match independently hand-calculated values on representative fixtures.
 
@@ -69,7 +65,7 @@ An evaluator publishing adversarial-gate findings needs reporting that accompani
 
 An evaluator assessing classifier non-determinism needs the gate runner to execute the full slice sweep at five independent samples (`sample_index` 0 through 4). For each sample, the runner replays or records classifier responses under distinct cache keys, produces a complete adversarial scoring result for that sample, and summarizes how detection and false-alarm rates vary across the five samples.
 
-**Why this priority**: N=5 sampling is a settled planning guardrail (§5, §9). The gate runner applies the same cache keying discipline as tier runners, with note text as the sole classifier input driving prompt identity.
+**Why this priority**: N=5 sampling is a settled planning guardrail (section 5, section 9). The gate runner applies the same cache keying discipline as tier runners, with note text as the sole classifier input driving prompt identity.
 
 **Independent Test**: Seed committed cache entries for all five sample indices for at least one gate case; run the gate runner offline; verify five per-sample scoring results are produced and a variance summary reports whether detection and false-alarm rates differ across samples.
 
@@ -128,7 +124,7 @@ An evaluator onboarding to the harness needs a quickstart document that walks th
 
 ### Functional Requirements
 
-- **FR-001**: The feature MUST provide an adversarial-gate runner under `runners/adversarial_gate/` (layout per planning §7, mirroring tier runner placement in Feature 002) that sweeps all cases in the extended adversarial slice.
+- **FR-001**: The feature MUST provide an adversarial-gate runner under `runners/adversarial_gate/` (layout per planning section 7, mirroring tier runner placement in Feature 002) that sweeps all cases in the extended adversarial slice.
 - **FR-002**: The runner MUST obtain classifier outcomes exclusively through `ModelSeam.classify_note` with note `text` only; it MUST NOT pass request triples, record fields, or ground-truth labels to the seam.
 - **FR-003**: Ground-truth labels MUST be read from slice case metadata (`label` attack or benign, and `family` where applicable) only; the runner MUST NOT infer labels from note text.
 - **FR-004**: The runner MUST pair each classifier outcome with its case label and aggregate results via the shared adversarial scoring primitives (`core.scoring` detection rate, false-alarm rate, per-family breakdown); it MUST NOT re-implement adversarial rate math in the runner or report layer.
@@ -192,16 +188,16 @@ An evaluator onboarding to the harness needs a quickstart document that walks th
 - Feature 001 (shared core) is complete: export loader, model seam with `classify_note`, cache, and adversarial rate primitives are available and covered by their own acceptance suite.
 - Feature 002 (context-tier sweep) is complete or merged: runner spine patterns (config loading, sample loop, variance summary, offline cache discipline) serve as reference implementation only; this feature does not modify tier runners.
 - The three frozen seed cases remain in `export/adversarial_seeds/seeds.yaml` immutable; the extended slice fixture includes them by identical content or by loader merge that preserves byte identity.
-- Slice sizing targets (80–100 cases, five families, hard-negative benign controls) follow planning §4.3 coverage-driven stopping rule; exact counts may vary within the stated band as long as family and class coverage criteria are met.
+- Slice sizing targets (80–100 cases, five families, hard-negative benign controls) follow planning section 4.3 coverage-driven stopping rule; exact counts may vary within the stated band as long as family and class coverage criteria are met.
 - Wilson confidence intervals use the standard Wilson score interval formula at a documented confidence level (default 95%) chosen in the plan phase; the spec requires intervals be present and hand-verifiable, not a specific statistical package.
-- Primary model identity is configuration supplied at run time; the spec does not fix a model string, consistent with planning §11.
+- Primary model identity is configuration supplied at run time; the spec does not fix a model string, consistent with planning section 11.
 - Per-sample aggregate scoring (one adversarial result per sample index covering the entire slice) is the primary reporting unit; the variance summary rolls up across those five results.
 - Prompt hash for gate cache keys canonicalizes a minimal JSON payload containing note text only, consistent with the classify_note input contract.
 
 ## Dependencies
 
 - Constitution: `.specify/memory/constitution.md` (Principles I–IV, VII, VIII).
-- Canonical planning: `docs/planning/dpdp_eval_harness_planning.md` (§4.3 adversarial-gate evaluation, §5 adversarial scoring, §6 classifier protocol and slice shape, §7 architecture, §8 feature breakdown, §9 guardrails).
+- Canonical planning: `docs/planning/dpdp_eval_harness_planning.md` (section 4.3 adversarial-gate evaluation, section 5 adversarial scoring, section 6 classifier protocol and slice shape, section 7 architecture, section 8 feature breakdown, section 9 guardrails).
 - ADR-0001: frozen export as deterministic ground truth (`docs/adr/0001-frozen-export-ground-truth.md`).
 - Feature 001 spec assumptions and adversarial deferrals: `specs/001-shared-core/spec.md` (US3, Out of Scope).
 - Feature 002 spec out-of-scope boundaries: `specs/002-context-tier-sweep/spec.md`.
@@ -216,7 +212,7 @@ An evaluator onboarding to the harness needs a quickstart document that walks th
 
 - T1/T2/T3 adjudication tier sweeps (Feature 002 — already shipped).
 - Autonomous retrieval, `core/tools`, and tool-call trace logging (Feature 004).
-- Command-line entrypoints and prose thesis writeup.
+- Command-line entrypoints and prose writeup.
 - Editing existing committed export adjudication subjects or the three frozen seed case content (frozen-interface discipline).
 - Live agent calls, Postgres, or harness-side rule engines that regenerate labels.
 - Re-implementing adversarial rate proportion math in `core/scoring` (use existing primitives only).

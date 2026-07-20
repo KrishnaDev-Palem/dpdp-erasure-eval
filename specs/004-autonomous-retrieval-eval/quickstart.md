@@ -13,7 +13,7 @@ This guide validates the autonomous retrieval acceptance contract after implemen
 - Feature 001 shared core passing (`tests/core/`)
 - Feature 002 tier runners passing (`tests/runners/`) — autonomous reuses cache/config/pairing patterns
 - Feature 003 adversarial gate passing (`tests/gate/`) — unchanged; confirms no regressions
-- No `MODEL_API_KEY` required for default validation
+- No provider API keys required for default validation
 
 ## Setup
 
@@ -113,16 +113,16 @@ uv run ruff format --check .
 
 ## Optional: refresh path (local only, not CI)
 
-Requires `MODEL_API_KEY` and `CACHE_MODE=refresh`. Documented for cache regeneration only; excluded from merge gate.
+Requires a provider API key (`ANTHROPIC_API_KEY` or `GEMINI_API_KEY` for the active `MODEL_ID`) and `CACHE_MODE=refresh`. Documented for cache regeneration only; excluded from merge gate.
 
 ```bash
 # PowerShell
 $env:CACHE_MODE = "refresh"
-$env:MODEL_API_KEY = "<your-key>"
+$env:ANTHROPIC_API_KEY = "<your-key>"
 
 # Bash
 export CACHE_MODE=refresh
-export MODEL_API_KEY="<your-key>"
+export ANTHROPIC_API_KEY="<your-key>"
 ```
 
 Run refresh via project-specific cache generation script or runner entrypoint once implemented (see [contracts/autonomous-runner.md](./contracts/autonomous-runner.md)). Re-commit new autonomous cache entries under `cache/primary/autonomous/` after review.

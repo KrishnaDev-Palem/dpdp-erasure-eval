@@ -2,11 +2,7 @@
 
 **Feature Branch**: `002-context-tier-sweep`
 
-**Created**: 2026-07-02
-
 **Status**: Accepted
-
-**Input**: User description: "Build T1, T2, and T3 adjudication runners that sweep all labeled subjects from the committed frozen export. Each runner loads export via core.export, builds tier-appropriate context via core.context (build_t1/t2/t3), obtains model verdicts via the injected ModelSeam (offline cache replay by default; refresh opt-in), pairs predictions with ground truth from expected blocks only, and aggregates results via core.scoring.score_adjudication. Support N=5 samples per case (sample_index 0–4) using cache keys with runner_id t1|t2|t3."
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -32,7 +28,7 @@ An evaluator measuring how a model adjudicates erasure requests with minimal con
 
 An evaluator comparing context tiers needs T2 (records-augmented) and T3 (rule-augmented) runners that reuse the same orchestration spine as T1 but assemble tier-appropriate context. T2 adds Data Principal locations and raw business fields; T3 adds retention-floor rule text and the governance map. Each tier sweeps all export subjects, grades per location against ground truth, and produces the same aggregate metric shape as T1.
 
-**Why this priority**: The thesis depends on isolating exactly one context variable between adjacent tiers. T2 and T3 complete the ablation ladder T1 starts.
+**Why this priority**: The evaluation depends on isolating exactly one context variable between adjacent tiers. T2 and T3 complete the ablation ladder T1 starts.
 
 **Independent Test**: Run T2 and T3 runners offline on the committed export; verify context inclusion matches the context-tier contract, `runner_id` values are `t2` and `t3` respectively for cache lookup, and aggregate scoring matches the adjudication scoring contract.
 
@@ -153,8 +149,8 @@ An evaluator onboarding to the harness needs a quickstart document that walks th
 
 - Feature 001 (shared core) is complete: export loader, provenance check, model seam, cache, adjudication scoring, and T1/T2/T3 context builders are available and covered by their own acceptance suite.
 - The committed frozen export and a sufficient committed cache (covering all subjects, three tiers, and sample indices 0–4 for offline CI) will be present or added as part of implementation; export content remains immutable after acceptance per ADR-0001 and constitution Principle III.
-- The canonical planning document (`docs/planning/dpdp_eval_harness_planning.md`) supplies tier definitions (§4.1), scoring semantics (§5), reproducibility mechanics (§7), feature breakdown (§8), and cost guardrails (§9); this spec consumes those via Feature 001 contracts rather than redefining them.
-- Primary model identity is configuration supplied at run time; the spec does not fix a model string, consistent with planning §11 and Feature 001 assumptions.
+- The canonical planning document (`docs/planning/dpdp_eval_harness_planning.md`) supplies tier definitions (section 4.1), scoring semantics (section 5), reproducibility mechanics (section 7), feature breakdown (section 8), and cost guardrails (section 9); this spec consumes those via Feature 001 contracts rather than redefining them.
+- Primary model identity is configuration supplied at run time; the spec does not fix a model string, consistent with planning section 11 and Feature 001 assumptions.
 - Per-sample aggregate scoring (one result per sample index covering the entire sweep) is the primary reporting unit; the variance summary rolls up across those five results rather than reporting per-subject variance tables in this feature.
 - Subjects with empty location lists are visited per the context-tier contract; they contribute zero location pairs, require no model invocation, and do not block the sweep.
 
@@ -180,4 +176,4 @@ An evaluator onboarding to the harness needs a quickstart document that walks th
 - Blended accuracy or other single headline scores that subsume over-erasure.
 - Confidence intervals on adjudication rates (deferred to downstream reporting if needed).
 - Broad README rewrites, CI workflow authoring, and pre-commit hook setup (repository bootstrap may proceed in parallel).
-- **Exception (constitution Quality Gates)**: Minimal README updates that link to this feature's quickstart and document the offline `tests/runners` path are in scope when required for SC-006 clone-and-run reproducibility; thesis-first structure and status badges remain bootstrap work.
+- **Exception (constitution Quality Gates)**: Minimal README updates that link to this feature's quickstart and document the offline `tests/runners` path are in scope when required for SC-006 clone-and-run reproducibility; evaluation-first structure and status badges remain bootstrap work.

@@ -2,15 +2,9 @@
 
 **Feature Branch**: `005-cli-adjudication-report`
 
-**Created**: 2026-07-07
-
 **Status**: Accepted
 
-**Input**: User description: "Build Feature 005: CLI and Adjudication Report — the cross-cutting integration layer deferred from Features 001–004. Deliver adjudication reporting (Wilson CIs on standalone safety rates, per-lane confusion matrix, N=5 sample rollups, cross-sample variance, cross-tier comparison), a `dpdp-eval` CLI with tier/autonomous/gate subcommands, and acceptance suites for report and CLI — all offline in CI with no model API key."
-
 ## Clarifications
-
-### Session 2026-07-07
 
 - Q: When `--output PATH` is set without `--json`, should the file contain JSON or human-readable text? → A: `--output` always writes JSON; stdout is human text unless `--json` is set.
 - Q: Should cross-tier comparison be library-only or also exposed as a CLI subcommand? → A: Library-only via `build_cross_tier_comparison`; acceptance-tested; no CLI subcommand in v1.
@@ -24,7 +18,7 @@
 
 An evaluator publishing context-tier or autonomous retrieval findings needs a reporting layer that consumes completed sweep results from tier runners (T1, T2, T3) or the autonomous runner and emits adjudication report tables. For the selected primary sample, the report MUST include Wilson confidence intervals on standalone over-erasure, over-retention, and mis-escalation rates; the per-lane confusion matrix from that sample's scoring; five sample rollups (N=5) each with Wilson-augmented metrics; and the cross-sample variance summary already produced by the runner — without re-deriving rate numerators or denominators.
 
-**Why this priority**: Features 001–004 ship runners and scoring primitives but defer Wilson intervals and human-consumable adjudication tables to this integration layer. Without it, sweep results cannot be published or compared in thesis-ready form.
+**Why this priority**: Features 001–004 ship runners and scoring primitives but defer Wilson intervals and human-consumable adjudication tables to this integration layer. Without it, sweep results cannot be published or compared in report-ready form.
 
 **Independent Test**: Feed a hand-crafted `TierSweepResult` or `AutonomousSweepResult` with known numerators and denominators into `build_tier_adjudication_report`; verify Wilson bounds, rate fidelity, zero-denominator nulls, confusion matrix shape, five rollups, and variance passthrough match independently hand-calculated values and the adjudication-report contract.
 
@@ -44,7 +38,7 @@ An evaluator publishing context-tier or autonomous retrieval findings needs a re
 
 An evaluator comparing the ablation ladder needs a cross-tier comparison table that places T1, T2, T3, and autonomous retrieval side by side at a chosen sample index, showing Wilson-augmented standalone safety rates for each tier without blended accuracy. Callers invoke `build_cross_tier_comparison` with four completed sweep results; v1 does not expose this as a CLI subcommand.
 
-**Why this priority**: The thesis depends on isolating context effects across tiers. A four-row comparison table is the primary integration artifact tying Features 002 and 004 together.
+**Why this priority**: The evaluation depends on isolating context effects across tiers. A four-row comparison table is the primary integration artifact tying Features 002 and 004 together.
 
 **Independent Test**: Provide four completed sweep results (t1, t2, t3, autonomous) with known rates; call `build_cross_tier_comparison(t1, t2, t3, autonomous, sample_index=N)`; verify exactly four rows in order (t1, t2, t3, autonomous) with correct Wilson-augmented rates for sample N.
 
@@ -61,9 +55,9 @@ An evaluator comparing the ablation ladder needs a cross-tier comparison table t
 
 An evaluator reproducing published numbers from a clone needs a single command-line entrypoint (`dpdp-eval`) that runs any evaluation (T1, T2, T3, autonomous, adversarial-gate), builds the appropriate report tables, and emits human-readable stdout or structured JSON. The CLI MUST support writing output to a file, selecting the primary sample index, and configuring export and cache roots — all without live model credentials in default offline mode.
 
-**Why this priority**: Features 001–004 implement runners and gate reporting but defer a unified operator surface. The CLI is the primary human and automation interface for reproducing thesis tables.
+**Why this priority**: Features 001–004 implement runners and gate reporting but defer a unified operator surface. The CLI is the primary human and automation interface for reproducing evaluation tables.
 
-**Independent Test**: Run each subcommand on a clean clone with `CACHE_MODE=offline` and no `MODEL_API_KEY`; verify exit code 0, expected JSON keys or human-readable labels, `--output` file creation, and `--sample-index` honored for adjudication subcommands.
+**Independent Test**: Run each subcommand on a clean clone with `CACHE_MODE=offline` and no provider API keys; verify exit code 0, expected JSON keys or human-readable labels, `--output` file creation, and `--sample-index` honored for adjudication subcommands.
 
 **Acceptance Scenarios**:
 
@@ -187,7 +181,7 @@ An evaluator onboarding to the harness needs a quickstart document that walks th
 ## Dependencies
 
 - Constitution: `.specify/memory/constitution.md` (Principles I–IV, VII, VIII).
-- Canonical planning: `docs/planning/dpdp_eval_harness_planning.md` (§7 integration layer, §5 adjudication scoring, §8 feature breakdown, §9 guardrails).
+- Canonical planning: `docs/planning/dpdp_eval_harness_planning.md` (section 7 integration layer, section 5 adjudication scoring, section 8 feature breakdown, section 9 guardrails).
 - ADR-0001: frozen export as deterministic ground truth (`docs/adr/0001-frozen-export-ground-truth.md`).
 - Feature 001 contracts (consumed, not re-specified): `specs/001-shared-core/contracts/scoring.md`, `specs/001-shared-core/contracts/cache.md`, `specs/001-shared-core/contracts/model-seam.md`.
 - Feature 002 spec and contracts: `specs/002-context-tier-sweep/spec.md`, `specs/002-context-tier-sweep/contracts/sweep-result.md`.
@@ -200,9 +194,9 @@ An evaluator onboarding to the harness needs a quickstart document that walks th
 - Runner orchestration changes (tier, autonomous, or gate runners MUST NOT be modified).
 - Edits to committed frozen export adjudication subjects or adversarial seed content.
 - Scoring math changes or Wilson interval logic in `core/scoring`.
-- Live model provider integration or requiring `MODEL_API_KEY` in CI.
+- Live model provider integration or requiring provider API keys in CI.
 - Per-subject variance tables beyond the five-sample sweep rollup already in runner output.
-- Prose thesis writeup or README overhaul (may reference CLI commands but is not owned by this feature).
+- Prose writeup or README overhaul (may reference CLI commands but is not owned by this feature).
 - Blended accuracy or other single headline scores that subsume standalone safety rates.
 - A dedicated CLI subcommand for cross-tier comparison (`compare-tiers` or equivalent); callers use `build_cross_tier_comparison` in tests/automation after individual sweeps.
 - A combined CLI subcommand that runs all tiers and autonomous in one invocation (callers run subcommands individually).

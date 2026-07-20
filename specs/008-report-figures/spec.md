@@ -1,8 +1,9 @@
-# Brief: report figures module
+# Feature Specification: Report Figures
+
+**Status:** Accepted
 
 **Repo:** `dpdp-erasure-eval`
-**Branch:** `feature/report-figures`
-**Flow:** Cursor implements on the branch and opens a PR. Human review and merge by hand. CI green before merge.
+
 **Scope class:** Additive. No edits to `core/`, `runners/`, fixtures, or any frozen interface. New code lives under `report/figures/` plus one CLI subcommand registration and one `.gitignore` line.
 
 ---
@@ -10,9 +11,9 @@
 ## 1. Objective
 
 Add a deterministic figure-generation module to `report/` that renders the harness's headline findings as
-publication-ready PNGs from the committed cache and scored results. The figures feed the writeup, the
-README, and the blog post. They are regenerable offline by anyone who clones the repo; no figure generation
-path ever hits the model API.
+publication-ready PNGs from the committed cache and scored results. The figures feed the writeup and the
+README. They are regenerable offline by anyone who clones the repo; no figure generation path ever hits the
+model API.
 
 ## 2. Non-goals
 
@@ -20,8 +21,8 @@ path ever hits the model API.
 - No new scoring logic of any kind. Figures render what the scoring module already computed.
 - No re-running of adjudication or gate evaluations. Read-only over existing artifacts.
 - No changes to table output or any existing `report/` behavior.
-- No committed PNGs in this PR. Output directory is gitignored; publication copies are committed by hand
-  later after visual review.
+- No committed PNGs in the initial feature delivery. Output directory is gitignored; publication copies are
+  committed by hand later after visual review.
 
 ## 3. Inputs and the aggregation rule
 
@@ -71,7 +72,7 @@ vocabulary, no internal scaffolding terms.
 - All iteration over cases, tiers, families, and lanes in sorted, explicit order.
 - Target: two consecutive runs over the same inputs produce byte-identical files. If byte equality proves
   brittle for a reason outside our control, fall back to asserting pixel-array equality of the rendered
-  canvases and surface the substitution in the PR description rather than silently weakening the test.
+  canvases and surface the substitution in the pull request description rather than silently weakening the test.
 
 ## 7. Dependency justification
 
@@ -82,10 +83,10 @@ no plotly, no pandas for this module.
 
 ## 8. Repo hygiene
 
-- Add `figures/` to `.gitignore` in this PR.
+- Add `figures/` to `.gitignore` when the figure module lands.
 - Publication copies will later be committed by hand to `docs/figures/` after visual review and final
-  regeneration against the final cache. That step is out of scope for this PR and is noted here only so the
-  gitignore choice is legible. *(Retroactive correction: the publication path was corrected to `docs/figures/` when that path was settled during release preparation; the brief originally named `assets/figures/`.)*
+  regeneration against the final cache. That step is out of scope for this feature and is noted here only so
+  the gitignore choice is legible. *(Retroactive correction: the publication path was corrected to `docs/figures/` when that path was settled during release preparation; the spec originally named `assets/figures/`.)*
 
 ## 9. Acceptance criteria
 
@@ -110,14 +111,14 @@ frozen export).
    invocation occurs (seam spy or equivalent).
 9. `ruff` clean, suite green in CI without network access.
 
-## 10. Commit and PR conventions
+## 10. Delivery conventions
 
 - Commit scope prefix: `report:` (developer-facing; no block-N vocabulary exists in this repo's reader
   surfaces and none is introduced).
-- Two-commit pattern within the branch: first the brief and test skeleton with the acceptance list encoded
+- Two-commit pattern on the feature branch: first the spec and test skeleton with the acceptance list encoded
   as failing tests marked expected-to-fail, then implementation flipping them green. Never a commit with a
   red suite unmarked.
-- PR description links this brief and states the determinism target outcome (byte-identical achieved or
+- Pull request description links this spec and states the determinism target outcome (byte-identical achieved or
   fallback used, per section 6).
 
 ## 11. Stop conditions
