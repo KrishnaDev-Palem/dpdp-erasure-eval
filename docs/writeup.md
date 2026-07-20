@@ -4,11 +4,11 @@ Results and analysis for the DPDP Erasure Evaluation Harness.
 
 ## 1. What this measures
 
-The [DPDP Erasure Agent](https://github.com/KrishnaDev-Palem/dpdp-erasure-agent) adjudicates Data Principal erasure requests under India's DPDP Act with deterministic rule-checking code. Every per-location verdict (erase, retain with cited retention floors, escalate) is computed by the same logic on every run, and no model participates in that decision. The one place the shipped agent uses a model is an adversarial-input screen over the free-text requester note, behind an injectable classifier seam.
+The [DPDP Erasure Agent](https://github.com/KrishnaDev-Palem/dpdp-erasure-agent) adjudicates erasure requests under India's DPDP Act with deterministic rule-checking code. A request comes from a Data Principal, the person the data is about, and is decided per data location. Every per-location verdict (erase, retain with cited retention floors, escalate) is computed by the same logic on every run, and no model participates in that decision. A retention floor is a law that sets a minimum keep-period for a kind of record; a floor that has not elapsed blocks deletion and is cited on the retain verdict. The one place the agent's design admits a model is an adversarial-input screen over the free-text requester note, and even there the shipped agent runs a deterministic stub behind an injectable classifier seam rather than a live model.
 
-This harness measures what happens when a model performs each of those two jobs.
+This harness measures what happens when a live model performs each of those two jobs.
 
-The adjudication ablation asks a model to produce the agent's per-location verdicts and grades it against the agent's own verdicts, which serve as the answer key. The model is swept across three context tiers (the request alone, the request plus the subject's records, the request plus records plus the governing rule text) and a fourth, autonomous setting in which the model retrieves its own records and rule text through logged tool calls.
+The adjudication ablation holds the task fixed and varies one thing at a time: how much context the model is given. The model produces the agent's per-location verdicts and is graded against the agent's own verdicts, which serve as the answer key. The sweep covers three context tiers (the request alone, the request plus the subject's records, the request plus records plus the governing rule text) and a fourth, autonomous setting in which the model retrieves its own records and rule text through logged tool calls.
 
 The adversarial-gate evaluation scores a live classifier behind the agent's existing seam on a labeled slice of smuggled-instruction attacks and benign controls.
 
@@ -18,11 +18,11 @@ The thesis under test: deterministic adjudication is the right tool for the rule
 
 ### Ground truth
 
-The answer key is a frozen, versioned export from the agent repository, pinned to agent commit [`3562059`](https://github.com/KrishnaDev-Palem/dpdp-erasure-agent/commit/3562059939cbaac3dc3500593f2940ef34c54c53). The harness verifies the pin at load time: `core/export/provenance.py` requires the SHA recorded in `export/PINNED_AGENT_SHA` to match `export/manifest.yaml` and the commit URL it carries. Every committed results file embeds the same SHA. The ground truth cannot silently drift under the evaluation.
+The answer key is a frozen export: a snapshot of the agent's fixtures and verdicts, taken once, versioned in this repository, and never edited afterward. The snapshot is pinned to agent commit [`3562059`](https://github.com/KrishnaDev-Palem/dpdp-erasure-agent/commit/3562059939cbaac3dc3500593f2940ef34c54c53). The harness verifies the pin at load time: `core/export/provenance.py` requires the SHA recorded in `export/PINNED_AGENT_SHA` to match `export/manifest.yaml` and the commit URL it carries. Every committed results file embeds the same SHA. The ground truth cannot silently drift under the evaluation.
 
 ### Metrics
 
-Each setting scores 34 location pairs across 16 subjects. Three rates are reported per setting, each with a Wilson 95% confidence interval (CI):
+Each setting scores 34 location pairs, a model verdict matched against the ground-truth verdict for the same data location, across 16 synthetic subjects. Three rates are reported per setting, each with a Wilson 95% confidence interval (CI):
 
 - **Over-erasure.** The model erases a location the ground truth retains or escalates. Under the DPDP Act's retention exceptions this is the statutory violation: data the law requires be kept is destroyed. It is reported as a standalone count and is never blended into a composite accuracy score.
 - **Over-retention.** The model retains a location the ground truth erases. This is the privacy failure: data the Data Principal is entitled to have erased survives.
@@ -109,7 +109,7 @@ On the rule-bound task, the model's failure profile is conservative and expensiv
 
 On the fuzzy task, the same class of small model performs excellently: near-ceiling detection, zero false alarms, and a single miss whose blast radius is zero by architecture.
 
-The shipped agent already embodies this split. The deterministic core owns every consequential verdict; the one model seam sits at the adversarial gate, screening an input surface that is inert either way. The harness turns that design position into measured evidence.
+The shipped agent already embodies this split. The deterministic core owns every consequential verdict; the one seam that admits a model sits at the adversarial gate, screening an input surface that is inert either way. The harness turns that design position into measured evidence.
 
 ## 7. Limitations and future work
 
