@@ -3,11 +3,11 @@
 **Date**: 2026-07-02  
 **Feature**: Context-tier adjudication sweep (T1/T2/T3 runners)
 
-## R1 — Runner module layout (planning §7)
+## R1 — Runner module layout (planning section 7)
 
 **Decision**: Add `runners/` at repository root with `runners/spine.py` (shared orchestration), `runners/pairing.py` and `runners/variance.py` (focused helpers), and thin tier entry modules `runners/t1.py`, `runners/t2.py`, `runners/t3.py`. Mirror acceptance tests under `tests/runners/`.
 
-**Rationale**: Planning §7 places evaluation executors beside `core/` rather than inside it. Runners orchestrate core primitives; they are not part of the shared library surface. Separating `runners/` keeps Feature 001's `core/` package stable and makes the runner acceptance suite independently gateable.
+**Rationale**: Planning section 7 places evaluation executors beside `core/` rather than inside it. Runners orchestrate core primitives; they are not part of the shared library surface. Separating `runners/` keeps Feature 001's `core/` package stable and makes the runner acceptance suite independently gateable.
 
 **Alternatives considered**:
 - `core/runners/` — rejected; blurs library vs orchestration boundaries and couples runner churn to core releases.
@@ -39,11 +39,11 @@
 
 **Decision**: Outer loop over `sample_index ∈ {0,1,2,3,4}`; inner loop over all export subjects. Each sample index produces exactly one aggregate `AdjudicationScoringResult` covering all location pairs from the full subject sweep. Cache entries are distinct per `(runner_id, case_id, prompt_hash, sample_index)`.
 
-**Rationale**: Spec FR-009–FR-011 and planning §9 bound sampling to N=5. Per-sample aggregate scoring (not per-subject tables) is the primary reporting unit per spec assumptions. Outer-sample loop keeps pairing lists independent and makes variance computation straightforward.
+**Rationale**: Spec FR-009–FR-011 and planning section 9 bound sampling to N=5. Per-sample aggregate scoring (not per-subject tables) is the primary reporting unit per spec assumptions. Outer-sample loop keeps pairing lists independent and makes variance computation straightforward.
 
 **Alternatives considered**:
 - Inner sample loop per subject — rejected; produces per-subject sample tables outside spec scope and complicates aggregate scoring.
-- Configurable N — rejected; planning §9 fixes N=5; unbounded samples violate cost discipline.
+- Configurable N — rejected; planning section 9 fixes N=5; unbounded samples violate cost discipline.
 
 ## R5 — Variance summary computation
 

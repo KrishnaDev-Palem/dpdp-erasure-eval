@@ -260,7 +260,7 @@ T018 → T019 → T020 → T021 → T022
 3. Phase 6: US2 adjudication scoring (tests first; hand-crafted pairs, no loader dependency)
 4. **STOP and VALIDATE**: `uv run pytest tests/core/test_acceptance_export.py tests/core/test_acceptance_provenance.py tests/core/test_acceptance_scoring_adjudication.py -v`
 
-### Full Feature 001 (planning §8 definition of done)
+### Full Feature 001 (planning section 8 definition of done)
 
 Complete Phases 1–9 in execution order. Success: core suite green offline; export loads and verifies pinned SHA.
 

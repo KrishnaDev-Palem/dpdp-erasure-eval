@@ -1,7 +1,7 @@
 # Frozen Export Contract
 
 **Version**: 1.0.0  
-**Authority**: Planning §6, agent block-1/block-3 fixtures
+**Authority**: Planning section 6, agent block-1/block-3 fixtures
 
 ## Layout
 
@@ -60,7 +60,7 @@ Each labeled location in the answer key:
 
 ## rules — retention floors
 
-Five floors minimum (planning §6 table): `pmla_kyc`, `gst`, `income_tax`, `companies_act`, `sebi`.
+Five floors minimum (planning section 6 table): `pmla_kyc`, `gst`, `income_tax`, `companies_act`, `sebi`.
 
 Each floor entry:
 

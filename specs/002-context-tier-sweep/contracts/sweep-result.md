@@ -2,7 +2,7 @@
 
 **Version**: 1.0.0  
 **Feature**: 002-context-tier-sweep  
-**Authority**: Spec FR-010–FR-013, FR-011; planning §5 scoring semantics
+**Authority**: Spec FR-010–FR-013, FR-011; planning section 5 scoring semantics
 
 ## Purpose
 

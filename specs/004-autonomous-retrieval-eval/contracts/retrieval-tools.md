@@ -2,7 +2,7 @@
 
 **Version**: 1.0.0  
 **Feature**: 004-autonomous-retrieval-eval  
-**Authority**: Spec FR-001–FR-003, FR-002; planning §4 autonomous retrieval evaluation
+**Authority**: Spec FR-001–FR-003, FR-002; planning section 4 autonomous retrieval evaluation
 
 ## Purpose
 

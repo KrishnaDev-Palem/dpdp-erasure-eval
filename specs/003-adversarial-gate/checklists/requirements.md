@@ -33,7 +33,7 @@
 
 **Iteration 1 (2026-07-03)**: All items pass.
 
-- Repository layout references (`runners/adversarial_gate/`, `fixtures/adversarial_slice/`, `report/`) follow the same binding-contract style as Features 001–002 and planning §7; they name evaluation artifacts, not implementation stack choices.
+- Repository layout references (`runners/adversarial_gate/`, `fixtures/adversarial_slice/`, `report/`) follow the same binding-contract style as Features 001–002 and planning section 7; they name evaluation artifacts, not implementation stack choices.
 - Wilson CI computation, N=5 sampling, offline cache, and per-family tables are specified with testable acceptance scenarios and success criteria.
 - Out-of-scope boundaries explicitly defer tier sweeps, autonomous variant, CLI, frozen-export edits, and core scoring reimplementation.
 - Zero `[NEEDS CLARIFICATION]` markers; assumptions document Wilson default confidence level deferral to plan phase.

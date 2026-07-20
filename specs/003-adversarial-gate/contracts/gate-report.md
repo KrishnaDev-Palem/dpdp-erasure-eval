@@ -2,7 +2,7 @@
 
 **Version**: 1.0.0  
 **Feature**: 003-adversarial-gate  
-**Authority**: Spec FR-015–FR-016, US3; planning §5 adversarial scoring
+**Authority**: Spec FR-015–FR-016, US3; planning section 5 adversarial scoring
 
 ## Purpose
 

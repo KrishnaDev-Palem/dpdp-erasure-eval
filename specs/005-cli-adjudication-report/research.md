@@ -20,7 +20,7 @@
 
 **Decision**: Single `cli/main.py` with `argparse` subparsers for `t1`, `t2`, `t3`, `autonomous`, `adversarial-gate`. Shared `_add_common_args()` attaches `--json`, `--output`, `--sample-index`, `--export-dir`, `--cache-root`. Dispatch dict maps subcommand name to runner callable + report builder. Console script `dpdp-eval = cli.main:main` in `pyproject.toml`; `python -m cli` via `cli/__main__.py`.
 
-**Rationale**: Minimal dependency surface (stdlib `argparse` + `json`). One file keeps CLI thin — orchestration only, no scoring or Wilson math. Subcommand-per-evaluation matches spec FR-009 and planning §7 operator surface. Acceptance tests invoke `python -m cli` for subprocess isolation.
+**Rationale**: Minimal dependency surface (stdlib `argparse` + `json`). One file keeps CLI thin — orchestration only, no scoring or Wilson math. Subcommand-per-evaluation matches spec FR-009 and planning section 7 operator surface. Acceptance tests invoke `python -m cli` for subprocess isolation.
 
 **Reconciliation with existing code**: Implementation matches decision. Known gaps vs spec:
 - `--output` help text currently says "in addition to stdout when --json is set" — **incorrect** per clarification: `--output` always writes JSON; stdout format controlled by `--json` only (FR-012).

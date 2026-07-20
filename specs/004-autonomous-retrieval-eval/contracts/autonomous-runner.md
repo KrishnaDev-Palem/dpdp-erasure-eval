@@ -2,7 +2,7 @@
 
 **Version**: 1.0.0  
 **Feature**: 004-autonomous-retrieval-eval  
-**Authority**: Spec FR-004–FR-019; planning §4, §7
+**Authority**: Spec FR-004–FR-019; planning section 4, section 7
 
 ## Purpose
 

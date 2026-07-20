@@ -1,7 +1,7 @@
 # Cache Contract
 
 **Version**: 1.0.0  
-**Authority**: Planning §7 (reproducibility mechanics), spec FR-014–FR-016
+**Authority**: Planning section 7 (reproducibility mechanics), spec FR-014–FR-016
 
 ## Storage root
 

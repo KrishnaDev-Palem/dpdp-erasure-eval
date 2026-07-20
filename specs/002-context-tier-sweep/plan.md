@@ -17,7 +17,7 @@ Deliver three tier adjudication runners (T1 request-only, T2 records-augmented, 
 **Target Platform**: Linux/macOS/Windows dev; GitHub Actions CI (offline, no API key)  
 **Project Type**: Library-style Python package + tier runner modules + committed cache expansion  
 **Performance Goals**: Full runners acceptance suite completes in &lt;60s offline on a standard dev machine  
-**Constraints**: No Postgres, no live agent in CI, frozen export immutable, `CACHE_MODE=offline` default, N=5 samples only (planning §9)  
+**Constraints**: No Postgres, no live agent in CI, frozen export immutable, `CACHE_MODE=offline` default, N=5 samples only (planning section 9)  
 **Scale/Scope**: All labeled export subjects × 3 tiers × 5 sample indices; ~30–50 labeled locations total across export
 
 ## Constitution Check
@@ -39,7 +39,7 @@ Deliver three tier adjudication runners (T1 request-only, T2 records-augmented, 
 
 *Post-design re-check (2026-07-02): **PASS** — no violations requiring Complexity Tracking.*
 
-## Scope Guardrails (planning §9)
+## Scope Guardrails (planning section 9)
 
 - **No Postgres** — filesystem export + cache only; runners read/write cache JSON under `cache/`.
 - **No live agent in CI** — default `CACHE_MODE=offline`; refresh path documented in [quickstart.md](./quickstart.md) but excluded from merge gate.
@@ -111,7 +111,7 @@ tests/
 core/                    # Feature 001 shared core (consumed, not modified in this feature)
 ```
 
-**Structure Decision**: Per planning §7, `runners/` lives at repository root (not under `core/` or `src/`). Tests mirror under `tests/runners/`. Tier runners are thin modules delegating to `runners/spine.py`; tier assembly stays in `core/context/tiers.py` (Feature 001). Cache and export artifacts remain at repo root for clone-and-inspect reproducibility.
+**Structure Decision**: Per planning section 7, `runners/` lives at repository root (not under `core/` or `src/`). Tests mirror under `tests/runners/`. Tier runners are thin modules delegating to `runners/spine.py`; tier assembly stays in `core/context/tiers.py` (Feature 001). Cache and export artifacts remain at repo root for clone-and-inspect reproducibility.
 
 ## Shared Runner Spine (design summary)
 

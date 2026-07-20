@@ -2,7 +2,7 @@
 
 **Version**: 1.0.0  
 **Feature**: 003-adversarial-gate  
-**Authority**: Spec FR-001–FR-012, FR-005–FR-011; planning §4.3, §7
+**Authority**: Spec FR-001–FR-012, FR-005–FR-011; planning section 4.3, section 7
 
 ## Purpose
 

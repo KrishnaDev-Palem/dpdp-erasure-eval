@@ -2,7 +2,7 @@
 
 **Version**: 1.1.0  
 **Feature**: 005-cli-adjudication-report  
-**Authority**: Spec FR-001–FR-007, FR-010–FR-012, FR-021; planning §7 integration layer; inherits scoring contract prohibitions
+**Authority**: Spec FR-001–FR-007, FR-010–FR-012, FR-021; planning section 7 integration layer; inherits scoring contract prohibitions
 
 ## Purpose
 

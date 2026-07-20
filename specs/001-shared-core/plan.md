@@ -17,7 +17,7 @@ Build the harness spine: load and verify the committed frozen export (provenance
 **Target Platform**: Linux/macOS/Windows dev; GitHub Actions CI  
 **Project Type**: Library-style Python package + committed data artifacts  
 **Performance Goals**: Full core acceptance suite completes in &lt;30s offline  
-**Constraints**: No database, no live agent, no API key in CI, frozen export immutable after commit (planning §6 frozen-export contract, §9 guardrails)  
+**Constraints**: No database, no live agent, no API key in CI, frozen export immutable after commit (planning section 6 frozen-export contract, section 9 guardrails)  
 **Scale/Scope**: ~30–50 labeled locations in export; cache keyed for N=5 samples per case
 
 ## Constitution Check
@@ -33,13 +33,13 @@ Build the harness spine: load and verify the committed frozen export (provenance
 | **V. Vocabulary and Wording Discipline** | **PASS** | DPDP terms; T1/T2/T3 internal labels ([contracts/context-tiers.md](./contracts/context-tiers.md)); `subject_id` retained |
 | **VI. Currency Before Communication** | **PASS** | Statute text embedded in committed export at generation time; research R7 records re-verify step before export commit |
 | **VII. Git Flow and Human Merge Gate** | **PASS** | Branch `001-shared-core`; PR + human merge; agent does not merge to `main` |
-| **VIII. Dependency and Cost Discipline** | **PASS** | No database/pgvector; bounded deps (`pyyaml`, `pydantic` only); no combinatorial blowup; see §9 guardrails below |
+| **VIII. Dependency and Cost Discipline** | **PASS** | No database/pgvector; bounded deps (`pyyaml`, `pydantic` only); no combinatorial blowup; see section 9 guardrails below |
 | **IX. Tracked Artifacts, Not Ephemeral Chat** | **PASS** | spec/plan/research/data-model/contracts/quickstart/tasks committed; ADR-0001 scheduled in tasks T008 |
 | **X. Stop and Surface Over Silent Choices** | **PASS** | Runners, CLI, Wilson CIs, autonomous tools explicitly deferred; no unresolved NEEDS CLARIFICATION |
 
 *Post-design re-check (2026-07-01): **PASS** — no violations requiring Complexity Tracking.*
 
-## Scope Guardrails (planning §9)
+## Scope Guardrails (planning section 9)
 
 - **No Postgres** — filesystem export + cache only; SQLite rejected in research R4.
 - **No live agent dependency** — export loaded from disk; provenance checks pinned SHA; CI runs fully offline.
@@ -138,7 +138,7 @@ uv.lock
 .env.example
 ```
 
-**Structure Decision**: Single-package layout per planning §7 with `core/` at repo root (not `src/`). Tests mirror modules under `tests/core/`. Data artifacts `export/` and `cache/` sit at root for clone-and-inspect reproducibility.
+**Structure Decision**: Single-package layout per planning section 7 with `core/` at repo root (not `src/`). Tests mirror modules under `tests/core/`. Data artifacts `export/` and `cache/` sit at root for clone-and-inspect reproducibility.
 
 ## Complexity Tracking
 
@@ -169,5 +169,5 @@ Complete — see [tasks.md](./tasks.md).
 1. **Bootstrap first**: `pyproject.toml`, `uv sync`, `ruff`, minimal `pytest` harness — enables red tests.
 2. **Export fixture**: Generate or copy from agent at pinned SHA; commit with manifest + `PINNED_AGENT_SHA`.
 3. **Test-first per user story**: follow tasks.md execution order (US1 export → US4 seam → US5 cache → US2/US3 scoring → US6 context); seam uses `ContextBundle` from `core/types.py` until tier builders land in US6.
-4. **ADR-0001** (load-bearing): Author `docs/adr/0001-frozen-export-ground-truth.md` early in implementation — documents eval methodology and frozen-export ground-truth coupling per planning §10; indexed in `docs/adr/README.md`. This is the sole ADR required for 001; no other load-bearing forks need ADR coverage in this feature.
+4. **ADR-0001** (load-bearing): Author `docs/adr/0001-frozen-export-ground-truth.md` early in implementation — documents eval methodology and frozen-export ground-truth coupling per planning section 10; indexed in `docs/adr/README.md`. This is the sole ADR required for 001; no other load-bearing forks need ADR coverage in this feature.
 5. **Out of scope reminder**: No `runners/`, `cli`, `report/`, or `core/tools/` in this feature.

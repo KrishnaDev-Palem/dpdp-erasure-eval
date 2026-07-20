@@ -2,7 +2,7 @@
 
 **Version**: 1.0.0  
 **Feature**: 002-context-tier-sweep  
-**Authority**: Spec FR-001–FR-004, FR-010, FR-012, FR-014; planning §7
+**Authority**: Spec FR-001–FR-004, FR-010, FR-012, FR-014; planning section 7
 
 ## Purpose
 

@@ -19,7 +19,7 @@ Deliver the cross-cutting integration layer deferred from Features 001–004: Wi
 **Target Platform**: Linux/macOS/Windows dev; GitHub Actions CI (offline, no API key)  
 **Project Type**: Library-style Python package + reporting module + CLI entrypoint + committed cache replay  
 **Performance Goals**: Full report + CLI acceptance suite completes in <60s offline on a standard dev machine  
-**Constraints**: No Postgres, no live agent in CI, frozen export and Features 001–004 runner/core/export modules immutable (FR-020), `CACHE_MODE=offline` default, N=5 samples only (planning §9), Wilson math only in `report/wilson.py`  
+**Constraints**: No Postgres, no live agent in CI, frozen export and Features 001–004 runner/core/export modules immutable (FR-020), `CACHE_MODE=offline` default, N=5 samples only (planning section 9), Wilson math only in `report/wilson.py`  
 **Scale/Scope**: 5 CLI subcommands; 3 tier + 1 autonomous + 1 gate runner consumed; 4-row cross-tier comparison table; adjudication report per sweep with 5 sample rollups
 
 ## Constitution Check
@@ -41,7 +41,7 @@ Deliver the cross-cutting integration layer deferred from Features 001–004: Wi
 
 *Post-design re-check (2026-07-07): **PASS** — no violations requiring Complexity Tracking.*
 
-## Scope Guardrails (planning §9)
+## Scope Guardrails (planning section 9)
 
 - **No Postgres** — filesystem export, fixtures, and cache only.
 - **No live agent in CI** — default `CACHE_MODE=offline`; refresh path documented in [quickstart.md](./quickstart.md) but excluded from merge gate.
@@ -126,7 +126,7 @@ tests/
     └── test_acceptance_cli.py
 ```
 
-**Structure Decision**: Per planning §7 integration layer, reporting formatters live in `report/` beside existing gate report modules; CLI lives in top-level `cli/` package registered as `dpdp-eval` in `pyproject.toml`. Runners orchestrate sweeps; report layer wraps Wilson CIs and formatting only; CLI wires runner → builder → formatter/JSON emit. Cross-tier comparison stays in `report/adjudication_tables.py` with no CLI surface.
+**Structure Decision**: Per planning section 7 integration layer, reporting formatters live in `report/` beside existing gate report modules; CLI lives in top-level `cli/` package registered as `dpdp-eval` in `pyproject.toml`. Runners orchestrate sweeps; report layer wraps Wilson CIs and formatting only; CLI wires runner → builder → formatter/JSON emit. Cross-tier comparison stays in `report/adjudication_tables.py` with no CLI surface.
 
 ## Integration Spine (design summary)
 

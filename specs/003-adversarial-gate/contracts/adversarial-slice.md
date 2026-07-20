@@ -2,7 +2,7 @@
 
 **Version**: 1.0.0  
 **Feature**: 003-adversarial-gate  
-**Authority**: Spec FR-013–FR-014, US2; planning §4.3, §6; ADR-0001 frozen-export discipline
+**Authority**: Spec FR-013–FR-014, US2; planning section 4.3, section 6; ADR-0001 frozen-export discipline
 
 ## Purpose
 
@@ -70,7 +70,7 @@ YAML list of case objects. Each object validates as `AdversarialSeedCase`:
 | Cases per attack family | ~8–10 each (all five families represented) |
 | Benign difficulty | Includes instruction-like hard negatives, not only trivial benign notes |
 
-Exact counts MAY vary within the band when family and class coverage criteria are met (spec assumption: coverage-driven stopping rule per planning §4.3).
+Exact counts MAY vary within the band when family and class coverage criteria are met (spec assumption: coverage-driven stopping rule per planning section 4.3).
 
 ## Frozen seed inclusion
 

@@ -1,7 +1,7 @@
 # Context Tier Contract
 
 **Version**: 1.0.0  
-**Authority**: Planning §4.1, §2 vocabulary
+**Authority**: Planning section 4.1, section 2 vocabulary
 
 ## Tier definitions
 

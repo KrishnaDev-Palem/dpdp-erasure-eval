@@ -3,11 +3,11 @@
 **Date**: 2026-07-03  
 **Feature**: Adversarial gate evaluation (extended slice, gate runner, Wilson reporting)
 
-## R1 — Gate runner module layout (planning §7, spec FR-001)
+## R1 — Gate runner module layout (planning section 7, spec FR-001)
 
 **Decision**: Add `runners/adversarial_gate/` as a dedicated package with `runner.py` (orchestration), `slice_loader.py`, `cache.py` (gate-specific cache key + classify refresh), `variance.py`, and `types.py`. Mirror acceptance tests under `tests/gate/`. Tier runners (`runners/t1.py`, etc.) remain unchanged at the parent level.
 
-**Rationale**: Spec FR-001 explicitly places the gate runner under `runners/adversarial_gate/`, distinguishing Evaluation 2 from the three flat tier entry modules shipped in Feature 002. A subdirectory keeps gate-specific concerns (slice loading, text-only prompt hashing, classify_note cache path) colocated without growing the tier spine. Planning §7 treats adversarial gate as a separate evaluation executor beside tier runners.
+**Rationale**: Spec FR-001 explicitly places the gate runner under `runners/adversarial_gate/`, distinguishing Evaluation 2 from the three flat tier entry modules shipped in Feature 002. A subdirectory keeps gate-specific concerns (slice loading, text-only prompt hashing, classify_note cache path) colocated without growing the tier spine. Planning section 7 treats adversarial gate as a separate evaluation executor beside tier runners.
 
 **Alternatives considered**:
 - `runners/adversarial_gate.py` (single flat module) — rejected; slice loader, cache helper, variance, and types exceed comfortable single-file scope (~200+ lines) and differ materially from tier spine.
@@ -39,7 +39,7 @@
 
 **Alternatives considered**:
 - `scipy.stats` or `statsmodels.stats.proportion` — rejected; adds dependency for ~30 lines of arithmetic; violates bounded-deps guardrail without justification.
-- Clopper-Pearson (exact binomial) — rejected; harder to hand-verify in acceptance tests; Wilson is planning §5 default and sufficient for slice sizes.
+- Clopper-Pearson (exact binomial) — rejected; harder to hand-verify in acceptance tests; Wilson is planning section 5 default and sufficient for slice sizes.
 - Wald interval — rejected; poor coverage at extreme proportions; acceptance fixtures include small-n family cuts.
 - Implement in `core/scoring` — rejected; contradicts FR-016 and Feature 001 deferral.
 
@@ -50,7 +50,7 @@
 1. **Location**: `fixtures/adversarial_slice/cases.yaml` — YAML list of case objects matching `AdversarialSeedCase` shape from `core/types.py`.
 2. **Frozen seed inclusion**: The three export seeds (`adv-erase-all`, `adv-admin-claim`, `benign-extra-ask`) MUST appear in the extended slice with **byte-identical** `case_id`, `surface`, `text`, `label`, and `family` fields to `export/adversarial_seeds/seeds.yaml`. When `verify_export_seeds` is enabled, loader calls `load_export()` + `verify_provenance()` then compares seeds; aborts on `ProvenanceError` or seed field mismatch before sweep start.
 3. **Additive authoring**: All new cases use new `case_id` values; no edits to export files or committed adjudication subjects.
-4. **Coverage targets** (planning §4.3): 80–100 total cases; ~40–50 attack, ~40–50 benign; five families at ~8–10 attack cases each; benign set includes instruction-like hard negatives.
+4. **Coverage targets** (planning section 4.3): 80–100 total cases; ~40–50 attack, ~40–50 benign; five families at ~8–10 attack cases each; benign set includes instruction-like hard negatives.
 5. **Family taxonomy** (stable snake_case IDs):
 
 | Family ID | Description |
@@ -97,7 +97,7 @@ Refresh path calls `seam.classify_note(text=case.text, case_id=case.case_id)` an
 
 **Decision**: Same outer-sample loop as Feature 002 ([002/contracts/runner-spine.md](../002-context-tier-sweep/contracts/runner-spine.md)): five per-sample `AdversarialScoringResult` values covering the full slice; `GateVarianceSummary` tracks `detection_rate` and `false_alarm_rate` with `constant_across_samples` booleans.
 
-**Rationale**: Planning §9 fixes N=5; spec FR-010–FR-012. Reusing variance constancy semantics from `runners/variance.py` keeps cross-evaluation comparisons consistent.
+**Rationale**: Planning section 9 fixes N=5; spec FR-010–FR-012. Reusing variance constancy semantics from `runners/variance.py` keeps cross-evaluation comparisons consistent.
 
 **Alternatives considered**:
 - Single-sample gate only — rejected; spec US4 requires five samples and variance summary.
@@ -110,7 +110,7 @@ Refresh path calls `seam.classify_note(text=case.text, case_id=case.case_id)` an
 **Rationale**: Wilson CIs were explicitly deferred from Features 001 and 002 to this feature. Reporting is consumed by future writeup/CLI features; separating from runner keeps runner output as scored results while report layer adds presentation.
 
 **Alternatives considered**:
-- `runners/adversarial_gate/report.py` — rejected; report may later serve other evaluations; top-level matches planning §7 module list.
+- `runners/adversarial_gate/report.py` — rejected; report may later serve other evaluations; top-level matches planning section 7 module list.
 - Wilson in runner — rejected; violates FR-016.
 
 ## R8 — Acceptance test strategy

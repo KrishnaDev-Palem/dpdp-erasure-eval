@@ -1,7 +1,7 @@
 # Scoring Contract
 
 **Version**: 1.0.0  
-**Authority**: Planning §5
+**Authority**: Planning section 5
 
 ## Adjudication scoring
 

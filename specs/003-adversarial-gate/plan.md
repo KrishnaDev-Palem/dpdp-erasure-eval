@@ -17,7 +17,7 @@ Deliver an adversarial-gate runner that sweeps an extended, eval-authored slice 
 **Target Platform**: Linux/macOS/Windows dev; GitHub Actions CI (offline, no API key)  
 **Project Type**: Library-style Python package + gate runner module + reporting module + committed cache expansion  
 **Performance Goals**: Full gate acceptance suite completes in &lt;60s offline on a standard dev machine  
-**Constraints**: No Postgres, no live agent in CI, frozen export seeds immutable, `CACHE_MODE=offline` default, N=5 samples only (planning §9), label isolation on seam inputs  
+**Constraints**: No Postgres, no live agent in CI, frozen export seeds immutable, `CACHE_MODE=offline` default, N=5 samples only (planning section 9), label isolation on seam inputs  
 **Scale/Scope**: ~80–100 slice cases × 5 sample indices; five attack families at ~8–10 cases each; one gate runner namespace
 
 ## Constitution Check
@@ -39,7 +39,7 @@ Deliver an adversarial-gate runner that sweeps an extended, eval-authored slice 
 
 *Post-design re-check (2026-07-03): **PASS** — no violations requiring Complexity Tracking.*
 
-## Scope Guardrails (planning §9)
+## Scope Guardrails (planning section 9)
 
 - **No Postgres** — filesystem export, fixtures, and cache only.
 - **No live agent in CI** — default `CACHE_MODE=offline`; refresh path documented in [quickstart.md](./quickstart.md) but excluded from merge gate.
@@ -125,7 +125,7 @@ tests/
 core/                    # Feature 001 shared core (consumed, not modified except blocking bugfixes)
 ```
 
-**Structure Decision**: Per planning §7 and spec FR-001, the gate runner lives in `runners/adversarial_gate/` (subdirectory, distinct from flat tier entry modules). Tier runners remain at `runners/t1.py` etc. Reporting deferred from Features 001/002 lands in top-level `report/`. Extended slice fixtures are eval-authored under `fixtures/adversarial_slice/` — separate from immutable `export/adversarial_seeds/`. Tests mirror under `tests/gate/`.
+**Structure Decision**: Per planning section 7 and spec FR-001, the gate runner lives in `runners/adversarial_gate/` (subdirectory, distinct from flat tier entry modules). Tier runners remain at `runners/t1.py` etc. Reporting deferred from Features 001/002 lands in top-level `report/`. Extended slice fixtures are eval-authored under `fixtures/adversarial_slice/` — separate from immutable `export/adversarial_seeds/`. Tests mirror under `tests/gate/`.
 
 ## Gate Runner Spine (design summary)
 

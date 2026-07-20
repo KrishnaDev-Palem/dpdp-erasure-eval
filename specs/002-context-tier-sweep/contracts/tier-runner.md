@@ -2,7 +2,7 @@
 
 **Version**: 1.0.0  
 **Feature**: 002-context-tier-sweep  
-**Authority**: Spec FR-001, FR-003, FR-008; planning §4.1, §2 vocabulary
+**Authority**: Spec FR-001, FR-003, FR-008; planning section 4.1, section 2 vocabulary
 
 ## Purpose
 

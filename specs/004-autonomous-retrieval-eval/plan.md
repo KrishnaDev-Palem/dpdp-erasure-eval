@@ -17,7 +17,7 @@ Deliver filesystem-backed retrieval tools under `core/tools/` that mirror T2 loc
 **Target Platform**: Linux/macOS/Windows dev; GitHub Actions CI (offline, no API key)  
 **Project Type**: Library-style Python package + retrieval tools module + autonomous runner + committed cache expansion  
 **Performance Goals**: Full autonomous acceptance suite completes in <60s offline on a standard dev machine  
-**Constraints**: No Postgres, no live agent in CI, frozen export/tier/gate modules immutable, `CACHE_MODE=offline` default, N=5 samples only (planning §9), ground-truth isolation on tools and initial context  
+**Constraints**: No Postgres, no live agent in CI, frozen export/tier/gate modules immutable, `CACHE_MODE=offline` default, N=5 samples only (planning section 9), ground-truth isolation on tools and initial context  
 **Scale/Scope**: 3 labeled export subjects (2 with locations requiring cache); 2 × 5 sample indices = 10 autonomous cache entries; 3 retrieval tools; one autonomous runner namespace
 
 ## Constitution Check
@@ -39,7 +39,7 @@ Deliver filesystem-backed retrieval tools under `core/tools/` that mirror T2 loc
 
 *Post-design re-check (2026-07-04): **PASS** — no violations requiring Complexity Tracking.*
 
-## Scope Guardrails (planning §9)
+## Scope Guardrails (planning section 9)
 
 - **No Postgres** — filesystem export and cache only.
 - **No live agent in CI** — default `CACHE_MODE=offline`; refresh path documented in [quickstart.md](./quickstart.md) but excluded from merge gate.
@@ -135,7 +135,7 @@ tests/
     └── test_acceptance_autonomous_cache_offline.py
 ```
 
-**Structure Decision**: Per planning §7 and spec FR-001/FR-004, retrieval tools live in `core/tools/` (shared library surface for seam integration and parity tests) and the autonomous runner in `runners/autonomous/` (orchestration, matching Feature 003 gate subdirectory pattern). Tier runners and adversarial gate remain unchanged. Autonomous runner reuses `runners/pairing.py`, `runners/variance.py`, and Feature 002 result types for sample rollups and variance.
+**Structure Decision**: Per planning section 7 and spec FR-001/FR-004, retrieval tools live in `core/tools/` (shared library surface for seam integration and parity tests) and the autonomous runner in `runners/autonomous/` (orchestration, matching Feature 003 gate subdirectory pattern). Tier runners and adversarial gate remain unchanged. Autonomous runner reuses `runners/pairing.py`, `runners/variance.py`, and Feature 002 result types for sample rollups and variance.
 
 ## Autonomous Runner Spine (design summary)
 

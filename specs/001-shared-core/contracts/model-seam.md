@@ -1,7 +1,7 @@
 # Model Seam Contract
 
 **Version**: 1.0.0  
-**Authority**: Planning §6 (Classifier protocol), §7 (injected model)
+**Authority**: Planning section 6 (Classifier protocol), section 7 (injected model)
 
 ## Protocol
 

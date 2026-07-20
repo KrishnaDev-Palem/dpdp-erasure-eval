@@ -3,7 +3,7 @@
 **Date**: 2026-07-04  
 **Feature**: Autonomous retrieval evaluation (filesystem tools, tool-use adjudication, committed cache traces)
 
-## R1 — Autonomous runner module layout (planning §7, spec FR-004)
+## R1 — Autonomous runner module layout (planning section 7, spec FR-004)
 
 **Decision**: Add `runners/autonomous/` as a dedicated package with `runner.py` (orchestration), `cache.py` (autonomous cache resolve + refresh with `tool_calls` persistence), `types.py` (`AutonomousSweepConfig`, `AutonomousSweepResult`), and `__init__.py`. Mirror acceptance tests under `tests/autonomous/`. Tier runners (`runners/t1.py`, etc.) and adversarial gate remain unchanged.
 
@@ -106,7 +106,7 @@ Introduce `AutonomousSweepResult` in `runners/autonomous/types.py` with `runner_
 - Subclass `TierSweepResult` with `tier="t1"` — rejected; misleading metadata (autonomous is not a tier runner).
 - Gate-style separate variance types — rejected; adjudication metrics match tier, not gate.
 
-## R7 — Committed cache cardinality (spec FR-019, planning §9)
+## R7 — Committed cache cardinality (spec FR-019, planning section 9)
 
 **Decision**: Commit autonomous cache entries for all export subjects **with at least one location** × **5** sample indices = **10** entries under `cache/{model_id}/autonomous/{case_id}/{prompt_hash}/{sample_index}.json`. Prompt hashes per subject match corresponding T1 entries (different `runner_id` directory only). Subjects with empty `locations` (e.g. `empty-locations-subject`) are swept but skipped for cache seeding — no model call — matching Feature 002 `scripts/seed_runner_cache.py` behavior.
 
