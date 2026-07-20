@@ -8,27 +8,27 @@ derived artifacts are regenerated to match.
 **Repository:** `dpdp-erasure-eval` · **Display title:** DPDP Erasure Evaluation Harness
 **Ground truth:** [`dpdp-erasure-agent`](https://github.com/KrishnaDev-Palem/dpdp-erasure-agent) (the first project)
 **Status:** Settled · **Supersedes:** the kickoff handoff (carried forward and closed out below)
-**Revision note:** §8, §9, and §10 brought current with the built scope on 2026-07-14.
+**Revision note:** sections 8, 9, and 10 brought current with the built scope on 2026-07-14.
 
 ---
 
 ## 0. How this document feeds Spec Kit
 
-The project is built with [Spec Kit](https://github.com/github/spec-kit) (spec-driven development),
-integration `cursor`. Spec Kit's command pipeline is `constitution → specify → plan → tasks → implement`,
-with `clarify`, `analyze`, and `checklist` as optional gates. Each command fills a Markdown artifact that
-feeds the next. This planning document sits upstream of all of them.
+The project was built with [Spec Kit](https://github.com/github/spec-kit) (spec-driven development).
+Spec Kit's pipeline runs `constitution → specify → plan → tasks → implement`, with `clarify`, `analyze`,
+and `checklist` as optional gates. Each step produces a Markdown artifact that feeds the next. This planning
+document sits upstream of all of them.
 
 The mapping below is the contract for derivation. A section here is the source; the Spec Kit file is the
-view. Cursor reads the cited section to fill the cited file.
+view. Implementers derive the cited file from the cited section.
 
 | Spec Kit artifact | Filled from |
 |---|---|
-| `.specify/memory/constitution.md` (one, project-wide) | §3 Principles and non-negotiables, §9 Cost and scope guardrails |
-| `specs/NNN-*/spec.md` (one per feature, the *what/why*) | §4 The two evaluations, §5 Scoring contract |
-| `specs/NNN-*/plan.md` + `research.md` (the *how*) | §7 Architecture and repository shape |
-| `specs/NNN-*/data-model.md` + `contracts/` | §6 Frozen-export contract |
-| `specs/NNN-*/tasks.md` | §8 Build order and feature decomposition |
+| `.specify/memory/constitution.md` (one, project-wide) | section 3 Principles and non-negotiables, section 9 Cost and scope guardrails |
+| `specs/NNN-*/spec.md` (one per feature, the *what/why*) | section 4 The two evaluations, section 5 Scoring contract |
+| `specs/NNN-*/plan.md` + `research.md` (the *how*) | section 7 Architecture and repository shape |
+| `specs/NNN-*/data-model.md` + `contracts/` | section 6 Frozen-export contract |
+| `specs/NNN-*/tasks.md` | section 8 Build order and feature decomposition |
 
 Two artifacts stay co-canonical alongside this document rather than derived from it:
 
@@ -57,7 +57,7 @@ verdicts, and grades the model's answers against the agent's, which are the know
 The argument the harness exists to make: deterministic adjudication is the right choice for the rule-bound
 legal task, and a model is the right choice for the genuinely fuzzy task (spotting a hostile instruction in
 free text). The harness produces measured evidence for both halves. A strong model score reinforces this
-thesis rather than denting it, because the load-bearing findings are reproducibility, auditability of the
+claim rather than denting it, because the load-bearing findings are reproducibility, auditability of the
 cited reason, and the erase/retain error asymmetry, not headline accuracy.
 
 What the harness is not: it is not a bake-off, it does not change the agent, and it does not re-litigate the
@@ -130,7 +130,7 @@ references them.
 - **Currency before communication.** Any regulatory or model-availability fact is web-verified before it
   lands in a tracked artifact. Sectoral floors and model strings both move.
 - **Developer-facing versus reader-facing wording.** T1–T3 and runner labels are internal. The writeup and
-  README use the descriptive evaluation names and the retired-scaffolding rule from §2.
+  README use the descriptive evaluation names and the retired-scaffolding rule from section 2.
 - **Stop and surface over silent choices.** Where this document or a spec is silent on a value or behavior,
   the gap is surfaced, not guessed.
 
@@ -144,19 +144,18 @@ quality requirements, recorded so the build does not drift from them.
   pgvector; the harness needs no database.
 - **Continuous integration (GitHub Actions).** Every pull request runs `ruff` (lint and format check) and
   the full `pytest` suite. The CI run is the merge gate. Because published numbers reproduce offline from
-  the committed cache (§7), the test job needs no model API key and runs fully offline, which keeps CI
+  the committed cache (section 7), the test job needs no model API key and runs fully offline, which keeps CI
   deterministic and secret-free.
 - **Pre-commit hooks.** `ruff` lint and format plus basic file hygiene (trailing whitespace, end-of-file,
   YAML well-formedness), so the same checks that gate the PR also catch issues before the commit.
-- **Pull-request flow with a human merge gate.** Cursor works on a feature branch, commits to that branch,
-  and opens a pull request. The diff is reviewed by hand and merged to `main` by hand. The protected
-  operation, landing on `main`, stays human; CI must be green before merge. This is a deliberate, named
-  relaxation of the agent's all-git-by-hand rule: branch commits are now Cursor's, the merge is not.
-- **Secret hygiene.** The model API key is read from an environment variable. A `.env.example` is committed
-  with the variable names and no values; the real key is never committed and `.env` is git-ignored.
+- **Pull-request flow with a human merge gate.** PRs land on feature branches; merge to `main` is manual.
+  The diff is reviewed by hand before merge. CI must be green before merge. Landing on `main` stays a
+  human decision; the protected branch is not updated automatically.
+- **Secret hygiene.** Provider API keys are read from environment variables. A `.env.example` is committed
+  with the variable names and no values; real keys are never committed and `.env` is git-ignored.
 - **Licensing and provenance.** MIT `LICENSE`, matching the agent. The frozen export carries a provenance
-  header pinning the agent commit SHA (§6).
-- **README as the on-ramp.** Thesis-first, reader-facing vocabulary, and a clone-and-run path that
+  header pinning the agent commit SHA (section 6).
+- **README as the on-ramp.** Claim-first, reader-facing vocabulary, and a clone-and-run path that
   reproduces the published tables from the committed cache with only an API key needed for the `--refresh`
   path. Status badges (CI, license, Python version, test count) reflect real CI state, never hand-set
   values.
@@ -167,7 +166,7 @@ quality requirements, recorded so the build does not drift from them.
 
 ## 4. The two evaluations
 
-*Feeds `specs/NNN-*/spec.md`. Stated as the* what *and* why*, tech-stack-agnostic. The* how *lives in §7.*
+*Feeds `specs/NNN-*/spec.md`. Stated as the* what *and* why*, tech-stack-agnostic. The* how *lives in section 7.*
 
 ### 4.1 Adjudication ablation (Evaluation 1)
 
@@ -254,7 +253,7 @@ contains the scary-looking error, and the operationally costlier error is the fa
 legitimate erasure request to a human reviewer and delays it. The gate is a tripwire and a legibility signal
 on top of an already-inert surface, and the writeup says so plainly. This evaluation is small in surface (a
 bounded slice, a binary outcome, one or two rates, no tier structure, and the seam already exists) but high
-in signal: it is the half of the thesis that shows a model doing well at the fuzzy task. Small means compact
+in signal: it is the half of the claim that shows a model doing well at the fuzzy task. Small means compact
 to build, not unimportant.
 
 ---
@@ -382,7 +381,7 @@ onto rows.
 ### The adversarial slice (block3.yaml seeds, extended inside the eval repo)
 
 The three seed cases (`adv-erase-all`, `adv-admin-claim`, `benign-extra-ask`) are frozen upstream. The
-harness extends rather than edits them, adding the attack families and benign controls of §4.3. Each slice
+harness extends rather than edits them, adding the attack families and benign controls of section 4.3. Each slice
 case carries the agent's slice shape: the **surface** (the field the text sits in), the **named field's
 text**, and a **label** (attack or benign). The classifier is invoked with the note text only, mirroring the
 agent's `screen_adversarial` gate, which passes the `requester_note` and nothing else.
@@ -451,14 +450,14 @@ adjudication runners emit the same per-location verdicts, graded the same way ag
 - **Committed response and trace cache.** Raw model responses, and tool-call traces for the autonomous
   variant, are stored as run artifacts keyed by model, tier, case, and prompt hash. Published numbers
   reproduce offline from the committed cache; a `--refresh` path re-hits the API.
-- **Per-case sampling** at N = 5 (§5), to measure variance.
+- **Per-case sampling** at N = 5 (section 5), to measure variance.
 
 ---
 
 ## 8. Build order and feature decomposition
 
-*Feeds `tasks.md` and the Spec Kit feature numbering.* Each numbered feature is one `/speckit.specify` run,
-one `specs/NNN-*` directory, one branch, one pull request.
+*Feeds `tasks.md` and the Spec Kit feature numbering.* Each numbered feature is one specify step, one
+`specs/NNN-*` directory, one branch, one pull request.
 
 | Feature | Scope | Definition of done |
 |---|---|---|
@@ -475,7 +474,7 @@ The writeup is prose and sits outside Spec Kit; it is authored by hand against t
 Same additive, never-block-shipping discipline as the agent: features 001–003 are a complete, publishable
 harness on their own; 004 layers on after that core is green and is cleanly cuttable. Features 005 through
 007 harden the harness from runnable to reproducible and publishable. Within each feature,
-the acceptance suite is written before the implementation, and CI plus the human merge gate (§3) stand
+the acceptance suite is written before the implementation, and CI plus the human merge gate (section 3) stand
 between the branch and `main`.
 
 ---
@@ -487,14 +486,14 @@ between the branch and `main`.
 - **Spend in the tens of dollars.** No combinatorial blowup. The guardrail is against the adjudication
   product run (tiers × models × samples × cases); one primary model, bounded sampling at N = 5, and the
   autonomous variant as the only multi-call setting keep it bounded. The adversarial slice is binary
-  classification on one model and costs pennies even at N = 5, so its sizing in §4.3 is not cost-bound.
+  classification on one model and costs pennies even at N = 5, so its sizing in section 4.3 is not cost-bound.
 - **Dependency discipline.** Additions require explicit justification; no pgvector; the harness needs no
   database.
 - **Single primary model in v1.** The guardrail bounds the adjudication product run (tiers × models ×
   samples × cases); one model per evaluation role satisfies it: one adjudication model across all context
   tiers and the autonomous variant, one gate model for the adversarial slice. What it forbids is
   multiplying models within the ablation. A second model or a second prompt within a single evaluation role
-  is an extension, not core (§11). The role assignment is recorded in ADR-0002.
+  is an extension, not core (section 11). The role assignment is recorded in ADR-0002.
 
 ---
 
@@ -503,24 +502,23 @@ between the branch and `main`.
 The forks settled for this project, recorded so nothing is left implicit.
 
 1. **Artifact model.** This planning document is canonical. `constitution`, `spec`, `plan`, and `tasks` are
-   derived from it (§0). ADRs and the acceptance suites are co-canonical and authored by hand. The
+   derived from it (section 0). ADRs and the acceptance suites are co-canonical and authored by hand. The
    per-runner acceptance specs are not a separate document set; they are the Spec Kit `spec.md` per feature.
-2. **Feature granularity.** Four Spec Kit features mapping the build order (§8): `001-shared-core`,
+2. **Feature granularity.** Four Spec Kit features mapping the build order (section 8): `001-shared-core`,
    `002-context-tier-sweep` (T1/T2/T3 as one feature), `003-adversarial-gate`, `004-autonomous-variant`. The
    writeup stays outside Spec Kit.
-3. **Git flow.** Cursor branches, commits to the feature branch, and opens a pull request; the diff is
-   reviewed and merged to `main` by hand. CI must be green before merge. A named relaxation of the agent's
-   all-git-by-hand rule: branch commits are Cursor's, the merge is not.
+3. **Git flow.** PRs land on feature branches; merge to `main` is manual. The diff is reviewed by hand
+   before merge. CI must be green before merge.
 4. **Core Spec Kit, no preset.** No regulatory-traceability preset: the harness measures compliance
    adjudication, it is not itself a regulated system, so a preset would add machinery without payoff. The
    rigor lives in the constitution. Spec Kit's default test-first article is kept and sharpened.
 5. **Adversarial slice sizing.** 80–100 cases, ≈40–50 attack across five families (≈8–10 each), ≈40–50
    benign controls matched ≈1:1 and stratified easy/hard, with the hard negatives carrying the weight.
-   Coverage-driven, not quota-driven (§4.3).
-6. **Sampling.** N = 5 per case for variance (§5).
+   Coverage-driven, not quota-driven (section 4.3).
+6. **Sampling.** N = 5 per case for variance (section 5).
 7. **Two-configuration comparison.** Deferred to the writeup's future work; the seam is built to support it
-   so a later A/B is a config change, not a refactor (§11).
-8. **Feature decomposition extended during the build.** The original §8 table listed four features
+   so a later A/B is a config change, not a refactor (section 11).
+8. **Feature decomposition extended during the build.** The original section 8 table listed four features
    (001–004). During the build, three features were added beyond that decomposition: `005-cli-report`
    earned separate feature status because the unified CLI and adjudication report tables are a cross-cutting
    integration layer deferred from 001–004; `006-live-model-seam` earned separate status because live
@@ -530,7 +528,7 @@ The forks settled for this project, recorded so nothing is left implicit.
    the canonical document, not a claim that 005–007 were planned from the start.
 9. **Live model role split.** One adjudication model and one gate model, assigned at wiring time. The
    adjudication model runs all context tiers and the autonomous variant; the gate model runs the adversarial
-   slice. Concrete model strings are configuration confirmed at wiring time (§11); ADR-0002 records the
+   slice. Concrete model strings are configuration confirmed at wiring time (section 11); ADR-0002 records the
    full decision, consequences, and rejected alternatives.
 
 ---
@@ -548,16 +546,10 @@ Confirmed at wiring time or carried as future work, deliberately not pinned here
 
 ---
 
-## 12. Quick reference: Spec Kit workflow
+## 12. Spec Kit methodology (reference)
 
-The command pipeline this project runs, for orientation.
-
-- `/speckit.constitution` — fills `.specify/memory/constitution.md` from §3 and §9. Run once.
-- `/speckit.specify` — per feature, fills `specs/NNN-*/spec.md` from §4 and §5. Creates the branch and
-  directory.
-- `/speckit.clarify` — optional, run before plan to close underspecified areas.
-- `/speckit.plan` — fills `plan.md`, `research.md`, `data-model.md`, `contracts/` from §6 and §7.
-- `/speckit.tasks` — fills `tasks.md` from §8.
-- `/speckit.analyze` — optional cross-artifact consistency check, after tasks and before implement.
-- `/speckit.implement` — executes the tasks. Implementation lands on a branch; CI and the human merge gate
-  stand between it and `main`.
+The build followed Spec Kit's spec-driven pipeline: constitution → specify → plan → tasks → implement.
+Per-feature contracts, plans, task breakdowns, and implementation artifacts live under `specs/` (numbered
+directories) and `.specify/memory/constitution.md`. Section 0 maps this planning document to those files.
+Optional gates (clarify, analyze, checklist) were used where a feature needed extra consistency checks.
+Pull requests land on feature branches; merge to `main` is manual, with CI green as the merge gate.

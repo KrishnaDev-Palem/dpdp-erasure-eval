@@ -1,7 +1,6 @@
 # ADR-0001: Frozen Export as Deterministic Ground Truth
 
-**Status**: Accepted  
-**Date**: 2026-07-01
+**Status**: Accepted
 
 ## Context
 
