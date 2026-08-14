@@ -1,0 +1,25 @@
+- category: customer
+  floors:
+  - pmla_kyc
+  anchor_selector: relationship_end
+- category: kyc_document
+  floors:
+  - pmla_kyc
+  anchor_selector: relationship_end
+- category: marketing_consent
+  floors: []
+  anchor_selector: none
+- category: payment_transaction
+  floors:
+  - pmla_kyc
+  - gst
+  - income_tax
+  - companies_act
+  anchor_selector: txn_date
+- category: securities_transaction
+  floors:
+  - pmla_kyc
+  - income_tax
+  - companies_act
+  - sebi
+  anchor_selector: txn_date
