@@ -8,11 +8,40 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from core.model.seam import load_model_config
-from core.types import AdjudicationScoringResult, ExpectedLabel, ModelVerdict, Rate, Tier
+from core.types import (
+    AdjudicationScoringResult,
+    ExpectedLabel,
+    GroupedAdjudicationScoring,
+    ModelVerdict,
+    Rate,
+    Tier,
+)
 
 VarianceMetric = Literal["over_erasure", "over_retention", "mis_escalation"]
 
 SAMPLE_INDICES: list[int] = [0, 1, 2, 3, 4]
+THREE_SAMPLE_INDICES: list[int] = [0, 1, 2]
+ALLOWED_ADJUDICATION_SAMPLE_INDICES: frozenset[tuple[int, ...]] = frozenset(
+    {
+        tuple(THREE_SAMPLE_INDICES),
+        tuple(SAMPLE_INDICES),
+    }
+)
+
+
+def validate_adjudication_sample_indices(indices: list[int]) -> None:
+    if tuple(indices) not in ALLOWED_ADJUDICATION_SAMPLE_INDICES:
+        raise ValueError("sample_indices must be [0, 1, 2] or [0, 1, 2, 3, 4]")
+
+
+def validate_adjudication_samples(samples: list[SampleRollup]) -> None:
+    if len(samples) not in {3, 5}:
+        raise ValueError(f"samples must have length 3 or 5, got {len(samples)}")
+    for index, sample in enumerate(samples):
+        if sample.sample_index != index:
+            raise ValueError(
+                f"samples[{index}].sample_index must be {index}, got {sample.sample_index}"
+            )
 
 
 class SweepConfig(BaseModel):
@@ -30,8 +59,7 @@ class SweepConfig(BaseModel):
     def _validate_config(self) -> SweepConfig:
         if self.runner_id != self.tier:
             raise ValueError(f"runner_id {self.runner_id!r} must match tier {self.tier!r}")
-        if sorted(self.sample_indices) != SAMPLE_INDICES:
-            raise ValueError("sample_indices must be exactly [0, 1, 2, 3, 4]")
+        validate_adjudication_sample_indices(self.sample_indices)
         if self.cache_mode not in {"offline", "refresh"}:
             raise ValueError(f"cache_mode must be offline or refresh, got {self.cache_mode!r}")
         return self
@@ -76,6 +104,7 @@ class SampleRollup(BaseModel):
     scoring: AdjudicationScoringResult
     total_subjects: int
     scored_location_pairs: int
+    grouped: GroupedAdjudicationScoring = Field(default_factory=GroupedAdjudicationScoring)
 
     @model_validator(mode="after")
     def _validate_scored_pairs(self) -> SampleRollup:
@@ -125,13 +154,7 @@ class TierSweepResult(BaseModel):
 
     @model_validator(mode="after")
     def _validate_samples(self) -> TierSweepResult:
-        if len(self.samples) != 5:
-            raise ValueError(f"samples must have length 5, got {len(self.samples)}")
-        for index, sample in enumerate(self.samples):
-            if sample.sample_index != index:
-                raise ValueError(
-                    f"samples[{index}].sample_index must be {index}, got {sample.sample_index}"
-                )
+        validate_adjudication_samples(self.samples)
         prohibited = {"accuracy", "micro_f1", "blended_score"}
         dumped = self.model_dump()
         for field in prohibited:
