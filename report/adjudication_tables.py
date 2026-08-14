@@ -2,12 +2,19 @@
 
 from __future__ import annotations
 
-from core.types import AdjudicationScoringResult, Rate
+from core.types import (
+    STRATA_GROUP_FIELDS,
+    AdjudicationScoringResult,
+    GroupedAdjudicationScoring,
+    Rate,
+)
 from report.adjudication_types import (
     AdjudicationMetricsTable,
     CrossTierComparisonTable,
     CrossTierMetricRow,
+    GroupedAdjudicationRow,
     SampleMetricsSummary,
+    StratumFieldTable,
     TierAdjudicationReportTables,
 )
 from report.types import RateWithCI
@@ -55,6 +62,37 @@ def _sample_summary(
     )
 
 
+def _grouped_rows(
+    scored: dict[str, AdjudicationScoringResult],
+    *,
+    confidence_level: float,
+) -> list[GroupedAdjudicationRow]:
+    return [
+        GroupedAdjudicationRow(
+            key=key,
+            metrics=_metrics_from_scoring(result, confidence_level=confidence_level),
+            scored_location_pairs=result.total_cases,
+        )
+        for key, result in scored.items()
+    ]
+
+
+def _stratum_tables(
+    grouped: GroupedAdjudicationScoring,
+    *,
+    confidence_level: float,
+) -> list[StratumFieldTable]:
+    tables: list[StratumFieldTable] = []
+    for field in STRATA_GROUP_FIELDS:
+        rows = _grouped_rows(
+            grouped.by_stratum.get(field, {}),
+            confidence_level=confidence_level,
+        )
+        if rows:
+            tables.append(StratumFieldTable(field=field, rows=rows))
+    return tables
+
+
 def _tier_label(result: TierSweepResult | AutonomousSweepResult) -> str:
     if isinstance(result, TierSweepResult):
         return result.tier
@@ -77,6 +115,7 @@ def build_tier_adjudication_report(
 
     primary = sweep.samples[sample_index]
     tier = _tier_label(sweep)
+    grouped = primary.grouped
     return TierAdjudicationReportTables(
         tier=tier,
         runner_id=sweep.runner_id,
@@ -90,6 +129,8 @@ def build_tier_adjudication_report(
             _sample_summary(sample, confidence_level=confidence_level) for sample in sweep.samples
         ],
         variance=sweep.variance,
+        by_cell=_grouped_rows(grouped.by_cell, confidence_level=confidence_level),
+        by_stratum=_stratum_tables(grouped, confidence_level=confidence_level),
     )
 
 
@@ -168,6 +209,18 @@ def format_adjudication_report(tables: TierAdjudicationReportTables) -> str:
             _format_variance_line("Mis-escalation", tables.variance.mis_escalation),
         ]
     )
+    if tables.by_cell:
+        lines.extend(["", "Per-cell rates (Wilson 95% CI):"])
+        for row in tables.by_cell:
+            lines.append(f"  {row.key}")
+            lines.extend(_format_grouped_metric_lines(row.metrics, indent=4))
+    if tables.by_stratum:
+        lines.extend(["", "Per-stratum rates (Wilson 95% CI):"])
+        for table in tables.by_stratum:
+            lines.append(f"  {table.field}")
+            for row in table.rows:
+                lines.append(f"    {row.key}")
+                lines.extend(_format_grouped_metric_lines(row.metrics, indent=6))
     return "\n".join(lines)
 
 
@@ -190,6 +243,15 @@ def format_cross_tier_comparison(table: CrossTierComparisonTable) -> str:
 
 def _format_metrics_row(label: str, rate_ci: RateWithCI) -> str:
     return f"  {label:<16} {_format_rate_ci(rate_ci)}"
+
+
+def _format_grouped_metric_lines(metrics: AdjudicationMetricsTable, *, indent: int) -> list[str]:
+    prefix = " " * indent
+    return [
+        f"{prefix}{_format_metrics_row('Over-erasure', metrics.over_erasure).lstrip()}",
+        f"{prefix}{_format_metrics_row('Over-retention', metrics.over_retention).lstrip()}",
+        f"{prefix}{_format_metrics_row('Mis-escalation', metrics.mis_escalation).lstrip()}",
+    ]
 
 
 def _format_rate_ci(rate_ci: RateWithCI) -> str:
