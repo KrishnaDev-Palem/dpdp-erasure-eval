@@ -16,6 +16,7 @@ def run_t1_sweep(
     config: SweepConfig | None = None,
     export_dir: Path | None = None,
     cache_root: Path | None = None,
+    sample_indices: list[int] | None = None,
 ) -> TierSweepResult:
     return run_tier_sweep(
         tier="t1",
@@ -24,4 +25,5 @@ def run_t1_sweep(
         export_dir=export_dir,
         cache_root=cache_root,
         builder=build_t1,
+        sample_indices=sample_indices,
     )
