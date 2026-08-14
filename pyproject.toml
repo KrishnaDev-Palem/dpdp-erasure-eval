@@ -42,6 +42,10 @@ line-length = 100
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
 
+[tool.ruff.lint.per-file-ignores]
+# Path insert must precede core imports so `python scripts/regenerate_export.py` works.
+"scripts/regenerate_export.py" = ["E402"]
+
 [tool.ruff.format]
 quote-style = "double"
 
