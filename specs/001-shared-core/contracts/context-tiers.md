@@ -24,7 +24,7 @@ build_t3(request, subject, rules) -> ContextBundle
 ## Inclusion rules
 
 1. `request` MUST include `subject_id`, `type`, `basis`, `as_of`.
-2. Location records MUST include business fields and `location_id`, `entity`; MUST NOT include `expected`.
+2. Location records MUST include business fields and `location_id`, `entity`; MUST NOT include `expected`, `strata`, or `cell_id`. `parent_customer` and `latest_txn_date` stay when present — those are facts the oracle used, not labels.
 3. T3 MUST attach full rules corpus from export (five floors + governance map).
 4. Adjacent tiers differ by exactly one added layer (T2 adds records; T3 adds rules).
 
