@@ -1,0 +1,172 @@
+# Small synthetic agent-shaped cases for coverage-adapter tests. Not the 6,450 pool.
+as_of: "2026-02-15"
+cases:
+  - case_id: ordinary_erase_payment:00000
+    subject_id: gen-ordinary_erase_payment-00000
+    cell_id: ordinary_erase_payment
+    record:
+      entity: transactions
+      txn_id: gen-ordinary_erase_payment-00000-txn-0
+      customer_id: gen-ordinary_erase_payment-00000
+      instrument_type: upi
+      txn_date: "2016-01-01"
+      amount: 1000
+      is_processor_held: false
+    request:
+      type: erasure
+      basis: explicit_erasure_right
+    oracle:
+      verdict: erase
+      cited_floors: []
+      escalate_reason: null
+    strata:
+      entity_type: transactions
+      floor_set: [pmla_kyc, gst, income_tax, companies_act]
+      collision_arity: 4
+      anchor_computable: true
+      boundary_flag: none
+      trigger_shape: explicit_erasure_right
+      re_engagement: false
+      split: train
+  - case_id: ordinary_erase_securities:00000
+    subject_id: gen-ordinary_erase_securities-00000
+    cell_id: ordinary_erase_securities
+    record:
+      entity: transactions
+      txn_id: gen-ordinary_erase_securities-00000-txn-0
+      customer_id: gen-ordinary_erase_securities-00000
+      instrument_type: equity
+      txn_date: "2010-01-01"
+      amount: 1100
+      is_processor_held: false
+    request:
+      type: erasure
+      basis: explicit_erasure_right
+    oracle:
+      verdict: erase
+      cited_floors: []
+      escalate_reason: null
+    strata:
+      entity_type: transactions
+      floor_set: [pmla_kyc, income_tax, companies_act, sebi]
+      collision_arity: 4
+      anchor_computable: true
+      boundary_flag: none
+      trigger_shape: explicit_erasure_right
+      re_engagement: false
+      split: eval
+  - case_id: uncomputable_customer:00000
+    subject_id: gen-uncomputable_customer-00000
+    cell_id: uncomputable_customer
+    record:
+      entity: customers
+      customer_id: gen-uncomputable_customer-00000
+      account_status: closed
+      account_closure_date: null
+      relationship_start: "2010-01-01"
+      jurisdiction: IN
+    request:
+      type: erasure
+      basis: explicit_erasure_right
+    oracle:
+      verdict: escalate
+      cited_floors: []
+      escalate_reason: uncomputable_anchor
+    strata:
+      entity_type: customers
+      floor_set: [pmla_kyc]
+      collision_arity: 1
+      anchor_computable: false
+      boundary_flag: none
+      trigger_shape: explicit_erasure_right
+      re_engagement: false
+      split: train
+  - case_id: ordinary_kyc_open_retain:00000
+    subject_id: gen-ordinary_kyc_open_retain-00000
+    cell_id: ordinary_kyc_open_retain
+    record:
+      entity: kyc_documents
+      doc_id: gen-ordinary_kyc_open_retain-00000-kyc-0
+      customer_id: gen-ordinary_kyc_open_retain-00000
+      doc_type: pan
+      file_path: synthetic/gen-ordinary_kyc_open_retain-00000.pdf
+      uploaded_date: "2015-06-01"
+    request:
+      type: erasure
+      basis: explicit_erasure_right
+    oracle:
+      verdict: retain
+      cited_floors: [pmla_kyc]
+      escalate_reason: null
+    parent_customer:
+      entity: customers
+      customer_id: gen-ordinary_kyc_open_retain-00000
+      account_status: open
+      account_closure_date: null
+      relationship_start: "2010-01-01"
+      jurisdiction: IN
+    strata:
+      entity_type: kyc_documents
+      floor_set: [pmla_kyc]
+      collision_arity: 1
+      anchor_computable: true
+      boundary_flag: none
+      trigger_shape: explicit_erasure_right
+      re_engagement: false
+      split: train
+  - case_id: ordinary_inactivity_erase_payment:00000
+    subject_id: gen-ordinary_inactivity_erase_payment-00000
+    cell_id: ordinary_inactivity_erase_payment
+    record:
+      entity: transactions
+      txn_id: gen-ordinary_inactivity_erase_payment-00000-txn-0
+      customer_id: gen-ordinary_inactivity_erase_payment-00000
+      instrument_type: card
+      txn_date: "2016-01-01"
+      amount: 1200
+      is_processor_held: false
+    request:
+      type: erasure
+      basis: inactivity
+    oracle:
+      verdict: erase
+      cited_floors: []
+      escalate_reason: null
+    context:
+      latest_txn_date: "2022-02-15"
+    strata:
+      entity_type: transactions
+      floor_set: [pmla_kyc, gst, income_tax, companies_act]
+      collision_arity: 4
+      anchor_computable: true
+      boundary_flag: none
+      trigger_shape: inactivity
+      re_engagement: false
+      split: train
+  - case_id: split_not_rederived:00000
+    subject_id: gen-split_not_rederived-00000
+    cell_id: split_not_rederived
+    record:
+      entity: customers
+      customer_id: gen-split_not_rederived-00000
+      account_status: open
+      account_closure_date: null
+      relationship_start: "2010-01-01"
+      jurisdiction: IN
+    request:
+      type: erasure
+      basis: explicit_erasure_right
+    oracle:
+      verdict: retain
+      cited_floors: [pmla_kyc]
+      escalate_reason: null
+    strata:
+      entity_type: customers
+      floor_set: [pmla_kyc]
+      collision_arity: 1
+      anchor_computable: true
+      boundary_flag: none
+      trigger_shape: explicit_erasure_right
+      re_engagement: false
+      # Would be train if recomputed from floor_set (no sebi). Must be copied as-is.
+      split: eval
