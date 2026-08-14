@@ -6,7 +6,7 @@
 
 ## Purpose
 
-Define the runner output schema for a completed tier sweep: five per-sample aggregate adjudication results plus a cross-sample variance summary.
+Define the runner output schema for a completed tier sweep: per-sample aggregate adjudication results (sample indices `[0, 1, 2]` or `[0, 1, 2, 3, 4]`) plus a cross-sample variance summary. A sample is another try of the same case, not a new person. Default offline replay of the committed export stays at five samples.
 
 ## Upstream contracts (by reference — do not fork)
 
@@ -29,7 +29,7 @@ One object returned by `run_t1_sweep`, `run_t2_sweep`, or `run_t3_sweep`.
 | `model_id` | string | Model role used for cache keys |
 | `cache_mode` | string | `offline` or `refresh` |
 | `export_agent_sha` | string | 40-char hex from verified manifest |
-| `samples` | array[SampleRollup] | Length exactly 5 |
+| `samples` | array[SampleRollup] | Length 3 or 5 |
 | `variance` | VarianceSummary | Cross-sample rate comparison |
 
 ### Optional audit fields
@@ -45,14 +45,15 @@ MUST NOT include: `accuracy`, `micro_f1`, `blended_score`, or any single headlin
 
 ## SampleRollup
 
-One entry per `sample_index` in `samples`, ordered 0 → 4.
+One entry per `sample_index` in `samples`, ordered from 0.
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `sample_index` | int | 0..4 |
+| `sample_index` | int | `0..2` or `0..4` |
 | `scoring` | AdjudicationScoringResult | Aggregate over **all** subjects in the sweep |
 | `total_subjects` | int | Subjects visited |
 | `scored_location_pairs` | int | Must equal `scoring.total_cases` |
+| `grouped` | GroupedAdjudicationScoring | `score_adjudication` per `cell_id` and per strata field; empty when `strata` is absent |
 
 ### AdjudicationScoringResult (embedded)
 
@@ -70,7 +71,7 @@ See [001/contracts/scoring.md](../../001-shared-core/contracts/scoring.md) for n
 
 ## VarianceSummary
 
-Compares the three standalone rates across the five sample rollups.
+Compares the three standalone rates across the sample rollups that were run (length 3 or 5).
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -83,7 +84,7 @@ Compares the three standalone rates across the five sample rollups.
 | Field | Type | Description |
 |-------|------|-------------|
 | `metric` | string | `over_erasure`, `over_retention`, or `mis_escalation` |
-| `by_sample` | array[RateAtSample] | Length 5; ordered by `sample_index` |
+| `by_sample` | array[RateAtSample] | Same length as the run; ordered by `sample_index` |
 | `constant_across_samples` | boolean | See rule below |
 
 ### RateAtSample
@@ -95,7 +96,7 @@ Compares the three standalone rates across the five sample rollups.
 
 ### Constancy rule
 
-`constant_across_samples` is `true` when, for all five entries in `by_sample`, the `rate.value` fields are equal (including the case where all are `null` because denominators are zero).
+`constant_across_samples` is `true` when, for every entry in `by_sample`, the `rate.value` fields are equal (including the case where all are `null` because denominators are zero).
 
 When `false`, acceptance tests and human reviewers MUST treat sample variance as present for that metric — without collapsing to a single blended number.
 
@@ -136,11 +137,11 @@ When `false`, acceptance tests and human reviewers MUST treat sample variance as
 }
 ```
 
-(Full `samples` array omitted for brevity; production output MUST include all five indices.)
+(Full `samples` array omitted for brevity; production output MUST include every index that was run.)
 
 ## Validation rules
 
-1. `len(samples) == 5` and `samples[i].sample_index == i` for all i.
+1. `len(samples)` is 3 or 5 and `samples[i].sample_index == i` for all i. Adjudication runners accept `sample_indices` `[0, 1, 2]` or `[0, 1, 2, 3, 4]`. The adversarial gate stays at exactly five samples.
 2. Each sample's scoring MUST be reproducible from the same committed cache in offline mode (SC-008).
 3. Hand-calculated rates from underlying pairs MUST match embedded `Rate` values (SC-004).
 4. Variance `by_sample` entries MUST reference the corresponding sample's scoring rates — not recomputed from a different pair set.
