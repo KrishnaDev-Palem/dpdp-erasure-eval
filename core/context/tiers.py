@@ -11,10 +11,13 @@ from core.types import (
     RulesCorpus,
 )
 
+_EVAL_ONLY_LOCATION_FIELDS: tuple[str, ...] = ("expected", "strata", "cell_id")
+
 
 def _location_without_expected(location: Any) -> dict[str, Any]:
     data = location.model_dump(mode="json") if hasattr(location, "model_dump") else dict(location)
-    data.pop("expected", None)
+    for field in _EVAL_ONLY_LOCATION_FIELDS:
+        data.pop(field, None)
     return data
 
 

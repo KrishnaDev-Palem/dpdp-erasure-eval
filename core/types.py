@@ -65,6 +65,18 @@ class Strata(BaseModel):
     split: Split
 
 
+STRATA_GROUP_FIELDS: tuple[str, ...] = (
+    "entity_type",
+    "floor_set",
+    "collision_arity",
+    "anchor_computable",
+    "boundary_flag",
+    "trigger_shape",
+    "re_engagement",
+    "split",
+)
+
+
 class LabeledLocation(BaseModel):
     model_config = ConfigDict(frozen=True, extra="allow")
 
@@ -190,6 +202,15 @@ class AdjudicationScoringResult(BaseModel):
     over_retention_rate: Rate
     mis_escalation_rate: Rate
     total_cases: int
+
+
+class GroupedAdjudicationScoring(BaseModel):
+    """`score_adjudication` applied to pairs grouped by cell_id and strata fields."""
+
+    model_config = ConfigDict(frozen=True)
+
+    by_cell: dict[str, AdjudicationScoringResult] = Field(default_factory=dict)
+    by_stratum: dict[str, dict[str, AdjudicationScoringResult]] = Field(default_factory=dict)
 
 
 RetrievalToolName = Literal[

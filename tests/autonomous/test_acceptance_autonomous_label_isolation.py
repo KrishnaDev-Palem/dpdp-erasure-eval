@@ -3,15 +3,21 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 import pytest
 
 from core.cache import make_cache_key, prompt_hash
-from core.context import build_t1
+from core.context import build_t1, build_t2
+from core.export import load_agent_cases
+from core.export.loader import ExportBundle
 from core.tools import build_retrieval_tool_registry
 from runners.autonomous.cache import resolve_autonomous_entry
 from runners.autonomous.types import AUTONOMOUS_RUNNER_ID
 from tests.core.conftest import subject_with_tag
+
+FIXTURE_PATH = Path(__file__).resolve().parents[1] / "core" / "fixtures" / "agent_cases.yaml"
+_EVAL_ONLY = ("expected", "strata", "cell_id")
 
 
 def _assert_no_expected(payload) -> None:
@@ -97,3 +103,46 @@ def test_governance_map_has_no_expected(export_bundle) -> None:
     result = registry.invoke("get_governance_map", {})
     _assert_no_expected(result)
     assert result["governance_map"]
+
+
+def _fixture_bundle(export_bundle) -> ExportBundle:
+    subjects = load_agent_cases(FIXTURE_PATH)
+    return ExportBundle(
+        manifest=export_bundle.manifest,
+        subjects=subjects,
+        rules=export_bundle.rules,
+        seeds=export_bundle.seeds,
+        export_dir=export_bundle.export_dir,
+    )
+
+
+@pytest.mark.context_isolation
+def test_autonomous_initial_context_strips_eval_only_fields() -> None:
+    subject = load_agent_cases(FIXTURE_PATH)[0]
+    context = build_t1(subject.request, subject)
+    serialized = context.model_dump(mode="json")
+    dumped = str(serialized)
+    for field in _EVAL_ONLY:
+        assert f"'{field}'" not in dumped and f'"{field}"' not in dumped
+    assert context.locations == []
+
+
+@pytest.mark.tool_isolation
+def test_location_records_strip_eval_only_keep_oracle_facts(export_bundle) -> None:
+    bundle = _fixture_bundle(export_bundle)
+    registry = build_retrieval_tool_registry(bundle)
+    kyc_id = "gen-ordinary_kyc_open_retain-00000"
+    inactivity_id = "gen-ordinary_inactivity_erase_payment-00000"
+    kyc = registry.invoke("get_location_records", {"subject_id": kyc_id})
+    inactivity = registry.invoke("get_location_records", {"subject_id": inactivity_id})
+    for payload in (kyc, inactivity):
+        dumped = str(payload)
+        for field in _EVAL_ONLY:
+            assert f"'{field}'" not in dumped and f'"{field}"' not in dumped
+        for location in payload["locations"]:
+            for field in _EVAL_ONLY:
+                assert field not in location
+    assert kyc["locations"][0]["parent_customer"]
+    assert inactivity["locations"][0]["latest_txn_date"] == "2022-02-15"
+    kyc_subject = next(item for item in bundle.subjects if item.subject_id == kyc_id)
+    assert kyc["locations"] == build_t2(kyc_subject.request, kyc_subject).locations

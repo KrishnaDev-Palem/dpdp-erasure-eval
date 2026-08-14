@@ -8,9 +8,11 @@
 
 Define the reporting layer output for tier and autonomous adjudication evaluation:
 Wilson confidence intervals on over-erasure, over-retention, and mis-escalation rates;
-per-lane confusion matrix; N=5 sample rollups; cross-sample variance summary; and
-cross-tier comparison tables. Consumes `TierSweepResult` and `AutonomousSweepResult`
-from runners — does not recompute rate numerators/denominators or confusion matrix cells.
+per-lane confusion matrix; sample rollups for the run that executed (3 or 5);
+cross-sample variance summary; per-cell and per-stratum rates when locations carry
+`strata`; and cross-tier comparison tables. Consumes `TierSweepResult` and
+`AutonomousSweepResult` from runners — does not recompute rate numerators/denominators
+or confusion matrix cells. Grouped rates reuse `score_adjudication` on each partition.
 
 CLI dispatch, flags, and subcommand behavior are specified in [cli.md](./cli.md).
 
@@ -71,7 +73,7 @@ Hand-calculated fixtures in `tests/report/test_acceptance_adjudication_report.py
 | `build_cross_tier_comparison` | `sample_index=0` | All four rows use sample N |
 | CLI adjudication subcommands | `--sample-index 0` | See [cli.md](./cli.md) |
 
-All five sample rollups are **always** included in `sample_rollups` regardless of primary sample selection.
+Every sample that was run is included in `sample_rollups` regardless of primary sample selection (length 3 or 5). `--sample-index` MUST fall inside that run.
 
 ## TierAdjudicationReportTables
 
@@ -87,8 +89,10 @@ Produced by `build_tier_adjudication_report(sweep, *, sample_index=0)`.
 | `primary_sample_index` | int | Selected sample for primary metrics |
 | `primary_metrics` | AdjudicationMetricsTable | Wilson-augmented standalone rates |
 | `confusion_matrix` | dict | From primary sample scoring (unchanged passthrough) |
-| `sample_rollups` | list[SampleMetricsSummary] | Length exactly 5 (indices 0–4) |
+| `sample_rollups` | list[SampleMetricsSummary] | Length 3 or 5 (indices of the run) |
 | `variance` | VarianceSummary | From sweep result (unchanged passthrough) |
+| `by_cell` | list[GroupedAdjudicationRow] | Empty when no scored location carries `cell_id` |
+| `by_stratum` | list[StratumFieldTable] | One table per locked strata field that has rows; empty when `strata` is absent |
 
 ### AdjudicationMetricsTable
 
@@ -130,8 +134,9 @@ When CLI runs without `--json`, adjudication subcommands emit human stdout via `
 2. **Primary rates (Wilson 95% CI)** — rows labeled `Over-erasure`, `Over-retention`, `Mis-escalation`
 3. **Confusion matrix (predicted × actual)** — table from primary sample
 4. **Cross-sample variance** — constancy summary from passthrough `variance`
+5. **Per-cell rates** and **Per-stratum rates** — printed only when any scored location carries `strata`
 
-**Excluded from human stdout**: five `sample_rollups` (JSON and `--output` only).
+**Excluded from human stdout**: `sample_rollups` (JSON and `--output` only). v1 exports with no `strata` omit the grouped sections.
 
 ## Prohibited fields
 

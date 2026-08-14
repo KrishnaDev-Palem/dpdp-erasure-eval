@@ -11,8 +11,8 @@ from core.cache.store import CacheStore, make_cache_key
 from core.context.tiers import build_t1, build_t2, build_t3
 from core.export.loader import ExportBundle, load_export
 from core.model.seam import ModelSeam, load_model_config
-from core.scoring.adjudication import score_adjudication
-from core.types import ContextBundle, RulesCorpus, Tier
+from core.scoring.adjudication import score_adjudication, score_adjudication_grouped
+from core.types import ContextBundle, LabeledLocation, RulesCorpus, Tier
 from runners.pairing import pair_subject_verdicts
 from runners.types import SAMPLE_INDICES, SampleRollup, SweepConfig, TierSweepResult
 from runners.variance import compute_variance_summary
@@ -31,16 +31,19 @@ def _resolve_config(
     config: SweepConfig | None,
     export_dir: Path | None,
     cache_root: Path | None,
+    sample_indices: list[int] | None = None,
 ) -> SweepConfig:
     if config is not None:
-        return config
+        if sample_indices is None:
+            return config
+        return config.model_copy(update={"sample_indices": list(sample_indices)})
     env = load_model_config()
     return SweepConfig(
         tier=tier,
         runner_id=tier,
         model_id=env.model_id,
         cache_mode=env.cache_mode,
-        sample_indices=list(SAMPLE_INDICES),
+        sample_indices=list(sample_indices) if sample_indices is not None else list(SAMPLE_INDICES),
         export_dir=export_dir,
         cache_root=cache_root,
     )
@@ -68,14 +71,20 @@ def run_tier_sweep(
     export_dir: Path | None = None,
     cache_root: Path | None = None,
     builder: ContextBuilder | None = None,
+    sample_indices: list[int] | None = None,
 ) -> TierSweepResult:
-    """Execute a full tier sweep over all export subjects and five sample indices."""
-    resolved = _resolve_config(tier, config, export_dir, cache_root)
+    """Execute a full tier sweep over all export subjects and configured sample indices."""
+    resolved = _resolve_config(tier, config, export_dir, cache_root, sample_indices)
     export_path = resolved.export_dir or Path("export")
     cache_path = resolved.cache_root or Path("cache")
 
     bundle: ExportBundle = load_export(export_path)
     manifest = bundle.verify_provenance()
+    locations_by_id: dict[str, LabeledLocation] = {
+        location.location_id: location
+        for subject in bundle.subjects
+        for location in subject.locations
+    }
 
     store = CacheStore(root=cache_path, cache_mode=resolved.cache_mode)
     started_at = datetime.now(tz=UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
@@ -125,6 +134,7 @@ def run_tier_sweep(
                 scoring=scoring,
                 total_subjects=len(bundle.subjects),
                 scored_location_pairs=scoring.total_cases,
+                grouped=score_adjudication_grouped(all_pairs, locations_by_id),
             )
         )
 

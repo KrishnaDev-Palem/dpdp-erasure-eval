@@ -186,6 +186,38 @@ def test_cli_sample_index_flag() -> None:
     assert len(payload["sample_rollups"]) == 5
 
 
+@pytest.mark.parametrize("subcommand", ["t1", "t2", "t3", "autonomous"])
+def test_cli_samples_three_on_adjudication_commands(subcommand: str) -> None:
+    result = _run_cli(subcommand, "--json", "--samples", "3")
+    assert result.returncode == 0, result.stderr
+    payload = json.loads(result.stdout)
+    assert len(payload["sample_rollups"]) == 3
+    assert [item["sample_index"] for item in payload["sample_rollups"]] == [0, 1, 2]
+    assert payload["by_cell"] == []
+    assert payload["by_stratum"] == []
+
+
+def test_cli_default_adjudication_still_five_samples() -> None:
+    result = _run_cli("t1", "--json")
+    assert result.returncode == 0, result.stderr
+    payload = json.loads(result.stdout)
+    assert len(payload["sample_rollups"]) == 5
+
+
+def test_cli_samples_three_rejects_sample_index_outside_run() -> None:
+    result = _run_cli("t1", "--samples", "3", "--sample-index", "4")
+    assert result.returncode != 0
+    combined = (result.stderr + result.stdout).lower()
+    assert "sample" in combined
+
+
+def test_cli_gate_rejects_samples_flag() -> None:
+    result = _run_cli("adversarial-gate", "--samples", "3")
+    assert result.returncode != 0
+    combined = (result.stderr + result.stdout).lower()
+    assert "samples" in combined or "unrecognized" in combined
+
+
 def test_cli_cache_root_override_uses_custom_path(tmp_path: Path) -> None:
     empty_cache = tmp_path / "empty_cache"
     empty_cache.mkdir()

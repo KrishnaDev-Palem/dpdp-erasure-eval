@@ -58,3 +58,19 @@ def test_no_hardcoded_model_id_in_gate_runner_source() -> None:
     source = runner_path.read_text(encoding="utf-8")
     assert 'model_id="primary"' not in source
     assert "model_id = 'primary'" not in source
+
+
+def test_gate_config_still_requires_exactly_five_samples(slice_path: Path, cache_dir: Path) -> None:
+    from pydantic import ValidationError
+
+    from runners.adversarial_gate.types import GateSweepConfig
+
+    with pytest.raises(ValidationError, match="exactly"):
+        GateSweepConfig(
+            runner_id="adversarial_gate",
+            model_id="primary",
+            cache_mode="offline",
+            sample_indices=[0, 1, 2],
+            slice_path=slice_path,
+            cache_root=cache_dir,
+        )

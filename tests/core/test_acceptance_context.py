@@ -28,6 +28,8 @@ def test_t2_records_without_expected() -> None:
     assert bundle.locations
     for location in bundle.locations:
         assert "expected" not in location
+        assert "strata" not in location
+        assert "cell_id" not in location
         assert "location_id" in location
 
 
