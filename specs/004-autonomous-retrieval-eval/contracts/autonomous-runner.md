@@ -67,7 +67,7 @@ Exposed from `runners/autonomous/runner.py`.
 
 ### 3. Sample loop (outer)
 
-For each `sample_index` in `{0, 1, 2, 3, 4}`:
+For each `sample_index` in the configured list (`[0, 1, 2]` or `[0, 1, 2, 3, 4]`; default five):
 
 1. Initialize empty list `all_pairs: list[tuple[ModelVerdict, ExpectedLabel]]`.
 2. Execute subject loop (below).
@@ -103,8 +103,8 @@ Assemble `AutonomousSweepResult` with metadata (`runner_id=autonomous`, `model_i
 
 ## Ground-truth isolation
 
-- Initial context MUST NOT include `expected` fields (enforced by `build_t1`).
-- Tool responses MUST NOT include `expected` (enforced by retrieval tools contract).
+- Initial context MUST NOT include `expected`, `strata`, or `cell_id` (enforced by `build_t1` and the T2-equivalent location dump used by retrieval tools). `parent_customer` and `latest_txn_date` stay when present.
+- Tool responses MUST NOT include `expected`, `strata`, or `cell_id` (enforced by retrieval tools contract).
 - Runners MUST NOT infer labels from tool outputs or model outputs.
 - Cache-canonicalized context for prompt hash MUST NOT include tool-call payloads (FR-014).
 
