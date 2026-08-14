@@ -8,7 +8,13 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from core.model.seam import load_model_config
-from runners.types import SAMPLE_INDICES, SampleRollup, VarianceSummary
+from runners.types import (
+    SAMPLE_INDICES,
+    SampleRollup,
+    VarianceSummary,
+    validate_adjudication_sample_indices,
+    validate_adjudication_samples,
+)
 
 AUTONOMOUS_RUNNER_ID = "autonomous"
 
@@ -27,8 +33,7 @@ class AutonomousSweepConfig(BaseModel):
     def _validate_config(self) -> AutonomousSweepConfig:
         if self.runner_id != AUTONOMOUS_RUNNER_ID:
             raise ValueError(f"runner_id must be {AUTONOMOUS_RUNNER_ID!r}, got {self.runner_id!r}")
-        if sorted(self.sample_indices) != SAMPLE_INDICES:
-            raise ValueError("sample_indices must be exactly [0, 1, 2, 3, 4]")
+        validate_adjudication_sample_indices(self.sample_indices)
         if self.cache_mode not in {"offline", "refresh"}:
             raise ValueError(f"cache_mode must be offline or refresh, got {self.cache_mode!r}")
         return self
@@ -67,13 +72,7 @@ class AutonomousSweepResult(BaseModel):
     def _validate_result(self) -> AutonomousSweepResult:
         if self.runner_id != AUTONOMOUS_RUNNER_ID:
             raise ValueError(f"runner_id must be {AUTONOMOUS_RUNNER_ID!r}")
-        if len(self.samples) != 5:
-            raise ValueError(f"samples must have length 5, got {len(self.samples)}")
-        for index, sample in enumerate(self.samples):
-            if sample.sample_index != index:
-                raise ValueError(
-                    f"samples[{index}].sample_index must be {index}, got {sample.sample_index}"
-                )
+        validate_adjudication_samples(self.samples)
         prohibited = {"accuracy", "micro_f1", "blended_score"}
         dumped = self.model_dump()
         for field in prohibited:
