@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_serializer, model_validator
 
 Verdict = Literal["erase", "retain", "escalate"]
 Basis = Literal[
@@ -16,6 +16,10 @@ Basis = Literal[
 ClassifierOutcome = Literal["clean", "adversarial"]
 SeedLabel = Literal["attack", "benign"]
 Tier = Literal["t1", "t2", "t3"]
+EntityType = Literal["customers", "transactions", "marketing_consents", "kyc_documents"]
+BoundaryFlag = Literal["none", "elapsed_by_1d", "unelapsed_by_1d"]
+Split = Literal["train", "eval"]
+CollisionArity = Literal[0, 1, 4]
 
 VERDICT_LANES: tuple[Verdict, Verdict, Verdict] = ("erase", "retain", "escalate")
 
@@ -46,12 +50,40 @@ class ExpectedLabel(BaseModel):
     cited_floors: list[str] = Field(default_factory=list)
 
 
+class Strata(BaseModel):
+    """Agent export-schema 1.0.0 `strata` object. Names are locked; do not rename."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    entity_type: EntityType
+    floor_set: list[str]
+    collision_arity: CollisionArity
+    anchor_computable: bool
+    boundary_flag: BoundaryFlag
+    trigger_shape: str
+    re_engagement: bool
+    split: Split
+
+
 class LabeledLocation(BaseModel):
     model_config = ConfigDict(frozen=True, extra="allow")
 
     location_id: str
     entity: str
     expected: ExpectedLabel
+    strata: Strata | None = None
+    cell_id: str | None = None
+    parent_customer: dict[str, Any] | None = None
+    latest_txn_date: str | None = None
+
+    @model_serializer(mode="wrap")
+    def _omit_absent_coverage_fields(self, handler: Any) -> dict[str, Any]:
+        """Keep v1 location dumps byte-stable when coverage fields are unset."""
+        data = handler(self)
+        for key in ("strata", "cell_id", "parent_customer", "latest_txn_date"):
+            if data.get(key) is None:
+                data.pop(key, None)
+        return data
 
 
 class AdjudicationSubject(BaseModel):
