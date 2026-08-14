@@ -49,7 +49,7 @@ All subcommands accept:
 |------|------|---------|-----------|
 | `--json` | boolean | false | When set, stdout is JSON. When unset, stdout is human-readable via the appropriate formatter |
 | `--output PATH` | path | none | **Always writes JSON** report content to PATH, regardless of `--json`. May be combined with `--json` (JSON to both stdout and file) |
-| `--sample-index` | int | `0` | Must be 0–4. Selects primary sample for adjudication reports; selects gate sample for adversarial-gate |
+| `--sample-index` | int | `0` | Must fall inside the run that actually executed (0–4 for a five-sample run; 0–2 for `--samples 3`). Selects primary sample for adjudication reports; selects gate sample for adversarial-gate |
 | `--export-dir` | path | repo `export/` | Frozen export root passed to tier/autonomous runners |
 | `--cache-root` | path | repo `cache/` | Cache root passed to runners |
 
@@ -61,6 +61,12 @@ default:           human text → stdout
 --output PATH:     JSON → PATH; human text → stdout (unless --json also set)
 --json --output:   JSON → stdout AND JSON → PATH
 ```
+
+Adjudication subcommands (`t1`, `t2`, `t3`, `autonomous`) also accept:
+
+| Flag | Type | Default | Semantics |
+|------|------|---------|-----------|
+| `--samples` | `3` or `5` | `5` | Sample indices `[0, 1, 2]` or `[0, 1, 2, 3, 4]`. A sample is another try of the same case, not a new person. Default offline replay of the committed export stays at 5. The adversarial-gate subcommand MUST reject this flag. |
 
 Human stdout for adjudication subcommands follows [adjudication-report.md](./adjudication-report.md) `format_adjudication_report` sections. Gate subcommand follows `format_gate_report` from Feature 003.
 
@@ -90,6 +96,8 @@ On runner failure: no partial report emitted (spec edge case: provenance verific
 | Input | Behavior |
 |-------|----------|
 | `--sample-index` outside 0–4 | Argparse rejection with clear message |
+| `--sample-index` outside the samples that were run (for example `--samples 3 --sample-index 4`) | Rejected with a clear error |
+| `--samples` on `adversarial-gate` | Argparse rejection (unknown argument) |
 | Unknown subcommand | Argparse error |
 | `--output PATH` with missing/non-writable parent | Clear error naming PATH; no silent drop |
 
@@ -100,6 +108,8 @@ On runner failure: no partial report emitted (spec edge case: provenance verific
 Top-level keys MUST include:
 
 `tier`, `runner_id`, `model_id`, `cache_mode`, `export_agent_sha`, `primary_sample_index`, `primary_metrics`, `confusion_matrix`, `sample_rollups`, `variance`
+
+`by_cell` and `by_stratum` MAY be present (empty lists when the v1 export has no `strata`).
 
 `primary_metrics` MUST contain `over_erasure`, `over_retention`, `mis_escalation`, each with nested `rate` and `interval`.
 
