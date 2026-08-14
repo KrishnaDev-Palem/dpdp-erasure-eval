@@ -22,6 +22,21 @@ from runners.t2 import run_t2_sweep
 from runners.t3 import run_t3_sweep
 
 
+def _add_adjudication_args(parser: argparse.ArgumentParser) -> None:
+    _add_common_args(parser)
+    parser.add_argument(
+        "--samples",
+        type=int,
+        default=5,
+        choices=[3, 5],
+        help=(
+            "How many times to retry each case (default: 5). "
+            "3 runs sample indices 0, 1, and 2. "
+            "A sample is another try of the same case, not a new person."
+        ),
+    )
+
+
 def _add_common_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--json",
@@ -82,17 +97,31 @@ def _emit_report(
         output_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
 
 
+def _adjudication_sample_indices(args: argparse.Namespace) -> list[int]:
+    count = getattr(args, "samples", 5)
+    return list(range(count))
+
+
 def _run_adjudication_command(
     *,
     run_sweep: Any,
     args: argparse.Namespace,
 ) -> int:
     # Refresh with provider credentials is operator opt-in; excluded from CI merge gate.
+    sample_indices = _adjudication_sample_indices(args)
+    if args.sample_index >= len(sample_indices):
+        print(
+            f"error: --sample-index {args.sample_index} is outside the "
+            f"{len(sample_indices)}-sample run",
+            file=sys.stderr,
+        )
+        return 1
     seam = create_model_seam()
     sweep_kwargs: dict[str, Any] = {
         "seam": seam,
         "export_dir": args.export_dir,
         "cache_root": args.cache_root,
+        "sample_indices": sample_indices,
     }
     result = run_sweep(**sweep_kwargs)
     report = build_tier_adjudication_report(result, sample_index=args.sample_index)
@@ -146,19 +175,19 @@ def main(argv: list[str] | None = None) -> int:
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     t1_parser = subparsers.add_parser("t1", help="Run request-only (T1) tier sweep")
-    _add_common_args(t1_parser)
+    _add_adjudication_args(t1_parser)
 
     t2_parser = subparsers.add_parser("t2", help="Run records-augmented (T2) tier sweep")
-    _add_common_args(t2_parser)
+    _add_adjudication_args(t2_parser)
 
     t3_parser = subparsers.add_parser("t3", help="Run rule-augmented (T3) tier sweep")
-    _add_common_args(t3_parser)
+    _add_adjudication_args(t3_parser)
 
     autonomous_parser = subparsers.add_parser(
         "autonomous",
         help="Run autonomous retrieval evaluation sweep",
     )
-    _add_common_args(autonomous_parser)
+    _add_adjudication_args(autonomous_parser)
 
     gate_parser = subparsers.add_parser(
         "adversarial-gate",
