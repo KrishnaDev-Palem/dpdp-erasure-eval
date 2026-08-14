@@ -179,6 +179,9 @@ The pin is enforced, not just documented. The export carries the agent commit it
 committed results file embeds the same SHA. Anyone can follow the permalink to the exact agent state,
 its ADRs, and the 52-test suite that produced every ground-truth label.
 
+A snapshot of this published 16-subject / 34-location experiment is copied under
+[`archive/v1/`](archive/v1/); `git checkout eval-v1.0.0` replays it in full.
+
 Reproducibility runs on a committed cache. Every model response and every tool-call trace is stored
 under [`cache/`](cache/), keyed by canonicalized input, at five samples per case. The committed results
 were produced live and then verified against cached replay: each live and offline results pair is

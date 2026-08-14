@@ -1,0 +1,170 @@
+{
+  "runner_id": "autonomous",
+  "model_id": "claude-sonnet-5",
+  "cache_mode": "offline",
+  "export_agent_sha": "3562059939cbaac3dc3500593f2940ef34c54c53",
+  "primary_sample_index": 0,
+  "total_incorrect": 10,
+  "retrieval_failure": {
+    "numerator": 0,
+    "denominator": 10,
+    "value": 0.0
+  },
+  "reasoning_failure": {
+    "numerator": 10,
+    "denominator": 10,
+    "value": 1.0
+  },
+  "per_lane": [
+    {
+      "lane": "erase",
+      "incorrect_count": 0,
+      "retrieval_failure_count": 0,
+      "reasoning_failure_count": 0
+    },
+    {
+      "lane": "retain",
+      "incorrect_count": 10,
+      "retrieval_failure_count": 0,
+      "reasoning_failure_count": 10
+    },
+    {
+      "lane": "escalate",
+      "incorrect_count": 0,
+      "retrieval_failure_count": 0,
+      "reasoning_failure_count": 0
+    }
+  ],
+  "sample_rollups": [
+    {
+      "sample_index": 0,
+      "total_incorrect": 10,
+      "retrieval_failure_count": 0,
+      "reasoning_failure_count": 10,
+      "per_lane": [
+        {
+          "lane": "erase",
+          "incorrect_count": 0,
+          "retrieval_failure_count": 0,
+          "reasoning_failure_count": 0
+        },
+        {
+          "lane": "retain",
+          "incorrect_count": 10,
+          "retrieval_failure_count": 0,
+          "reasoning_failure_count": 10
+        },
+        {
+          "lane": "escalate",
+          "incorrect_count": 0,
+          "retrieval_failure_count": 0,
+          "reasoning_failure_count": 0
+        }
+      ]
+    },
+    {
+      "sample_index": 1,
+      "total_incorrect": 13,
+      "retrieval_failure_count": 0,
+      "reasoning_failure_count": 13,
+      "per_lane": [
+        {
+          "lane": "erase",
+          "incorrect_count": 0,
+          "retrieval_failure_count": 0,
+          "reasoning_failure_count": 0
+        },
+        {
+          "lane": "retain",
+          "incorrect_count": 13,
+          "retrieval_failure_count": 0,
+          "reasoning_failure_count": 13
+        },
+        {
+          "lane": "escalate",
+          "incorrect_count": 0,
+          "retrieval_failure_count": 0,
+          "reasoning_failure_count": 0
+        }
+      ]
+    },
+    {
+      "sample_index": 2,
+      "total_incorrect": 13,
+      "retrieval_failure_count": 0,
+      "reasoning_failure_count": 13,
+      "per_lane": [
+        {
+          "lane": "erase",
+          "incorrect_count": 0,
+          "retrieval_failure_count": 0,
+          "reasoning_failure_count": 0
+        },
+        {
+          "lane": "retain",
+          "incorrect_count": 13,
+          "retrieval_failure_count": 0,
+          "reasoning_failure_count": 13
+        },
+        {
+          "lane": "escalate",
+          "incorrect_count": 0,
+          "retrieval_failure_count": 0,
+          "reasoning_failure_count": 0
+        }
+      ]
+    },
+    {
+      "sample_index": 3,
+      "total_incorrect": 14,
+      "retrieval_failure_count": 0,
+      "reasoning_failure_count": 14,
+      "per_lane": [
+        {
+          "lane": "erase",
+          "incorrect_count": 0,
+          "retrieval_failure_count": 0,
+          "reasoning_failure_count": 0
+        },
+        {
+          "lane": "retain",
+          "incorrect_count": 14,
+          "retrieval_failure_count": 0,
+          "reasoning_failure_count": 14
+        },
+        {
+          "lane": "escalate",
+          "incorrect_count": 0,
+          "retrieval_failure_count": 0,
+          "reasoning_failure_count": 0
+        }
+      ]
+    },
+    {
+      "sample_index": 4,
+      "total_incorrect": 10,
+      "retrieval_failure_count": 0,
+      "reasoning_failure_count": 10,
+      "per_lane": [
+        {
+          "lane": "erase",
+          "incorrect_count": 0,
+          "retrieval_failure_count": 0,
+          "reasoning_failure_count": 0
+        },
+        {
+          "lane": "retain",
+          "incorrect_count": 10,
+          "retrieval_failure_count": 0,
+          "reasoning_failure_count": 10
+        },
+        {
+          "lane": "escalate",
+          "incorrect_count": 0,
+          "retrieval_failure_count": 0,
+          "reasoning_failure_count": 0
+        }
+      ]
+    }
+  ]
+}
