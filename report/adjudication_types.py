@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from report.types import RateWithCI
 from runners.types import VarianceSummary
@@ -29,6 +29,25 @@ class SampleMetricsSummary(BaseModel):
     metrics: AdjudicationMetricsTable
 
 
+class GroupedAdjudicationRow(BaseModel):
+    """Wilson-augmented standalone rates for one cell_id or strata-field value."""
+
+    model_config = ConfigDict(frozen=True)
+
+    key: str
+    metrics: AdjudicationMetricsTable
+    scored_location_pairs: int
+
+
+class StratumFieldTable(BaseModel):
+    """Grouped rates for one export-schema 1.0.0 strata field."""
+
+    model_config = ConfigDict(frozen=True)
+
+    field: str
+    rows: list[GroupedAdjudicationRow]
+
+
 class TierAdjudicationReportTables(BaseModel):
     """Report tables for one tier or autonomous sweep result."""
 
@@ -44,6 +63,8 @@ class TierAdjudicationReportTables(BaseModel):
     confusion_matrix: dict[str, dict[str, int]]
     sample_rollups: list[SampleMetricsSummary]
     variance: VarianceSummary
+    by_cell: list[GroupedAdjudicationRow] = Field(default_factory=list)
+    by_stratum: list[StratumFieldTable] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def _validate_no_blended_accuracy(self) -> TierAdjudicationReportTables:
