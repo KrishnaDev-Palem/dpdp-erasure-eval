@@ -30,6 +30,25 @@ Pairs `(predicted: ModelVerdict, expected: ExpectedLabel)` aligned by `location_
 
 Return zeroed matrix and rates with `value: null` where denominator is 0.
 
+### Grouped rates (per `cell_id` and strata)
+
+When scored locations carry `strata` / `cell_id`, group the same
+`(ModelVerdict, ExpectedLabel)` pairs by `cell_id` and by each export-schema
+`1.0.0` strata field (`entity_type`, `floor_set`, `collision_arity`,
+`anchor_computable`, `boundary_flag`, `trigger_shape`, `re_engagement`, `split`).
+
+Join pairs back to `LabeledLocation` by `location_id`. Do not put `strata`
+inside `ExpectedLabel`. Read `split` from the location; do not re-derive it.
+
+Each group is scored with `score_adjudication`. There is no second definition
+of over-erasure, over-retention, or mis-escalation.
+
+Locations without `strata` (v1 export) produce empty grouped results. Aggregate
+scoring is unchanged.
+
+Wilson intervals are not computed in core; the report layer wraps each group's
+`Rate` with `report/wilson.py`.
+
 ## Adversarial scoring
 
 ### Input
