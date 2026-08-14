@@ -8,6 +8,8 @@ import yaml
 from pydantic import ValidationError
 
 from core.exceptions import ExportLoadError, ProvenanceError
+from core.export.agent_cases import parse_subject_items
+from core.export.coverage import GENERATOR_AS_OF
 from core.export.provenance import verify_provenance
 from core.types import (
     AdjudicationSubject,
@@ -68,21 +70,22 @@ def _parse_subjects(export_dir: Path) -> list[AdjudicationSubject]:
     raw_subjects: list[object]
     if isinstance(data, dict) and "subjects" in data:
         raw_subjects = data["subjects"]
+    elif isinstance(data, dict) and "cases" in data:
+        raw_subjects = data["cases"]
     elif isinstance(data, list):
         raw_subjects = data
     else:
-        _raise_load_error("Adjudication export must be a list or contain a subjects key")
+        _raise_load_error("Adjudication export must be a list or contain a subjects or cases key")
 
-    if not raw_subjects:
+    if not isinstance(raw_subjects, list) or not raw_subjects:
         _raise_load_error("Adjudication export contains no subjects")
 
-    subjects: list[AdjudicationSubject] = []
-    for item in raw_subjects:
-        try:
-            subjects.append(AdjudicationSubject.model_validate(item))
-        except ValidationError as exc:
-            _raise_load_error("Invalid adjudication subject in export", exc)
-    return subjects
+    try:
+        return parse_subject_items(raw_subjects, as_of=GENERATOR_AS_OF)
+    except ExportLoadError:
+        raise
+    except ValidationError as exc:
+        _raise_load_error("Invalid adjudication subject in export", exc)
 
 
 def _parse_rules(export_dir: Path) -> RulesCorpus:
