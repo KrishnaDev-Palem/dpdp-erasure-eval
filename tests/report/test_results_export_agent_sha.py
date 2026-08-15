@@ -18,9 +18,7 @@ def pinned_agent_sha() -> str:
 
 
 ADJUDICATION_RESULTS = sorted(
-    path
-    for path in RESULTS_DIR.glob("*.json")
-    if not path.name.startswith("gate-")
+    path for path in RESULTS_DIR.glob("*.json") if not path.name.startswith("gate-")
 )
 GATE_RESULTS = sorted(RESULTS_DIR.glob("gate-*.json"))
 PUBLISHED_GATE_SHA = "3562059939cbaac3dc3500593f2940ef34c54c53"
