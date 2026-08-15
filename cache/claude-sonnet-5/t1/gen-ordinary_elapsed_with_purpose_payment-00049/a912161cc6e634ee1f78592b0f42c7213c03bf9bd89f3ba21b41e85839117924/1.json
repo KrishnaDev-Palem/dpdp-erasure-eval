@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-ordinary_elapsed_with_purpose_payment-00049",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "a912161cc6e634ee1f78592b0f42c7213c03bf9bd89f3ba21b41e85839117924",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "ordinary_elapsed_with_purpose_payment:00049",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-14T20:53:28Z",
+  "runner_id": "t1",
+  "sample_index": 1,
+  "tool_calls": []
+}

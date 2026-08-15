@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-re_engagement_erase_payment-00184",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "01735cc4877e315410181855004144abce983b71fd272d640fe8fc8513a077c3",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "re_engagement_erase_payment:00184",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-14T20:35:32Z",
+  "runner_id": "t1",
+  "sample_index": 0,
+  "tool_calls": []
+}

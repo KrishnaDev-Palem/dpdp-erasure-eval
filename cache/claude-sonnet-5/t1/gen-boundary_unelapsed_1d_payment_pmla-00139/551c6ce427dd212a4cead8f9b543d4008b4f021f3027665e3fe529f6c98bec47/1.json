@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-boundary_unelapsed_1d_payment_pmla-00139",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "551c6ce427dd212a4cead8f9b543d4008b4f021f3027665e3fe529f6c98bec47",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "boundary_unelapsed_1d_payment_pmla:00139",
+        "verdict": "escalate"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-14T20:48:21Z",
+  "runner_id": "t1",
+  "sample_index": 1,
+  "tool_calls": []
+}

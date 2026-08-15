@@ -1,0 +1,67 @@
+{
+  "case_id": "gen-ordinary_inactivity_erase_payment-00031",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "8604814216f46063e1b837f8e0e0cff77ba7fc59323a983e16cd20ceca208905",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "ordinary_inactivity_erase_payment:00031",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-15T00:22:18Z",
+  "runner_id": "autonomous",
+  "sample_index": 1,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "gen-ordinary_inactivity_erase_payment-00031"
+      },
+      "result_summary": {
+        "categories": [
+          "customer",
+          "kyc_document",
+          "marketing_consent",
+          "payment_transaction",
+          "securities_transaction"
+        ],
+        "entry_count": 5
+      },
+      "sequence": 0,
+      "tool_name": "get_governance_map"
+    },
+    {
+      "arguments": {
+        "subject_id": "gen-ordinary_inactivity_erase_payment-00031"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "ordinary_inactivity_erase_payment:00031"
+        ],
+        "subject_id": "gen-ordinary_inactivity_erase_payment-00031"
+      },
+      "sequence": 1,
+      "tool_name": "get_location_records"
+    },
+    {
+      "arguments": {
+        "subject_id": "gen-ordinary_inactivity_erase_payment-00031"
+      },
+      "result_summary": {
+        "floor_count": 5,
+        "floor_ids": [
+          "companies_act",
+          "gst",
+          "income_tax",
+          "pmla_kyc",
+          "sebi"
+        ]
+      },
+      "sequence": 2,
+      "tool_name": "get_retention_floors"
+    }
+  ]
+}

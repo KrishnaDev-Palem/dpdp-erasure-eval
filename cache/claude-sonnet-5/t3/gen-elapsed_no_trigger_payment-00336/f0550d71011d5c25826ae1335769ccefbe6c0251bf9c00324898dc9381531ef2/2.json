@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-elapsed_no_trigger_payment-00336",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "f0550d71011d5c25826ae1335769ccefbe6c0251bf9c00324898dc9381531ef2",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "elapsed_no_trigger_payment:00336",
+        "verdict": "escalate"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-14T23:02:26Z",
+  "runner_id": "t3",
+  "sample_index": 2,
+  "tool_calls": []
+}

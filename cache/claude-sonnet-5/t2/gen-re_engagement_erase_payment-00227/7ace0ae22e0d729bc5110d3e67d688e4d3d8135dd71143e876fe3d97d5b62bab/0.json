@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-re_engagement_erase_payment-00227",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "7ace0ae22e0d729bc5110d3e67d688e4d3d8135dd71143e876fe3d97d5b62bab",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "re_engagement_erase_payment:00227",
+        "verdict": "escalate"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-14T21:36:29Z",
+  "runner_id": "t2",
+  "sample_index": 0,
+  "tool_calls": []
+}

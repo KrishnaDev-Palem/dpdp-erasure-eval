@@ -1,0 +1,67 @@
+{
+  "case_id": "gen-marketing_active-00206",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "728df736f644cf06b67050761c2a1d445bb335bfbeb56eba5fc0b2dde06dca3e",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "marketing_active:00206",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-15T00:14:02Z",
+  "runner_id": "autonomous",
+  "sample_index": 1,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "gen-marketing_active-00206"
+      },
+      "result_summary": {
+        "categories": [
+          "customer",
+          "kyc_document",
+          "marketing_consent",
+          "payment_transaction",
+          "securities_transaction"
+        ],
+        "entry_count": 5
+      },
+      "sequence": 0,
+      "tool_name": "get_governance_map"
+    },
+    {
+      "arguments": {
+        "subject_id": "gen-marketing_active-00206"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "marketing_active:00206"
+        ],
+        "subject_id": "gen-marketing_active-00206"
+      },
+      "sequence": 1,
+      "tool_name": "get_location_records"
+    },
+    {
+      "arguments": {
+        "subject_id": "gen-marketing_active-00206"
+      },
+      "result_summary": {
+        "floor_count": 5,
+        "floor_ids": [
+          "companies_act",
+          "gst",
+          "income_tax",
+          "pmla_kyc",
+          "sebi"
+        ]
+      },
+      "sequence": 2,
+      "tool_name": "get_retention_floors"
+    }
+  ]
+}

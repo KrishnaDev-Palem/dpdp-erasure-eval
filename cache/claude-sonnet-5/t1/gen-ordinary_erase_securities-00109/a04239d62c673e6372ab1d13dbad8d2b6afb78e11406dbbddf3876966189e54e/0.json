@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-ordinary_erase_securities-00109",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "a04239d62c673e6372ab1d13dbad8d2b6afb78e11406dbbddf3876966189e54e",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "ordinary_erase_securities:00109",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-14T20:31:37Z",
+  "runner_id": "t1",
+  "sample_index": 0,
+  "tool_calls": []
+}

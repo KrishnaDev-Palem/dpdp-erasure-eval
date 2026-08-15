@@ -1,0 +1,67 @@
+{
+  "case_id": "gen-ordinary_erase_payment-00470",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "5dd7d9a38efcdc85539a9c8a45a07208af90e4a4823f19ec470820162ec31940",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "ordinary_erase_payment:00470",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-15T01:01:07Z",
+  "runner_id": "autonomous",
+  "sample_index": 2,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "gen-ordinary_erase_payment-00470"
+      },
+      "result_summary": {
+        "categories": [
+          "customer",
+          "kyc_document",
+          "marketing_consent",
+          "payment_transaction",
+          "securities_transaction"
+        ],
+        "entry_count": 5
+      },
+      "sequence": 0,
+      "tool_name": "get_governance_map"
+    },
+    {
+      "arguments": {
+        "subject_id": "gen-ordinary_erase_payment-00470"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "ordinary_erase_payment:00470"
+        ],
+        "subject_id": "gen-ordinary_erase_payment-00470"
+      },
+      "sequence": 1,
+      "tool_name": "get_location_records"
+    },
+    {
+      "arguments": {
+        "subject_id": "gen-ordinary_erase_payment-00470"
+      },
+      "result_summary": {
+        "floor_count": 5,
+        "floor_ids": [
+          "companies_act",
+          "gst",
+          "income_tax",
+          "pmla_kyc",
+          "sebi"
+        ]
+      },
+      "sequence": 2,
+      "tool_name": "get_retention_floors"
+    }
+  ]
+}

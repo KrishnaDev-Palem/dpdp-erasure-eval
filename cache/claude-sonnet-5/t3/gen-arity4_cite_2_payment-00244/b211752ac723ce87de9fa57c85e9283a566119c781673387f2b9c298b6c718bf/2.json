@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-arity4_cite_2_payment-00244",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "b211752ac723ce87de9fa57c85e9283a566119c781673387f2b9c298b6c718bf",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "arity4_cite_2_payment:00244",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-14T22:54:30Z",
+  "runner_id": "t3",
+  "sample_index": 2,
+  "tool_calls": []
+}

@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-boundary_elapsed_1d_customer-00055",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "8ac4acdaee63a108350f664d2c8029fe7717979954b460d5b6032f28384a22d5",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "boundary_elapsed_1d_customer:00055",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-14T21:28:15Z",
+  "runner_id": "t2",
+  "sample_index": 0,
+  "tool_calls": []
+}

@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-uncomputable_customer-00195",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "0567c4a69d5c2b69356e5d4ad215bb0b4c7c179190835cc86b4738feeac6cdef",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "uncomputable_customer:00195",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-14T22:02:36Z",
+  "runner_id": "t2",
+  "sample_index": 2,
+  "tool_calls": []
+}

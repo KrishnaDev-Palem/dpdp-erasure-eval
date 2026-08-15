@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-ordinary_open_customer_retain-00359",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "61c18341b04a1830c9b20c6b16e4cc9b99c22314dbc473c99748e5e34dbdc457",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "ordinary_open_customer_retain:00359",
+        "verdict": "escalate"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-14T21:47:49Z",
+  "runner_id": "t2",
+  "sample_index": 1,
+  "tool_calls": []
+}

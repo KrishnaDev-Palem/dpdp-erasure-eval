@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-ordinary_erase_payment-00199",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "5a6ea5e855ba578cb43aecd79b3a297717d167d0ba7deb26de399a773ce15162",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "ordinary_erase_payment:00199",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-14T22:45:39Z",
+  "runner_id": "t3",
+  "sample_index": 1,
+  "tool_calls": []
+}

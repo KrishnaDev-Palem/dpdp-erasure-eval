@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-uncomputable_kyc-00152",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "248d21085126e65d3ca97557dee59b2cae415f93b716e7130c31de3e5d4951f7",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "uncomputable_kyc:00152",
+        "verdict": "escalate"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-14T22:51:11Z",
+  "runner_id": "t3",
+  "sample_index": 1,
+  "tool_calls": []
+}

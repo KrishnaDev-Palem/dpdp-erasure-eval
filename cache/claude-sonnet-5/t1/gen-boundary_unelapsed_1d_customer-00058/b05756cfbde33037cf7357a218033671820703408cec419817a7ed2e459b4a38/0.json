@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-boundary_unelapsed_1d_customer-00058",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "b05756cfbde33037cf7357a218033671820703408cec419817a7ed2e459b4a38",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "boundary_unelapsed_1d_customer:00058",
+        "verdict": "escalate"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-14T20:23:09Z",
+  "runner_id": "t1",
+  "sample_index": 0,
+  "tool_calls": []
+}

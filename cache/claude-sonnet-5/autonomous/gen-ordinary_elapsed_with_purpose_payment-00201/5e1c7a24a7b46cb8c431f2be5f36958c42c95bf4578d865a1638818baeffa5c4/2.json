@@ -1,0 +1,67 @@
+{
+  "case_id": "gen-ordinary_elapsed_with_purpose_payment-00201",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "5e1c7a24a7b46cb8c431f2be5f36958c42c95bf4578d865a1638818baeffa5c4",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "ordinary_elapsed_with_purpose_payment:00201",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-15T00:58:59Z",
+  "runner_id": "autonomous",
+  "sample_index": 2,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "gen-ordinary_elapsed_with_purpose_payment-00201"
+      },
+      "result_summary": {
+        "categories": [
+          "customer",
+          "kyc_document",
+          "marketing_consent",
+          "payment_transaction",
+          "securities_transaction"
+        ],
+        "entry_count": 5
+      },
+      "sequence": 0,
+      "tool_name": "get_governance_map"
+    },
+    {
+      "arguments": {
+        "subject_id": "gen-ordinary_elapsed_with_purpose_payment-00201"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "ordinary_elapsed_with_purpose_payment:00201"
+        ],
+        "subject_id": "gen-ordinary_elapsed_with_purpose_payment-00201"
+      },
+      "sequence": 1,
+      "tool_name": "get_location_records"
+    },
+    {
+      "arguments": {
+        "subject_id": "gen-ordinary_elapsed_with_purpose_payment-00201"
+      },
+      "result_summary": {
+        "floor_count": 5,
+        "floor_ids": [
+          "companies_act",
+          "gst",
+          "income_tax",
+          "pmla_kyc",
+          "sebi"
+        ]
+      },
+      "sequence": 2,
+      "tool_name": "get_retention_floors"
+    }
+  ]
+}

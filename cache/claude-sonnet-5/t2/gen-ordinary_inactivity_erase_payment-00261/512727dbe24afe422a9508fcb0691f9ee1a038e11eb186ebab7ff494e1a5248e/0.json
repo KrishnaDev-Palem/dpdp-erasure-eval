@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-ordinary_inactivity_erase_payment-00261",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "512727dbe24afe422a9508fcb0691f9ee1a038e11eb186ebab7ff494e1a5248e",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "ordinary_inactivity_erase_payment:00261",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-14T21:34:56Z",
+  "runner_id": "t2",
+  "sample_index": 0,
+  "tool_calls": []
+}

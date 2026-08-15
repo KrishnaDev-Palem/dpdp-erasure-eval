@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-ordinary_inactivity_erase_payment-00061",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "0632b082bd9d1c987486717ab26b4ada2efc1cf8418f11a3e3cb03ee3703cb05",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "ordinary_inactivity_erase_payment:00061",
+        "verdict": "escalate"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-14T23:07:56Z",
+  "runner_id": "t3",
+  "sample_index": 2,
+  "tool_calls": []
+}

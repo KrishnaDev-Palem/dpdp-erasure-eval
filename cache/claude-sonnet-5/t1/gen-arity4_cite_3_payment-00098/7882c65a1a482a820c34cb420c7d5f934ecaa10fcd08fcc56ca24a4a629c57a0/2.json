@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-arity4_cite_3_payment-00098",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "7882c65a1a482a820c34cb420c7d5f934ecaa10fcd08fcc56ca24a4a629c57a0",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "arity4_cite_3_payment:00098",
+        "verdict": "escalate"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-14T21:05:45Z",
+  "runner_id": "t1",
+  "sample_index": 2,
+  "tool_calls": []
+}
