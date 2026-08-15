@@ -10,8 +10,7 @@ from typing import Any
 
 from core.exceptions import ExportLoadError
 
-# Agent tag export-v1.1.0. Do not flip the committed PINNED_AGENT_SHA to this
-# until the later archive + re-pin slice.
+# Agent tag export-v1.1.0. The committed PINNED_AGENT_SHA is this coverage-slice pin.
 COVERAGE_AGENT_TAG = "export-v1.1.0"
 COVERAGE_AGENT_SHA = "7b659e8e3ec87a9115a5d7709f20f1c1eb6fec22"
 GENERATOR_AS_OF = "2026-02-15"
