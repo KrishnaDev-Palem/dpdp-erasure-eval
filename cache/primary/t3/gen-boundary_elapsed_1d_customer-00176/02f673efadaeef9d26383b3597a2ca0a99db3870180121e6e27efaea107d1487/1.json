@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-boundary_elapsed_1d_customer-00176",
+  "model_id": "primary",
+  "prompt_hash": "02f673efadaeef9d26383b3597a2ca0a99db3870180121e6e27efaea107d1487",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "boundary_elapsed_1d_customer:00176",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-15T03:09:10Z",
+  "runner_id": "t3",
+  "sample_index": 1,
+  "tool_calls": []
+}

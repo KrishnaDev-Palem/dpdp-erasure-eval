@@ -1,0 +1,33 @@
+{
+  "case_id": "gen-ordinary_inactivity_erase_payment-00189",
+  "model_id": "primary",
+  "prompt_hash": "65f58e7e7e38fb9cf3f030af468f01bbcee0cf22404e224395b6ad4ffa4507dc",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "ordinary_inactivity_erase_payment:00189",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-15T03:09:14Z",
+  "runner_id": "autonomous",
+  "sample_index": 0,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "gen-ordinary_inactivity_erase_payment-00189"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "ordinary_inactivity_erase_payment:00189"
+        ],
+        "subject_id": "gen-ordinary_inactivity_erase_payment-00189"
+      },
+      "sequence": 0,
+      "tool_name": "get_location_records"
+    }
+  ]
+}

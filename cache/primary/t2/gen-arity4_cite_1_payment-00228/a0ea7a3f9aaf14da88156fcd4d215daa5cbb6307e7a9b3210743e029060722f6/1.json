@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-arity4_cite_1_payment-00228",
+  "model_id": "primary",
+  "prompt_hash": "a0ea7a3f9aaf14da88156fcd4d215daa5cbb6307e7a9b3210743e029060722f6",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "arity4_cite_1_payment:00228",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-15T03:09:06Z",
+  "runner_id": "t2",
+  "sample_index": 1,
+  "tool_calls": []
+}

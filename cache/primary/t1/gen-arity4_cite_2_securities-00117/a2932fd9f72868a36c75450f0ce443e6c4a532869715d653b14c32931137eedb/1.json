@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-arity4_cite_2_securities-00117",
+  "model_id": "primary",
+  "prompt_hash": "a2932fd9f72868a36c75450f0ce443e6c4a532869715d653b14c32931137eedb",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "arity4_cite_2_securities:00117",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-15T03:09:03Z",
+  "runner_id": "t1",
+  "sample_index": 1,
+  "tool_calls": []
+}

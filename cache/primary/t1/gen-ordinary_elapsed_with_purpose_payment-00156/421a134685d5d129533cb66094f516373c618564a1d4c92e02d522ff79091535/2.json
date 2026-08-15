@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-ordinary_elapsed_with_purpose_payment-00156",
+  "model_id": "primary",
+  "prompt_hash": "421a134685d5d129533cb66094f516373c618564a1d4c92e02d522ff79091535",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "ordinary_elapsed_with_purpose_payment:00156",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-15T03:09:03Z",
+  "runner_id": "t1",
+  "sample_index": 2,
+  "tool_calls": []
+}

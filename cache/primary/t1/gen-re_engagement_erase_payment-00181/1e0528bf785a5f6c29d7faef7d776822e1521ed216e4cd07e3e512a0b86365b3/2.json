@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-re_engagement_erase_payment-00181",
+  "model_id": "primary",
+  "prompt_hash": "1e0528bf785a5f6c29d7faef7d776822e1521ed216e4cd07e3e512a0b86365b3",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "re_engagement_erase_payment:00181",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-15T03:09:03Z",
+  "runner_id": "t1",
+  "sample_index": 2,
+  "tool_calls": []
+}

@@ -1,0 +1,33 @@
+{
+  "case_id": "gen-ordinary_open_customer_retain-00336",
+  "model_id": "primary",
+  "prompt_hash": "d01889aaf08d00dcb5affc3a20f7ba65ad2405a0f90c7d1af4c15309e7ce9c95",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "ordinary_open_customer_retain:00336",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-15T03:09:14Z",
+  "runner_id": "autonomous",
+  "sample_index": 1,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "gen-ordinary_open_customer_retain-00336"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "ordinary_open_customer_retain:00336"
+        ],
+        "subject_id": "gen-ordinary_open_customer_retain-00336"
+      },
+      "sequence": 0,
+      "tool_name": "get_location_records"
+    }
+  ]
+}

@@ -10,6 +10,7 @@ from core.context import build_t1, build_t2, build_t3
 from core.export import load_export
 from core.types import CacheEntry, Tier, Verdict
 from runners.autonomous.types import AUTONOMOUS_RUNNER_ID
+from runners.types import DEFAULT_ADJUDICATION_SAMPLE_INDICES
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CACHE_ROOT = REPO_ROOT / "cache"
@@ -19,14 +20,8 @@ def _base_verdicts(subject) -> dict[str, Verdict]:
     return {location.location_id: location.expected.verdict for location in subject.locations}
 
 
-def _verdicts_for(subject, sample_index: int) -> dict[str, Verdict]:
-    verdicts = _base_verdicts(subject)
-    if sample_index == 1 and "mixed_fanout" in subject.tags:
-        for location_id, verdict in list(verdicts.items()):
-            if verdict == "erase":
-                verdicts[location_id] = "retain"
-                break
-    return verdicts
+def _verdicts_for(subject, _sample_index: int) -> dict[str, Verdict]:
+    return _base_verdicts(subject)
 
 
 def _build_context(tier: Tier, subject, rules):
@@ -67,7 +62,7 @@ def seed_tier(tier: Tier, *, model_id: str = "primary") -> int:
         )
         if not location_ids:
             continue
-        for sample_index in range(5):
+        for sample_index in DEFAULT_ADJUDICATION_SAMPLE_INDICES:
             verdict_map = _verdicts_for(subject, sample_index)
             key = make_cache_key(
                 context=context,
@@ -100,7 +95,7 @@ def seed_autonomous(*, model_id: str = "primary") -> int:
             continue
         context = build_t1(subject.request, subject)
         location_ids = [location.location_id for location in subject.locations]
-        for sample_index in range(5):
+        for sample_index in DEFAULT_ADJUDICATION_SAMPLE_INDICES:
             verdict_map = _verdicts_for(subject, sample_index)
             key = make_cache_key(
                 context=context,

@@ -1,0 +1,33 @@
+{
+  "case_id": "gen-ordinary_erase_securities-00019",
+  "model_id": "primary",
+  "prompt_hash": "5d18523c1ba6c1b0ae02e72cbb13d3b32e7954c68125264b0cee99af1cc0c86d",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "ordinary_erase_securities:00019",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-15T03:09:14Z",
+  "runner_id": "autonomous",
+  "sample_index": 2,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "gen-ordinary_erase_securities-00019"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "ordinary_erase_securities:00019"
+        ],
+        "subject_id": "gen-ordinary_erase_securities-00019"
+      },
+      "sequence": 0,
+      "tool_name": "get_location_records"
+    }
+  ]
+}

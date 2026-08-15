@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-uncomputable_kyc-00152",
+  "model_id": "primary",
+  "prompt_hash": "0eea6e5ae7862d1b44cc27171bf6abae9454d16982db66f4c65b5d2954dcbedd",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "uncomputable_kyc:00152",
+        "verdict": "escalate"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-15T03:09:06Z",
+  "runner_id": "t2",
+  "sample_index": 0,
+  "tool_calls": []
+}

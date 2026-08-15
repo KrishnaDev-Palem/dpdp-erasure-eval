@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-elapsed_no_trigger_payment-00031",
+  "model_id": "primary",
+  "prompt_hash": "011ecafb1e1d13ee1701977e74672c8ab44802d0175ad230f3816183d9038e24",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "elapsed_no_trigger_payment:00031",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-15T03:09:10Z",
+  "runner_id": "t3",
+  "sample_index": 0,
+  "tool_calls": []
+}

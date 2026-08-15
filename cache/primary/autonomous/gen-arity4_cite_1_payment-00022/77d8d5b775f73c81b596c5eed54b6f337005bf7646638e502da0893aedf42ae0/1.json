@@ -1,0 +1,33 @@
+{
+  "case_id": "gen-arity4_cite_1_payment-00022",
+  "model_id": "primary",
+  "prompt_hash": "77d8d5b775f73c81b596c5eed54b6f337005bf7646638e502da0893aedf42ae0",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "arity4_cite_1_payment:00022",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-15T03:09:14Z",
+  "runner_id": "autonomous",
+  "sample_index": 1,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "gen-arity4_cite_1_payment-00022"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "arity4_cite_1_payment:00022"
+        ],
+        "subject_id": "gen-arity4_cite_1_payment-00022"
+      },
+      "sequence": 0,
+      "tool_name": "get_location_records"
+    }
+  ]
+}

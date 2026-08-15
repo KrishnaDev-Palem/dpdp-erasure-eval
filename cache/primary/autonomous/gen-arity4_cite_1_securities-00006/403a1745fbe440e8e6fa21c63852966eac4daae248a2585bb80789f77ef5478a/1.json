@@ -1,0 +1,33 @@
+{
+  "case_id": "gen-arity4_cite_1_securities-00006",
+  "model_id": "primary",
+  "prompt_hash": "403a1745fbe440e8e6fa21c63852966eac4daae248a2585bb80789f77ef5478a",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "arity4_cite_1_securities:00006",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-15T03:09:14Z",
+  "runner_id": "autonomous",
+  "sample_index": 1,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "gen-arity4_cite_1_securities-00006"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "arity4_cite_1_securities:00006"
+        ],
+        "subject_id": "gen-arity4_cite_1_securities-00006"
+      },
+      "sequence": 0,
+      "tool_name": "get_location_records"
+    }
+  ]
+}

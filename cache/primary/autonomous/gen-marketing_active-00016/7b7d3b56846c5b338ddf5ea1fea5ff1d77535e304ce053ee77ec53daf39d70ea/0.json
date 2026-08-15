@@ -1,0 +1,33 @@
+{
+  "case_id": "gen-marketing_active-00016",
+  "model_id": "primary",
+  "prompt_hash": "7b7d3b56846c5b338ddf5ea1fea5ff1d77535e304ce053ee77ec53daf39d70ea",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "marketing_active:00016",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-15T03:09:14Z",
+  "runner_id": "autonomous",
+  "sample_index": 0,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "gen-marketing_active-00016"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "marketing_active:00016"
+        ],
+        "subject_id": "gen-marketing_active-00016"
+      },
+      "sequence": 0,
+      "tool_name": "get_location_records"
+    }
+  ]
+}

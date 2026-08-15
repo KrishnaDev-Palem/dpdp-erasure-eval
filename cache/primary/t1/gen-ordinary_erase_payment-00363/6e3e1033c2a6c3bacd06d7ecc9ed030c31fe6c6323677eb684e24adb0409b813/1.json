@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-ordinary_erase_payment-00363",
+  "model_id": "primary",
+  "prompt_hash": "6e3e1033c2a6c3bacd06d7ecc9ed030c31fe6c6323677eb684e24adb0409b813",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "ordinary_erase_payment:00363",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-15T03:09:03Z",
+  "runner_id": "t1",
+  "sample_index": 1,
+  "tool_calls": []
+}

@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-marketing_active-00054",
+  "model_id": "primary",
+  "prompt_hash": "7a5a191028da05476c09be966d7156562008d74b115850aedf03404144719da9",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "marketing_active:00054",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-15T03:09:03Z",
+  "runner_id": "t1",
+  "sample_index": 0,
+  "tool_calls": []
+}
