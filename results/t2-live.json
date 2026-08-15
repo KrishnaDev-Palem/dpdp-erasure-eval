@@ -3,102 +3,102 @@
   "runner_id": "t2",
   "model_id": "claude-sonnet-5",
   "cache_mode": "refresh",
-  "export_agent_sha": "3562059939cbaac3dc3500593f2940ef34c54c53",
+  "export_agent_sha": "7b659e8e3ec87a9115a5d7709f20f1c1eb6fec22",
   "primary_sample_index": 0,
   "primary_metrics": {
     "over_erasure": {
       "rate": {
-        "numerator": 1,
-        "denominator": 34,
-        "value": 0.029411764705882353
+        "numerator": 129,
+        "denominator": 350,
+        "value": 0.36857142857142855
       },
       "interval": {
-        "lower": 0.00521077192559663,
-        "upper": 0.1491590221634482,
+        "lower": 0.3197120497892868,
+        "upper": 0.42028460408069335,
         "confidence_level": 0.95
       }
     },
     "over_retention": {
       "rate": {
-        "numerator": 0,
-        "denominator": 34,
-        "value": 0.0
+        "numerator": 1,
+        "denominator": 350,
+        "value": 0.002857142857142857
       },
       "interval": {
-        "lower": 0.0,
-        "upper": 0.10151790621961015,
+        "lower": 0.0005045210608510117,
+        "upper": 0.01600456096907424,
         "confidence_level": 0.95
       }
     },
     "mis_escalation": {
       "rate": {
-        "numerator": 20,
-        "denominator": 34,
-        "value": 0.5882352941176471
+        "numerator": 99,
+        "denominator": 350,
+        "value": 0.28285714285714286
       },
       "interval": {
-        "lower": 0.42221304146519273,
-        "upper": 0.7363426221431113,
+        "lower": 0.23822680199110363,
+        "upper": 0.33220245222886363,
         "confidence_level": 0.95
       }
     }
   },
   "confusion_matrix": {
     "erase": {
-      "erase": 3,
-      "retain": 1,
-      "escalate": 0
+      "erase": 67,
+      "retain": 123,
+      "escalate": 6
     },
     "retain": {
-      "erase": 0,
-      "retain": 8,
+      "erase": 1,
+      "retain": 38,
       "escalate": 0
     },
     "escalate": {
-      "erase": 4,
-      "retain": 16,
-      "escalate": 2
+      "erase": 16,
+      "retain": 77,
+      "escalate": 22
     }
   },
   "sample_rollups": [
     {
       "sample_index": 0,
-      "total_subjects": 16,
-      "scored_location_pairs": 34,
+      "total_subjects": 350,
+      "scored_location_pairs": 350,
       "metrics": {
         "over_erasure": {
           "rate": {
-            "numerator": 1,
-            "denominator": 34,
-            "value": 0.029411764705882353
+            "numerator": 129,
+            "denominator": 350,
+            "value": 0.36857142857142855
           },
           "interval": {
-            "lower": 0.00521077192559663,
-            "upper": 0.1491590221634482,
+            "lower": 0.3197120497892868,
+            "upper": 0.42028460408069335,
             "confidence_level": 0.95
           }
         },
         "over_retention": {
           "rate": {
-            "numerator": 0,
-            "denominator": 34,
-            "value": 0.0
+            "numerator": 1,
+            "denominator": 350,
+            "value": 0.002857142857142857
           },
           "interval": {
-            "lower": 0.0,
-            "upper": 0.10151790621961015,
+            "lower": 0.0005045210608510117,
+            "upper": 0.01600456096907424,
             "confidence_level": 0.95
           }
         },
         "mis_escalation": {
           "rate": {
-            "numerator": 20,
-            "denominator": 34,
-            "value": 0.5882352941176471
+            "numerator": 99,
+            "denominator": 350,
+            "value": 0.28285714285714286
           },
           "interval": {
-            "lower": 0.42221304146519273,
-            "upper": 0.7363426221431113,
+            "lower": 0.23822680199110363,
+            "upper": 0.33220245222886363,
             "confidence_level": 0.95
           }
         }
@@ -106,42 +106,42 @@
     },
     {
       "sample_index": 1,
-      "total_subjects": 16,
-      "scored_location_pairs": 34,
+      "total_subjects": 350,
+      "scored_location_pairs": 350,
       "metrics": {
         "over_erasure": {
           "rate": {
-            "numerator": 1,
-            "denominator": 34,
-            "value": 0.029411764705882353
+            "numerator": 134,
+            "denominator": 350,
+            "value": 0.38285714285714284
           },
           "interval": {
-            "lower": 0.00521077192559663,
-            "upper": 0.1491590221634482,
+            "lower": 0.3334649134201381,
+            "upper": 0.4347929737248441,
             "confidence_level": 0.95
           }
         },
         "over_retention": {
           "rate": {
             "numerator": 0,
-            "denominator": 34,
+            "denominator": 350,
             "value": 0.0
           },
           "interval": {
             "lower": 0.0,
-            "upper": 0.10151790621961015,
+            "upper": 0.010856835374924824,
             "confidence_level": 0.95
           }
         },
         "mis_escalation": {
           "rate": {
-            "numerator": 20,
-            "denominator": 34,
-            "value": 0.5882352941176471
+            "numerator": 97,
+            "denominator": 350,
+            "value": 0.27714285714285714
           },
           "interval": {
-            "lower": 0.42221304146519273,
-            "upper": 0.7363426221431113,
+            "lower": 0.232862756426813,
+            "upper": 0.32626200448315346,
             "confidence_level": 0.95
           }
         }
@@ -149,128 +149,42 @@
     },
     {
       "sample_index": 2,
-      "total_subjects": 16,
-      "scored_location_pairs": 34,
+      "total_subjects": 350,
+      "scored_location_pairs": 350,
       "metrics": {
         "over_erasure": {
           "rate": {
-            "numerator": 0,
-            "denominator": 34,
-            "value": 0.0
+            "numerator": 133,
+            "denominator": 350,
+            "value": 0.38
           },
           "interval": {
-            "lower": 0.0,
-            "upper": 0.10151790621961015,
-            "confidence_level": 0.95
-          }
-        },
-        "over_retention": {
-          "rate": {
-            "numerator": 1,
-            "denominator": 34,
-            "value": 0.029411764705882353
-          },
-          "interval": {
-            "lower": 0.00521077192559663,
-            "upper": 0.1491590221634482,
-            "confidence_level": 0.95
-          }
-        },
-        "mis_escalation": {
-          "rate": {
-            "numerator": 17,
-            "denominator": 34,
-            "value": 0.5
-          },
-          "interval": {
-            "lower": 0.34069062628048985,
-            "upper": 0.6593093737195102,
-            "confidence_level": 0.95
-          }
-        }
-      }
-    },
-    {
-      "sample_index": 3,
-      "total_subjects": 16,
-      "scored_location_pairs": 34,
-      "metrics": {
-        "over_erasure": {
-          "rate": {
-            "numerator": 1,
-            "denominator": 34,
-            "value": 0.029411764705882353
-          },
-          "interval": {
-            "lower": 0.00521077192559663,
-            "upper": 0.1491590221634482,
+            "lower": 0.33071064935933864,
+            "upper": 0.4318949911306433,
             "confidence_level": 0.95
           }
         },
         "over_retention": {
           "rate": {
             "numerator": 0,
-            "denominator": 34,
+            "denominator": 350,
             "value": 0.0
           },
           "interval": {
             "lower": 0.0,
-            "upper": 0.10151790621961015,
+            "upper": 0.010856835374924824,
             "confidence_level": 0.95
           }
         },
         "mis_escalation": {
           "rate": {
-            "numerator": 16,
-            "denominator": 34,
-            "value": 0.47058823529411764
+            "numerator": 99,
+            "denominator": 350,
+            "value": 0.28285714285714286
           },
           "interval": {
-            "lower": 0.31451251633111366,
-            "upper": 0.6326355957994516,
-            "confidence_level": 0.95
-          }
-        }
-      }
-    },
-    {
-      "sample_index": 4,
-      "total_subjects": 16,
-      "scored_location_pairs": 34,
-      "metrics": {
-        "over_erasure": {
-          "rate": {
-            "numerator": 0,
-            "denominator": 34,
-            "value": 0.0
-          },
-          "interval": {
-            "lower": 0.0,
-            "upper": 0.10151790621961015,
-            "confidence_level": 0.95
-          }
-        },
-        "over_retention": {
-          "rate": {
-            "numerator": 0,
-            "denominator": 34,
-            "value": 0.0
-          },
-          "interval": {
-            "lower": 0.0,
-            "upper": 0.10151790621961015,
-            "confidence_level": 0.95
-          }
-        },
-        "mis_escalation": {
-          "rate": {
-            "numerator": 18,
-            "denominator": 34,
-            "value": 0.5294117647058824
-          },
-          "interval": {
-            "lower": 0.3673644042005483,
-            "upper": 0.6854874836688863,
+            "lower": 0.23822680199110363,
+            "upper": 0.33220245222886363,
             "confidence_level": 0.95
           }
         }
@@ -284,41 +198,25 @@
         {
           "sample_index": 0,
           "rate": {
-            "numerator": 1,
-            "denominator": 34,
-            "value": 0.029411764705882353
+            "numerator": 129,
+            "denominator": 350,
+            "value": 0.36857142857142855
           }
         },
         {
           "sample_index": 1,
           "rate": {
-            "numerator": 1,
-            "denominator": 34,
-            "value": 0.029411764705882353
+            "numerator": 134,
+            "denominator": 350,
+            "value": 0.38285714285714284
           }
         },
         {
           "sample_index": 2,
           "rate": {
-            "numerator": 0,
-            "denominator": 34,
-            "value": 0.0
-          }
-        },
-        {
-          "sample_index": 3,
-          "rate": {
-            "numerator": 1,
-            "denominator": 34,
-            "value": 0.029411764705882353
-          }
-        },
-        {
-          "sample_index": 4,
-          "rate": {
-            "numerator": 0,
-            "denominator": 34,
-            "value": 0.0
+            "numerator": 133,
+            "denominator": 350,
+            "value": 0.38
           }
         }
       ],
@@ -330,40 +228,24 @@
         {
           "sample_index": 0,
           "rate": {
-            "numerator": 0,
-            "denominator": 34,
-            "value": 0.0
+            "numerator": 1,
+            "denominator": 350,
+            "value": 0.002857142857142857
           }
         },
         {
           "sample_index": 1,
           "rate": {
             "numerator": 0,
-            "denominator": 34,
+            "denominator": 350,
             "value": 0.0
           }
         },
         {
           "sample_index": 2,
           "rate": {
-            "numerator": 1,
-            "denominator": 34,
-            "value": 0.029411764705882353
-          }
-        },
-        {
-          "sample_index": 3,
-          "rate": {
             "numerator": 0,
-            "denominator": 34,
-            "value": 0.0
-          }
-        },
-        {
-          "sample_index": 4,
-          "rate": {
-            "numerator": 0,
-            "denominator": 34,
+            "denominator": 350,
             "value": 0.0
           }
         }
@@ -376,45 +258,2131 @@
         {
           "sample_index": 0,
           "rate": {
-            "numerator": 20,
-            "denominator": 34,
-            "value": 0.5882352941176471
+            "numerator": 99,
+            "denominator": 350,
+            "value": 0.28285714285714286
           }
         },
         {
           "sample_index": 1,
           "rate": {
-            "numerator": 20,
-            "denominator": 34,
-            "value": 0.5882352941176471
+            "numerator": 97,
+            "denominator": 350,
+            "value": 0.27714285714285714
           }
         },
         {
           "sample_index": 2,
           "rate": {
-            "numerator": 17,
-            "denominator": 34,
-            "value": 0.5
-          }
-        },
-        {
-          "sample_index": 3,
-          "rate": {
-            "numerator": 16,
-            "denominator": 34,
-            "value": 0.47058823529411764
-          }
-        },
-        {
-          "sample_index": 4,
-          "rate": {
-            "numerator": 18,
-            "denominator": 34,
-            "value": 0.5294117647058824
+            "numerator": 99,
+            "denominator": 350,
+            "value": 0.28285714285714286
           }
         }
       ],
       "constant_across_samples": false
     }
-  }
+  },
+  "by_cell": [
+    {
+      "key": "arity4_cite_1_payment",
+      "metrics": {
+        "over_erasure": {
+          "rate": {
+            "numerator": 15,
+            "denominator": 15,
+            "value": 1.0
+          },
+          "interval": {
+            "lower": 0.7961107336956521,
+            "upper": 1.0,
+            "confidence_level": 0.95
+          }
+        },
+        "over_retention": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 15,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.20388926630434784,
+            "confidence_level": 0.95
+          }
+        },
+        "mis_escalation": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 15,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.20388926630434784,
+            "confidence_level": 0.95
+          }
+        }
+      },
+      "scored_location_pairs": 15
+    },
+    {
+      "key": "arity4_cite_1_securities",
+      "metrics": {
+        "over_erasure": {
+          "rate": {
+            "numerator": 1,
+            "denominator": 15,
+            "value": 0.06666666666666667
+          },
+          "interval": {
+            "lower": 0.011866588606194856,
+            "upper": 0.2981707755242399,
+            "confidence_level": 0.95
+          }
+        },
+        "over_retention": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 15,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.20388926630434784,
+            "confidence_level": 0.95
+          }
+        },
+        "mis_escalation": {
+          "rate": {
+            "numerator": 14,
+            "denominator": 15,
+            "value": 0.9333333333333333
+          },
+          "interval": {
+            "lower": 0.7018292244757601,
+            "upper": 0.9881334113938051,
+            "confidence_level": 0.95
+          }
+        }
+      },
+      "scored_location_pairs": 15
+    },
+    {
+      "key": "arity4_cite_2_payment",
+      "metrics": {
+        "over_erasure": {
+          "rate": {
+            "numerator": 15,
+            "denominator": 15,
+            "value": 1.0
+          },
+          "interval": {
+            "lower": 0.7961107336956521,
+            "upper": 1.0,
+            "confidence_level": 0.95
+          }
+        },
+        "over_retention": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 15,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.20388926630434784,
+            "confidence_level": 0.95
+          }
+        },
+        "mis_escalation": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 15,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.20388926630434784,
+            "confidence_level": 0.95
+          }
+        }
+      },
+      "scored_location_pairs": 15
+    },
+    {
+      "key": "arity4_cite_2_securities",
+      "metrics": {
+        "over_erasure": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 15,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.20388926630434784,
+            "confidence_level": 0.95
+          }
+        },
+        "over_retention": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 15,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.20388926630434784,
+            "confidence_level": 0.95
+          }
+        },
+        "mis_escalation": {
+          "rate": {
+            "numerator": 15,
+            "denominator": 15,
+            "value": 1.0
+          },
+          "interval": {
+            "lower": 0.7961107336956521,
+            "upper": 1.0,
+            "confidence_level": 0.95
+          }
+        }
+      },
+      "scored_location_pairs": 15
+    },
+    {
+      "key": "arity4_cite_3_payment",
+      "metrics": {
+        "over_erasure": {
+          "rate": {
+            "numerator": 13,
+            "denominator": 15,
+            "value": 0.8666666666666667
+          },
+          "interval": {
+            "lower": 0.6211750079348376,
+            "upper": 0.9626395301086407,
+            "confidence_level": 0.95
+          }
+        },
+        "over_retention": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 15,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.20388926630434784,
+            "confidence_level": 0.95
+          }
+        },
+        "mis_escalation": {
+          "rate": {
+            "numerator": 2,
+            "denominator": 15,
+            "value": 0.13333333333333333
+          },
+          "interval": {
+            "lower": 0.0373604698913593,
+            "upper": 0.3788249920651624,
+            "confidence_level": 0.95
+          }
+        }
+      },
+      "scored_location_pairs": 15
+    },
+    {
+      "key": "arity4_cite_3_securities",
+      "metrics": {
+        "over_erasure": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 15,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.20388926630434784,
+            "confidence_level": 0.95
+          }
+        },
+        "over_retention": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 15,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.20388926630434784,
+            "confidence_level": 0.95
+          }
+        },
+        "mis_escalation": {
+          "rate": {
+            "numerator": 15,
+            "denominator": 15,
+            "value": 1.0
+          },
+          "interval": {
+            "lower": 0.7961107336956521,
+            "upper": 1.0,
+            "confidence_level": 0.95
+          }
+        }
+      },
+      "scored_location_pairs": 15
+    },
+    {
+      "key": "boundary_elapsed_1d_customer",
+      "metrics": {
+        "over_erasure": {
+          "rate": {
+            "numerator": 15,
+            "denominator": 15,
+            "value": 1.0
+          },
+          "interval": {
+            "lower": 0.7961107336956521,
+            "upper": 1.0,
+            "confidence_level": 0.95
+          }
+        },
+        "over_retention": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 15,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.20388926630434784,
+            "confidence_level": 0.95
+          }
+        },
+        "mis_escalation": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 15,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.20388926630434784,
+            "confidence_level": 0.95
+          }
+        }
+      },
+      "scored_location_pairs": 15
+    },
+    {
+      "key": "boundary_elapsed_1d_payment_pmla",
+      "metrics": {
+        "over_erasure": {
+          "rate": {
+            "numerator": 3,
+            "denominator": 15,
+            "value": 0.2
+          },
+          "interval": {
+            "lower": 0.07047420643610414,
+            "upper": 0.4518593533465045,
+            "confidence_level": 0.95
+          }
+        },
+        "over_retention": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 15,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.20388926630434784,
+            "confidence_level": 0.95
+          }
+        },
+        "mis_escalation": {
+          "rate": {
+            "numerator": 10,
+            "denominator": 15,
+            "value": 0.6666666666666666
+          },
+          "interval": {
+            "lower": 0.41713125151212976,
+            "upper": 0.8482389930530876,
+            "confidence_level": 0.95
+          }
+        }
+      },
+      "scored_location_pairs": 15
+    },
+    {
+      "key": "boundary_unelapsed_1d_customer",
+      "metrics": {
+        "over_erasure": {
+          "rate": {
+            "numerator": 11,
+            "denominator": 15,
+            "value": 0.7333333333333333
+          },
+          "interval": {
+            "lower": 0.4804911034231324,
+            "upper": 0.8910272389681718,
+            "confidence_level": 0.95
+          }
+        },
+        "over_retention": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 15,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.20388926630434784,
+            "confidence_level": 0.95
+          }
+        },
+        "mis_escalation": {
+          "rate": {
+            "numerator": 3,
+            "denominator": 15,
+            "value": 0.2
+          },
+          "interval": {
+            "lower": 0.07047420643610414,
+            "upper": 0.4518593533465045,
+            "confidence_level": 0.95
+          }
+        }
+      },
+      "scored_location_pairs": 15
+    },
+    {
+      "key": "boundary_unelapsed_1d_payment_pmla",
+      "metrics": {
+        "over_erasure": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 15,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.20388926630434784,
+            "confidence_level": 0.95
+          }
+        },
+        "over_retention": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 15,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.20388926630434784,
+            "confidence_level": 0.95
+          }
+        },
+        "mis_escalation": {
+          "rate": {
+            "numerator": 5,
+            "denominator": 15,
+            "value": 0.3333333333333333
+          },
+          "interval": {
+            "lower": 0.15176100694691236,
+            "upper": 0.5828687484878701,
+            "confidence_level": 0.95
+          }
+        }
+      },
+      "scored_location_pairs": 15
+    },
+    {
+      "key": "elapsed_no_trigger_customer",
+      "metrics": {
+        "over_erasure": {
+          "rate": {
+            "numerator": 15,
+            "denominator": 15,
+            "value": 1.0
+          },
+          "interval": {
+            "lower": 0.7961107336956521,
+            "upper": 1.0,
+            "confidence_level": 0.95
+          }
+        },
+        "over_retention": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 15,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.20388926630434784,
+            "confidence_level": 0.95
+          }
+        },
+        "mis_escalation": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 15,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.20388926630434784,
+            "confidence_level": 0.95
+          }
+        }
+      },
+      "scored_location_pairs": 15
+    },
+    {
+      "key": "elapsed_no_trigger_payment",
+      "metrics": {
+        "over_erasure": {
+          "rate": {
+            "numerator": 15,
+            "denominator": 15,
+            "value": 1.0
+          },
+          "interval": {
+            "lower": 0.7961107336956521,
+            "upper": 1.0,
+            "confidence_level": 0.95
+          }
+        },
+        "over_retention": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 15,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.20388926630434784,
+            "confidence_level": 0.95
+          }
+        },
+        "mis_escalation": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 15,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.20388926630434784,
+            "confidence_level": 0.95
+          }
+        }
+      },
+      "scored_location_pairs": 15
+    },
+    {
+      "key": "elapsed_no_trigger_securities",
+      "metrics": {
+        "over_erasure": {
+          "rate": {
+            "numerator": 5,
+            "denominator": 15,
+            "value": 0.3333333333333333
+          },
+          "interval": {
+            "lower": 0.15176100694691236,
+            "upper": 0.5828687484878701,
+            "confidence_level": 0.95
+          }
+        },
+        "over_retention": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 15,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.20388926630434784,
+            "confidence_level": 0.95
+          }
+        },
+        "mis_escalation": {
+          "rate": {
+            "numerator": 10,
+            "denominator": 15,
+            "value": 0.6666666666666666
+          },
+          "interval": {
+            "lower": 0.41713125151212976,
+            "upper": 0.8482389930530876,
+            "confidence_level": 0.95
+          }
+        }
+      },
+      "scored_location_pairs": 15
+    },
+    {
+      "key": "marketing_active",
+      "metrics": {
+        "over_erasure": {
+          "rate": {
+            "numerator": 15,
+            "denominator": 15,
+            "value": 1.0
+          },
+          "interval": {
+            "lower": 0.7961107336956521,
+            "upper": 1.0,
+            "confidence_level": 0.95
+          }
+        },
+        "over_retention": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 15,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.20388926630434784,
+            "confidence_level": 0.95
+          }
+        },
+        "mis_escalation": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 15,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.20388926630434784,
+            "confidence_level": 0.95
+          }
+        }
+      },
+      "scored_location_pairs": 15
+    },
+    {
+      "key": "marketing_withdrawn",
+      "metrics": {
+        "over_erasure": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 14,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.21531701192718142,
+            "confidence_level": 0.95
+          }
+        },
+        "over_retention": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 14,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.21531701192718142,
+            "confidence_level": 0.95
+          }
+        },
+        "mis_escalation": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 14,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.21531701192718142,
+            "confidence_level": 0.95
+          }
+        }
+      },
+      "scored_location_pairs": 14
+    },
+    {
+      "key": "ordinary_elapsed_with_purpose_payment",
+      "metrics": {
+        "over_erasure": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 14,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.21531701192718142,
+            "confidence_level": 0.95
+          }
+        },
+        "over_retention": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 14,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.21531701192718142,
+            "confidence_level": 0.95
+          }
+        },
+        "mis_escalation": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 14,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.21531701192718142,
+            "confidence_level": 0.95
+          }
+        }
+      },
+      "scored_location_pairs": 14
+    },
+    {
+      "key": "ordinary_erase_payment",
+      "metrics": {
+        "over_erasure": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 14,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.21531701192718142,
+            "confidence_level": 0.95
+          }
+        },
+        "over_retention": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 14,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.21531701192718142,
+            "confidence_level": 0.95
+          }
+        },
+        "mis_escalation": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 14,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.21531701192718142,
+            "confidence_level": 0.95
+          }
+        }
+      },
+      "scored_location_pairs": 14
+    },
+    {
+      "key": "ordinary_erase_securities",
+      "metrics": {
+        "over_erasure": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 14,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.21531701192718142,
+            "confidence_level": 0.95
+          }
+        },
+        "over_retention": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 14,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.21531701192718142,
+            "confidence_level": 0.95
+          }
+        },
+        "mis_escalation": {
+          "rate": {
+            "numerator": 7,
+            "denominator": 14,
+            "value": 0.5
+          },
+          "interval": {
+            "lower": 0.2679886791947528,
+            "upper": 0.7320113208052472,
+            "confidence_level": 0.95
+          }
+        }
+      },
+      "scored_location_pairs": 14
+    },
+    {
+      "key": "ordinary_inactivity_erase_payment",
+      "metrics": {
+        "over_erasure": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 14,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.21531701192718142,
+            "confidence_level": 0.95
+          }
+        },
+        "over_retention": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 14,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.21531701192718142,
+            "confidence_level": 0.95
+          }
+        },
+        "mis_escalation": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 14,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.21531701192718142,
+            "confidence_level": 0.95
+          }
+        }
+      },
+      "scored_location_pairs": 14
+    },
+    {
+      "key": "ordinary_kyc_open_retain",
+      "metrics": {
+        "over_erasure": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 14,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.21531701192718142,
+            "confidence_level": 0.95
+          }
+        },
+        "over_retention": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 14,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.21531701192718142,
+            "confidence_level": 0.95
+          }
+        },
+        "mis_escalation": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 14,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.21531701192718142,
+            "confidence_level": 0.95
+          }
+        }
+      },
+      "scored_location_pairs": 14
+    },
+    {
+      "key": "ordinary_open_customer_retain",
+      "metrics": {
+        "over_erasure": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 14,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.21531701192718142,
+            "confidence_level": 0.95
+          }
+        },
+        "over_retention": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 14,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.21531701192718142,
+            "confidence_level": 0.95
+          }
+        },
+        "mis_escalation": {
+          "rate": {
+            "numerator": 3,
+            "denominator": 14,
+            "value": 0.21428571428571427
+          },
+          "interval": {
+            "lower": 0.0757124833691637,
+            "upper": 0.4758972377320828,
+            "confidence_level": 0.95
+          }
+        }
+      },
+      "scored_location_pairs": 14
+    },
+    {
+      "key": "re_engagement_erase_payment",
+      "metrics": {
+        "over_erasure": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 14,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.21531701192718142,
+            "confidence_level": 0.95
+          }
+        },
+        "over_retention": {
+          "rate": {
+            "numerator": 1,
+            "denominator": 14,
+            "value": 0.07142857142857142
+          },
+          "interval": {
+            "lower": 0.012721886112291636,
+            "upper": 0.3146926955395781,
+            "confidence_level": 0.95
+          }
+        },
+        "mis_escalation": {
+          "rate": {
+            "numerator": 9,
+            "denominator": 14,
+            "value": 0.6428571428571429
+          },
+          "interval": {
+            "lower": 0.3876400468214042,
+            "upper": 0.8365550926279727,
+            "confidence_level": 0.95
+          }
+        }
+      },
+      "scored_location_pairs": 14
+    },
+    {
+      "key": "uncomputable_customer",
+      "metrics": {
+        "over_erasure": {
+          "rate": {
+            "numerator": 6,
+            "denominator": 14,
+            "value": 0.42857142857142855
+          },
+          "interval": {
+            "lower": 0.21380509930400526,
+            "upper": 0.6740973309713064,
+            "confidence_level": 0.95
+          }
+        },
+        "over_retention": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 14,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.21531701192718142,
+            "confidence_level": 0.95
+          }
+        },
+        "mis_escalation": {
+          "rate": {
+            "numerator": 6,
+            "denominator": 14,
+            "value": 0.42857142857142855
+          },
+          "interval": {
+            "lower": 0.21380509930400526,
+            "upper": 0.6740973309713064,
+            "confidence_level": 0.95
+          }
+        }
+      },
+      "scored_location_pairs": 14
+    },
+    {
+      "key": "uncomputable_kyc",
+      "metrics": {
+        "over_erasure": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 14,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.21531701192718142,
+            "confidence_level": 0.95
+          }
+        },
+        "over_retention": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 14,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.21531701192718142,
+            "confidence_level": 0.95
+          }
+        },
+        "mis_escalation": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 14,
+            "value": 0.0
+          },
+          "interval": {
+            "lower": 0.0,
+            "upper": 0.21531701192718142,
+            "confidence_level": 0.95
+          }
+        }
+      },
+      "scored_location_pairs": 14
+    }
+  ],
+  "by_stratum": [
+    {
+      "field": "entity_type",
+      "rows": [
+        {
+          "key": "customers",
+          "metrics": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 47,
+                "denominator": 73,
+                "value": 0.6438356164383562
+              },
+              "interval": {
+                "lower": 0.529332842211795,
+                "upper": 0.7439566259929274,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 73,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.04999375338358389,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 12,
+                "denominator": 73,
+                "value": 0.1643835616438356
+              },
+              "interval": {
+                "lower": 0.09661201862809403,
+                "upper": 0.26571255556088685,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "scored_location_pairs": 73
+        },
+        {
+          "key": "kyc_documents",
+          "metrics": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 28,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.12064720365810762,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 28,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.12064720365810762,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 28,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.12064720365810762,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "scored_location_pairs": 28
+        },
+        {
+          "key": "marketing_consents",
+          "metrics": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 15,
+                "denominator": 29,
+                "value": 0.5172413793103449
+              },
+              "interval": {
+                "lower": 0.3443073797056916,
+                "upper": 0.6861418066920478,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 29,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.11697359446555587,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 29,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.11697359446555587,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "scored_location_pairs": 29
+        },
+        {
+          "key": "transactions",
+          "metrics": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 67,
+                "denominator": 220,
+                "value": 0.30454545454545456
+              },
+              "interval": {
+                "lower": 0.24751651351531426,
+                "upper": 0.36828323058944556,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 1,
+                "denominator": 220,
+                "value": 0.004545454545454545
+              },
+              "interval": {
+                "lower": 0.0008028148215663295,
+                "upper": 0.02529421093235966,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 87,
+                "denominator": 220,
+                "value": 0.39545454545454545
+              },
+              "interval": {
+                "lower": 0.3331693230388094,
+                "upper": 0.4613282145055969,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "scored_location_pairs": 220
+        }
+      ]
+    },
+    {
+      "field": "floor_set",
+      "rows": [
+        {
+          "key": "",
+          "metrics": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 15,
+                "denominator": 29,
+                "value": 0.5172413793103449
+              },
+              "interval": {
+                "lower": 0.3443073797056916,
+                "upper": 0.6861418066920478,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 29,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.11697359446555587,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 29,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.11697359446555587,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "scored_location_pairs": 29
+        },
+        {
+          "key": "pmla_kyc",
+          "metrics": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 47,
+                "denominator": 101,
+                "value": 0.46534653465346537
+              },
+              "interval": {
+                "lower": 0.3711275816192353,
+                "upper": 0.5621050283371178,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 101,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.03664194365595336,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 12,
+                "denominator": 101,
+                "value": 0.1188118811881188
+              },
+              "interval": {
+                "lower": 0.06928651062322312,
+                "upper": 0.1962721988966621,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "scored_location_pairs": 101
+        },
+        {
+          "key": "pmla_kyc,gst,income_tax,companies_act",
+          "metrics": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 61,
+                "denominator": 146,
+                "value": 0.4178082191780822
+              },
+              "interval": {
+                "lower": 0.3409174566492344,
+                "upper": 0.4989134047403932,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 1,
+                "denominator": 146,
+                "value": 0.00684931506849315
+              },
+              "interval": {
+                "lower": 0.001210066099070966,
+                "upper": 0.03777510223869371,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 26,
+                "denominator": 146,
+                "value": 0.1780821917808219
+              },
+              "interval": {
+                "lower": 0.12452375102480434,
+                "upper": 0.24814712275123652,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "scored_location_pairs": 146
+        },
+        {
+          "key": "pmla_kyc,income_tax,companies_act,sebi",
+          "metrics": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 6,
+                "denominator": 74,
+                "value": 0.08108108108108109
+              },
+              "interval": {
+                "lower": 0.03768933680933338,
+                "upper": 0.16582138239479394,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 74,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.049351503566216516,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 61,
+                "denominator": 74,
+                "value": 0.8243243243243243
+              },
+              "interval": {
+                "lower": 0.7222779521065887,
+                "upper": 0.8943589104450547,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "scored_location_pairs": 74
+        }
+      ]
+    },
+    {
+      "field": "collision_arity",
+      "rows": [
+        {
+          "key": "0",
+          "metrics": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 15,
+                "denominator": 29,
+                "value": 0.5172413793103449
+              },
+              "interval": {
+                "lower": 0.3443073797056916,
+                "upper": 0.6861418066920478,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 29,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.11697359446555587,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 29,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.11697359446555587,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "scored_location_pairs": 29
+        },
+        {
+          "key": "1",
+          "metrics": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 47,
+                "denominator": 101,
+                "value": 0.46534653465346537
+              },
+              "interval": {
+                "lower": 0.3711275816192353,
+                "upper": 0.5621050283371178,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 101,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.03664194365595336,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 12,
+                "denominator": 101,
+                "value": 0.1188118811881188
+              },
+              "interval": {
+                "lower": 0.06928651062322312,
+                "upper": 0.1962721988966621,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "scored_location_pairs": 101
+        },
+        {
+          "key": "4",
+          "metrics": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 67,
+                "denominator": 220,
+                "value": 0.30454545454545456
+              },
+              "interval": {
+                "lower": 0.24751651351531426,
+                "upper": 0.36828323058944556,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 1,
+                "denominator": 220,
+                "value": 0.004545454545454545
+              },
+              "interval": {
+                "lower": 0.0008028148215663295,
+                "upper": 0.02529421093235966,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 87,
+                "denominator": 220,
+                "value": 0.39545454545454545
+              },
+              "interval": {
+                "lower": 0.3331693230388094,
+                "upper": 0.4613282145055969,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "scored_location_pairs": 220
+        }
+      ]
+    },
+    {
+      "field": "anchor_computable",
+      "rows": [
+        {
+          "key": "false",
+          "metrics": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 6,
+                "denominator": 28,
+                "value": 0.21428571428571427
+              },
+              "interval": {
+                "lower": 0.10212321701189422,
+                "upper": 0.3953894707927388,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 28,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.12064720365810762,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 6,
+                "denominator": 28,
+                "value": 0.21428571428571427
+              },
+              "interval": {
+                "lower": 0.10212321701189422,
+                "upper": 0.3953894707927388,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "scored_location_pairs": 28
+        },
+        {
+          "key": "true",
+          "metrics": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 123,
+                "denominator": 322,
+                "value": 0.38198757763975155
+              },
+              "interval": {
+                "lower": 0.33060406777472495,
+                "upper": 0.43615376793440475,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 1,
+                "denominator": 322,
+                "value": 0.003105590062111801
+              },
+              "interval": {
+                "lower": 0.0005484093101857882,
+                "upper": 0.01737931999141351,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 93,
+                "denominator": 322,
+                "value": 0.2888198757763975
+              },
+              "interval": {
+                "lower": 0.24203638299824237,
+                "upper": 0.34058290195493723,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "scored_location_pairs": 322
+        }
+      ]
+    },
+    {
+      "field": "boundary_flag",
+      "rows": [
+        {
+          "key": "elapsed_by_1d",
+          "metrics": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 18,
+                "denominator": 30,
+                "value": 0.6
+              },
+              "interval": {
+                "lower": 0.42320052498273836,
+                "upper": 0.7540960567391659,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 30,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.113517091390478,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 10,
+                "denominator": 30,
+                "value": 0.3333333333333333
+              },
+              "interval": {
+                "lower": 0.19230295526846194,
+                "upper": 0.5122027418616973,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "scored_location_pairs": 30
+        },
+        {
+          "key": "none",
+          "metrics": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 100,
+                "denominator": 290,
+                "value": 0.3448275862068966
+              },
+              "interval": {
+                "lower": 0.2924710826458213,
+                "upper": 0.40124144818711743,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 1,
+                "denominator": 290,
+                "value": 0.0034482758620689655
+              },
+              "interval": {
+                "lower": 0.0006089492549414596,
+                "upper": 0.019271149410461944,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 81,
+                "denominator": 290,
+                "value": 0.2793103448275862
+              },
+              "interval": {
+                "lower": 0.2308145383376623,
+                "upper": 0.33357661662473925,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "scored_location_pairs": 290
+        },
+        {
+          "key": "unelapsed_by_1d",
+          "metrics": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 11,
+                "denominator": 30,
+                "value": 0.36666666666666664
+              },
+              "interval": {
+                "lower": 0.21873702204017678,
+                "upper": 0.5448675356639506,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 30,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.113517091390478,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 8,
+                "denominator": 30,
+                "value": 0.26666666666666666
+              },
+              "interval": {
+                "lower": 0.14182495553910618,
+                "upper": 0.4444830204431169,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "scored_location_pairs": 30
+        }
+      ]
+    },
+    {
+      "field": "trigger_shape",
+      "rows": [
+        {
+          "key": "consent_withdrawn",
+          "metrics": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 14,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.21531701192718142,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 14,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.21531701192718142,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 14,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.21531701192718142,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "scored_location_pairs": 14
+        },
+        {
+          "key": "explicit_erasure_right",
+          "metrics": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 6,
+                "denominator": 70,
+                "value": 0.08571428571428572
+              },
+              "interval": {
+                "lower": 0.03987612654032836,
+                "upper": 0.17465876977827793,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 70,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.05202487486728348,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 9,
+                "denominator": 70,
+                "value": 0.12857142857142856
+              },
+              "interval": {
+                "lower": 0.06914021991242263,
+                "upper": 0.22664968713184502,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "scored_location_pairs": 70
+        },
+        {
+          "key": "inactivity",
+          "metrics": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 14,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.21531701192718142,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 14,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.21531701192718142,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 14,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.21531701192718142,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "scored_location_pairs": 14
+        },
+        {
+          "key": "none",
+          "metrics": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 68,
+                "denominator": 90,
+                "value": 0.7555555555555555
+              },
+              "interval": {
+                "lower": 0.6575143545381369,
+                "upper": 0.8326733660463373,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 90,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.04093706842168078,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 20,
+                "denominator": 90,
+                "value": 0.2222222222222222
+              },
+              "interval": {
+                "lower": 0.14871223281666784,
+                "upper": 0.3184750274175992,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "scored_location_pairs": 90
+        },
+        {
+          "key": "purpose_fulfilled",
+          "metrics": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 55,
+                "denominator": 162,
+                "value": 0.3395061728395062
+              },
+              "interval": {
+                "lower": 0.27105591086960734,
+                "upper": 0.4153918802756784,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 1,
+                "denominator": 162,
+                "value": 0.006172839506172839
+              },
+              "interval": {
+                "lower": 0.00109046202853268,
+                "upper": 0.034133510726192307,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 70,
+                "denominator": 162,
+                "value": 0.43209876543209874
+              },
+              "interval": {
+                "lower": 0.3582611622067933,
+                "upper": 0.5090821340469813,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "scored_location_pairs": 162
+        }
+      ]
+    },
+    {
+      "field": "re_engagement",
+      "rows": [
+        {
+          "key": "false",
+          "metrics": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 129,
+                "denominator": 336,
+                "value": 0.38392857142857145
+              },
+              "interval": {
+                "lower": 0.3335159124154075,
+                "upper": 0.43696539416977803,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 336,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.011304089905414755,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 90,
+                "denominator": 336,
+                "value": 0.26785714285714285
+              },
+              "interval": {
+                "lower": 0.22332488765640368,
+                "upper": 0.3176377255139674,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "scored_location_pairs": 336
+        },
+        {
+          "key": "true",
+          "metrics": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 14,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.21531701192718142,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 1,
+                "denominator": 14,
+                "value": 0.07142857142857142
+              },
+              "interval": {
+                "lower": 0.012721886112291636,
+                "upper": 0.3146926955395781,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 9,
+                "denominator": 14,
+                "value": 0.6428571428571429
+              },
+              "interval": {
+                "lower": 0.3876400468214042,
+                "upper": 0.8365550926279727,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "scored_location_pairs": 14
+        }
+      ]
+    },
+    {
+      "field": "split",
+      "rows": [
+        {
+          "key": "eval",
+          "metrics": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 6,
+                "denominator": 74,
+                "value": 0.08108108108108109
+              },
+              "interval": {
+                "lower": 0.03768933680933338,
+                "upper": 0.16582138239479394,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 74,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.049351503566216516,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 61,
+                "denominator": 74,
+                "value": 0.8243243243243243
+              },
+              "interval": {
+                "lower": 0.7222779521065887,
+                "upper": 0.8943589104450547,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "scored_location_pairs": 74
+        },
+        {
+          "key": "train",
+          "metrics": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 123,
+                "denominator": 276,
+                "value": 0.44565217391304346
+              },
+              "interval": {
+                "lower": 0.388157793035745,
+                "upper": 0.5046387032678782,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 1,
+                "denominator": 276,
+                "value": 0.0036231884057971015
+              },
+              "interval": {
+                "lower": 0.000639851831292353,
+                "upper": 0.02023481440846614,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 38,
+                "denominator": 276,
+                "value": 0.13768115942028986
+              },
+              "interval": {
+                "lower": 0.10197859676174836,
+                "upper": 0.1833313785957396,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "scored_location_pairs": 276
+        }
+      ]
+    }
+  ]
 }

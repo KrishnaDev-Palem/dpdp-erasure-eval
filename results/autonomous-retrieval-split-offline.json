@@ -1,0 +1,118 @@
+{
+  "runner_id": "autonomous",
+  "model_id": "claude-sonnet-5",
+  "cache_mode": "offline",
+  "export_agent_sha": "7b659e8e3ec87a9115a5d7709f20f1c1eb6fec22",
+  "primary_sample_index": 0,
+  "total_incorrect": 101,
+  "retrieval_failure": {
+    "numerator": 0,
+    "denominator": 101,
+    "value": 0.0
+  },
+  "reasoning_failure": {
+    "numerator": 101,
+    "denominator": 101,
+    "value": 1.0
+  },
+  "per_lane": [
+    {
+      "lane": "erase",
+      "incorrect_count": 15,
+      "retrieval_failure_count": 0,
+      "reasoning_failure_count": 15
+    },
+    {
+      "lane": "retain",
+      "incorrect_count": 86,
+      "retrieval_failure_count": 0,
+      "reasoning_failure_count": 86
+    },
+    {
+      "lane": "escalate",
+      "incorrect_count": 0,
+      "retrieval_failure_count": 0,
+      "reasoning_failure_count": 0
+    }
+  ],
+  "sample_rollups": [
+    {
+      "sample_index": 0,
+      "total_incorrect": 101,
+      "retrieval_failure_count": 0,
+      "reasoning_failure_count": 101,
+      "per_lane": [
+        {
+          "lane": "erase",
+          "incorrect_count": 15,
+          "retrieval_failure_count": 0,
+          "reasoning_failure_count": 15
+        },
+        {
+          "lane": "retain",
+          "incorrect_count": 86,
+          "retrieval_failure_count": 0,
+          "reasoning_failure_count": 86
+        },
+        {
+          "lane": "escalate",
+          "incorrect_count": 0,
+          "retrieval_failure_count": 0,
+          "reasoning_failure_count": 0
+        }
+      ]
+    },
+    {
+      "sample_index": 1,
+      "total_incorrect": 98,
+      "retrieval_failure_count": 0,
+      "reasoning_failure_count": 98,
+      "per_lane": [
+        {
+          "lane": "erase",
+          "incorrect_count": 15,
+          "retrieval_failure_count": 0,
+          "reasoning_failure_count": 15
+        },
+        {
+          "lane": "retain",
+          "incorrect_count": 83,
+          "retrieval_failure_count": 0,
+          "reasoning_failure_count": 83
+        },
+        {
+          "lane": "escalate",
+          "incorrect_count": 0,
+          "retrieval_failure_count": 0,
+          "reasoning_failure_count": 0
+        }
+      ]
+    },
+    {
+      "sample_index": 2,
+      "total_incorrect": 101,
+      "retrieval_failure_count": 0,
+      "reasoning_failure_count": 101,
+      "per_lane": [
+        {
+          "lane": "erase",
+          "incorrect_count": 17,
+          "retrieval_failure_count": 0,
+          "reasoning_failure_count": 17
+        },
+        {
+          "lane": "retain",
+          "incorrect_count": 84,
+          "retrieval_failure_count": 0,
+          "reasoning_failure_count": 84
+        },
+        {
+          "lane": "escalate",
+          "incorrect_count": 0,
+          "retrieval_failure_count": 0,
+          "reasoning_failure_count": 0
+        }
+      ]
+    }
+  ]
+}

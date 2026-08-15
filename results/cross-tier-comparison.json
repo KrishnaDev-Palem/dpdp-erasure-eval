@@ -1,42 +1,42 @@
 {
-  "export_agent_sha": "3562059939cbaac3dc3500593f2940ef34c54c53",
+  "export_agent_sha": "7b659e8e3ec87a9115a5d7709f20f1c1eb6fec22",
   "sample_index": 0,
   "rows": [
     {
       "tier": "t1",
       "over_erasure": {
         "rate": {
-          "numerator": 0,
-          "denominator": 34,
-          "value": 0.0
+          "numerator": 88,
+          "denominator": 350,
+          "value": 0.25142857142857145
         },
         "interval": {
-          "lower": 0.0,
-          "upper": 0.10151790621961015,
+          "lower": 0.2088429207261199,
+          "upper": 0.2994116202888427,
           "confidence_level": 0.95
         }
       },
       "over_retention": {
         "rate": {
           "numerator": 0,
-          "denominator": 34,
+          "denominator": 350,
           "value": 0.0
         },
         "interval": {
           "lower": 0.0,
-          "upper": 0.10151790621961015,
+          "upper": 0.010856835374924824,
           "confidence_level": 0.95
         }
       },
       "mis_escalation": {
         "rate": {
-          "numerator": 32,
-          "denominator": 34,
-          "value": 0.9411764705882353
+          "numerator": 149,
+          "denominator": 350,
+          "value": 0.4257142857142857
         },
         "interval": {
-          "lower": 0.8090606311053629,
-          "upper": 0.9837176869361576,
+          "lower": 0.3749946128319386,
+          "upper": 0.4780469741380502,
           "confidence_level": 0.95
         }
       }
@@ -45,37 +45,37 @@
       "tier": "t2",
       "over_erasure": {
         "rate": {
-          "numerator": 1,
-          "denominator": 34,
-          "value": 0.029411764705882353
+          "numerator": 129,
+          "denominator": 350,
+          "value": 0.36857142857142855
         },
         "interval": {
-          "lower": 0.00521077192559663,
-          "upper": 0.1491590221634482,
+          "lower": 0.3197120497892868,
+          "upper": 0.42028460408069335,
           "confidence_level": 0.95
         }
       },
       "over_retention": {
         "rate": {
-          "numerator": 0,
-          "denominator": 34,
-          "value": 0.0
+          "numerator": 1,
+          "denominator": 350,
+          "value": 0.002857142857142857
         },
         "interval": {
-          "lower": 0.0,
-          "upper": 0.10151790621961015,
+          "lower": 0.0005045210608510117,
+          "upper": 0.01600456096907424,
           "confidence_level": 0.95
         }
       },
       "mis_escalation": {
         "rate": {
-          "numerator": 20,
-          "denominator": 34,
-          "value": 0.5882352941176471
+          "numerator": 99,
+          "denominator": 350,
+          "value": 0.28285714285714286
         },
         "interval": {
-          "lower": 0.42221304146519273,
-          "upper": 0.7363426221431113,
+          "lower": 0.23822680199110363,
+          "upper": 0.33220245222886363,
           "confidence_level": 0.95
         }
       }
@@ -84,37 +84,37 @@
       "tier": "t3",
       "over_erasure": {
         "rate": {
-          "numerator": 1,
-          "denominator": 34,
-          "value": 0.029411764705882353
+          "numerator": 53,
+          "denominator": 350,
+          "value": 0.15142857142857144
         },
         "interval": {
-          "lower": 0.00521077192559663,
-          "upper": 0.1491590221634482,
+          "lower": 0.11767094103743408,
+          "upper": 0.1927549670525135,
           "confidence_level": 0.95
         }
       },
       "over_retention": {
         "rate": {
-          "numerator": 0,
-          "denominator": 34,
-          "value": 0.0
+          "numerator": 3,
+          "denominator": 350,
+          "value": 0.008571428571428572
         },
         "interval": {
-          "lower": 0.0,
-          "upper": 0.10151790621961015,
+          "lower": 0.002919203741260255,
+          "upper": 0.02489437159866586,
           "confidence_level": 0.95
         }
       },
       "mis_escalation": {
         "rate": {
-          "numerator": 11,
-          "denominator": 34,
-          "value": 0.3235294117647059
+          "numerator": 42,
+          "denominator": 350,
+          "value": 0.12
         },
         "interval": {
-          "lower": 0.19131451326458573,
-          "upper": 0.4915741595188061,
+          "lower": 0.0900154469026484,
+          "upper": 0.15823574798229442,
           "confidence_level": 0.95
         }
       }
@@ -123,37 +123,37 @@
       "tier": "autonomous",
       "over_erasure": {
         "rate": {
-          "numerator": 1,
-          "denominator": 34,
-          "value": 0.029411764705882353
+          "numerator": 66,
+          "denominator": 350,
+          "value": 0.18857142857142858
         },
         "interval": {
-          "lower": 0.00521077192559663,
-          "upper": 0.1491590221634482,
+          "lower": 0.15105438149106976,
+          "upper": 0.23285073311388338,
           "confidence_level": 0.95
         }
       },
       "over_retention": {
         "rate": {
-          "numerator": 0,
-          "denominator": 34,
-          "value": 0.0
+          "numerator": 6,
+          "denominator": 350,
+          "value": 0.017142857142857144
         },
         "interval": {
-          "lower": 0.0,
-          "upper": 0.10151790621961015,
+          "lower": 0.007879699634977295,
+          "upper": 0.036890615669950104,
           "confidence_level": 0.95
         }
       },
       "mis_escalation": {
         "rate": {
-          "numerator": 9,
-          "denominator": 34,
-          "value": 0.2647058823529412
+          "numerator": 29,
+          "denominator": 350,
+          "value": 0.08285714285714285
         },
         "interval": {
-          "lower": 0.14601027541553796,
-          "upper": 0.4311746216289845,
+          "lower": 0.058307800368703394,
+          "upper": 0.11646418800123384,
           "confidence_level": 0.95
         }
       }
