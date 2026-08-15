@@ -207,6 +207,21 @@ def test_figure_module_imports_no_runners() -> None:
                 assert not node.module.startswith("runners"), f"{path.name} imports {node.module}"
 
 
+def test_three_sample_agreement_buckets(export_dir, cache_dir) -> None:
+    from report.figures.variance import compute_verdict_agreement_by_tier
+
+    distributions = compute_verdict_agreement_by_tier(
+        export_dir=export_dir,
+        cache_root=cache_dir,
+        model_id="primary",
+        sample_indices=[0, 1, 2],
+    )
+    expected = {"3/3 unanimous", "2/3", "split"}
+    for distribution in distributions.values():
+        assert set(distribution.bucket_counts) == expected
+        assert sum(distribution.bucket_counts.values()) == distribution.total_cases
+
+
 def test_offline_loader_does_not_invoke_model_seam(
     export_dir,
     cache_dir,

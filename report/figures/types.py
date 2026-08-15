@@ -30,7 +30,17 @@ FAMILY_DISPLAY: dict[str, str] = {
     "exfiltration": "exfiltration",
 }
 
-AGREEMENT_BUCKETS: tuple[str, ...] = ("5/5 unanimous", "4/5", "3/5", "split")
+FIVE_SAMPLE_AGREEMENT_BUCKETS: tuple[str, ...] = ("5/5 unanimous", "4/5", "3/5", "split")
+THREE_SAMPLE_AGREEMENT_BUCKETS: tuple[str, ...] = ("3/3 unanimous", "2/3", "split")
+AGREEMENT_BUCKETS: tuple[str, ...] = FIVE_SAMPLE_AGREEMENT_BUCKETS
+
+
+def agreement_buckets_for(sample_count: int) -> tuple[str, ...]:
+    if sample_count == 3:
+        return THREE_SAMPLE_AGREEMENT_BUCKETS
+    if sample_count == 5:
+        return FIVE_SAMPLE_AGREEMENT_BUCKETS
+    raise ValueError(f"sample_count must be 3 or 5, got {sample_count}")
 
 
 @dataclass(frozen=True)

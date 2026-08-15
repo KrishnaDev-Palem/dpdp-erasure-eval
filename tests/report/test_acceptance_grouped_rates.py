@@ -138,4 +138,4 @@ def test_v1_export_omits_grouped_tables(
     assert "Per-cell rates" not in human
     assert "Per-stratum rates" not in human
     assert report.primary_metrics.over_erasure.rate == result.samples[0].scoring.over_erasure_rate
-    assert len(report.sample_rollups) == 5
+    assert len(report.sample_rollups) == 3

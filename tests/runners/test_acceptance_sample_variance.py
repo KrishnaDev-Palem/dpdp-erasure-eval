@@ -19,7 +19,12 @@ def test_five_per_sample_rollups(
     export_dir: Path,
     cache_dir: Path,
 ) -> None:
-    result = run_t2_sweep(seam=fake_seam, export_dir=export_dir, cache_root=cache_dir)
+    result = run_t2_sweep(
+        seam=fake_seam,
+        export_dir=export_dir,
+        cache_root=cache_dir,
+        sample_indices=[0, 1, 2, 3, 4],
+    )
     assert len(result.samples) == 5
     for index, sample in enumerate(result.samples):
         assert sample.sample_index == index
@@ -30,7 +35,12 @@ def test_variance_summary_has_constancy_flags(
     export_dir: Path,
     cache_dir: Path,
 ) -> None:
-    result = run_t2_sweep(seam=fake_seam, export_dir=export_dir, cache_root=cache_dir)
+    result = run_t2_sweep(
+        seam=fake_seam,
+        export_dir=export_dir,
+        cache_root=cache_dir,
+        sample_indices=[0, 1, 2, 3, 4],
+    )
     variance = result.variance
     assert hasattr(variance.over_erasure, "constant_across_samples")
     assert hasattr(variance.over_retention, "constant_across_samples")

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 from core.exceptions import ModelResponseError
@@ -42,14 +43,24 @@ class LiveAdapterConfig:
 class AnthropicModelSeam:
     """Live ModelSeam backed by the Anthropic Messages API."""
 
-    def __init__(self, config: LiveAdapterConfig, *, client: Any | None = None) -> None:
+    def __init__(
+        self,
+        config: LiveAdapterConfig,
+        *,
+        client: Any | None = None,
+        export_dir: Path | None = None,
+    ) -> None:
         self._config = config
+        self._export_dir = export_dir
         if client is not None:
             self._client = client
         else:
             import anthropic
 
             self._client = anthropic.Anthropic(api_key=config.api_key)
+
+    def bind_export_dir(self, export_dir: Path) -> None:
+        self._export_dir = export_dir
 
     def adjudicate(
         self,
@@ -58,10 +69,18 @@ class AnthropicModelSeam:
         case_id: str,
         tool_registry: ToolRegistry | None = None,
     ) -> list[ModelVerdict] | AdjudicationSessionResult:
-        location_ids = resolve_adjudication_location_ids(context=context, case_id=case_id)
+        location_ids = resolve_adjudication_location_ids(
+            context=context,
+            case_id=case_id,
+            export_dir=self._export_dir,
+        )
         if tool_registry is None:
             text = self._complete_text(
-                prompt=build_adjudication_prompt(context=context, case_id=case_id),
+                prompt=build_adjudication_prompt(
+                    context=context,
+                    case_id=case_id,
+                    export_dir=self._export_dir,
+                ),
             )
             payload = extract_json_object(text)
             return parse_verdicts(payload=payload, location_ids=location_ids, case_id=case_id)
@@ -107,7 +126,11 @@ class AnthropicModelSeam:
         messages: list[dict[str, Any]] = [
             {
                 "role": "user",
-                "content": build_adjudication_prompt(context=context, case_id=case_id),
+                "content": build_adjudication_prompt(
+                    context=context,
+                    case_id=case_id,
+                    export_dir=self._export_dir,
+                ),
             }
         ]
         all_tool_calls: list[dict[str, Any]] = []

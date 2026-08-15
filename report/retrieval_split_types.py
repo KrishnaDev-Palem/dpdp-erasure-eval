@@ -60,6 +60,8 @@ class RetrievalSplitReport(BaseModel):
         lane_set = {row.lane for row in self.per_lane}
         if lane_set != set(VERDICT_LANES):
             raise ValueError(f"per_lane must cover {VERDICT_LANES}, got {sorted(lane_set)}")
-        if len(self.sample_rollups) != 5:
-            raise ValueError(f"sample_rollups must have length 5, got {len(self.sample_rollups)}")
+        if len(self.sample_rollups) not in {3, 5}:
+            raise ValueError(
+                f"sample_rollups must have length 3 or 5, got {len(self.sample_rollups)}"
+            )
         return self

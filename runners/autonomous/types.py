@@ -9,7 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from core.model.seam import load_model_config
 from runners.types import (
-    SAMPLE_INDICES,
+    DEFAULT_ADJUDICATION_SAMPLE_INDICES,
     SampleRollup,
     VarianceSummary,
     validate_adjudication_sample_indices,
@@ -25,7 +25,9 @@ class AutonomousSweepConfig(BaseModel):
     runner_id: str = AUTONOMOUS_RUNNER_ID
     model_id: str
     cache_mode: str
-    sample_indices: list[int] = Field(default_factory=lambda: list(SAMPLE_INDICES))
+    sample_indices: list[int] = Field(
+        default_factory=lambda: list(DEFAULT_ADJUDICATION_SAMPLE_INDICES)
+    )
     export_dir: Path | None = None
     cache_root: Path | None = None
 
@@ -49,7 +51,7 @@ class AutonomousSweepConfig(BaseModel):
         return cls(
             model_id=config.model_id,
             cache_mode=config.cache_mode,
-            sample_indices=list(SAMPLE_INDICES),
+            sample_indices=list(DEFAULT_ADJUDICATION_SAMPLE_INDICES),
             export_dir=export_dir,
             cache_root=cache_root,
         )

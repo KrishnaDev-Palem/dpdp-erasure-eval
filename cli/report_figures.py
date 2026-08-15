@@ -21,6 +21,7 @@ from runners.adversarial_gate.runner import run_adversarial_gate_sweep
 from runners.t1 import run_t1_sweep
 from runners.t2 import run_t2_sweep
 from runners.t3 import run_t3_sweep
+from runners.types import DEFAULT_ADJUDICATION_SAMPLE_INDICES
 
 
 class _OfflineOnlySeam:
@@ -44,6 +45,7 @@ def load_figure_inputs(
     export_dir: Path | None = None,
     cache_root: Path | None = None,
     sample_index: int = 0,
+    sample_indices: list[int] | None = None,
 ) -> LoadFigureInputsResult:
     """Load adjudication and adversarial-gate scored results from committed cache."""
     export_path = export_dir or Path("export")
@@ -51,12 +53,32 @@ def load_figure_inputs(
     config = load_model_config()
     seam = _OfflineOnlySeam()
     missing: list[str] = []
+    adjudication_samples = (
+        list(sample_indices)
+        if sample_indices is not None
+        else list(DEFAULT_ADJUDICATION_SAMPLE_INDICES)
+    )
 
     adjudication_data: AdjudicationFigureData | None = None
     try:
-        t1 = run_t1_sweep(seam=seam, export_dir=export_path, cache_root=cache_path)
-        t2 = run_t2_sweep(seam=seam, export_dir=export_path, cache_root=cache_path)
-        t3 = run_t3_sweep(seam=seam, export_dir=export_path, cache_root=cache_path)
+        t1 = run_t1_sweep(
+            seam=seam,
+            export_dir=export_path,
+            cache_root=cache_path,
+            sample_indices=adjudication_samples,
+        )
+        t2 = run_t2_sweep(
+            seam=seam,
+            export_dir=export_path,
+            cache_root=cache_path,
+            sample_indices=adjudication_samples,
+        )
+        t3 = run_t3_sweep(
+            seam=seam,
+            export_dir=export_path,
+            cache_root=cache_path,
+            sample_indices=adjudication_samples,
+        )
         tier_reports = {
             "t1": build_tier_adjudication_report(t1, sample_index=sample_index),
             "t2": build_tier_adjudication_report(t2, sample_index=sample_index),
@@ -66,6 +88,7 @@ def load_figure_inputs(
             export_dir=export_path,
             cache_root=cache_path,
             model_id=config.model_id,
+            sample_indices=adjudication_samples,
         )
         adjudication_data = AdjudicationFigureData(
             tier_reports=tier_reports,

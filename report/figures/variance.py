@@ -11,9 +11,9 @@ from core.context.tiers import build_t1, build_t2, build_t3
 from core.export.loader import ExportBundle, load_export
 from core.types import ContextBundle, RulesCorpus, Tier, Verdict
 from report.figures.types import (
-    AGREEMENT_BUCKETS,
     CONTEXT_TIERS,
     VerdictAgreementDistribution,
+    agreement_buckets_for,
 )
 
 ContextBuilder = Callable[..., ContextBundle]
@@ -58,13 +58,22 @@ def _extract_verdict(raw_verdicts: list[dict], location_id: str) -> Verdict:
 def _agreement_bucket(verdicts: list[Verdict]) -> str:
     counts = Counter(verdicts)
     max_count = max(counts.values())
-    if max_count == 5:
-        return "5/5 unanimous"
-    if max_count == 4:
-        return "4/5"
-    if max_count == 3:
-        return "3/5"
-    return "split"
+    sample_count = len(verdicts)
+    if sample_count == 5:
+        if max_count == 5:
+            return "5/5 unanimous"
+        if max_count == 4:
+            return "4/5"
+        if max_count == 3:
+            return "3/5"
+        return "split"
+    if sample_count == 3:
+        if max_count == 3:
+            return "3/3 unanimous"
+        if max_count == 2:
+            return "2/3"
+        return "split"
+    raise ValueError(f"agreement buckets require 3 or 5 samples, got {sample_count}")
 
 
 def compute_verdict_agreement_by_tier(
@@ -75,13 +84,14 @@ def compute_verdict_agreement_by_tier(
     sample_indices: list[int] | None = None,
 ) -> dict[str, VerdictAgreementDistribution]:
     """Compute per-tier verdict agreement buckets from offline cache reads."""
-    indices = sample_indices if sample_indices is not None else [0, 1, 2, 3, 4]
+    indices = sample_indices if sample_indices is not None else [0, 1, 2]
+    buckets = agreement_buckets_for(len(indices))
     bundle: ExportBundle = load_export(export_dir)
     store = CacheStore(root=cache_root, cache_mode="offline")
     distributions: dict[str, VerdictAgreementDistribution] = {}
 
     for tier in CONTEXT_TIERS:
-        bucket_counts = {bucket: 0 for bucket in AGREEMENT_BUCKETS}
+        bucket_counts = {bucket: 0 for bucket in buckets}
         total_cases = 0
         for subject in sorted(bundle.subjects, key=lambda item: item.subject_id):
             context = _build_context(tier=tier, subject=subject, rules=bundle.rules)

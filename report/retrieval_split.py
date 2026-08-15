@@ -7,6 +7,7 @@ from typing import Any
 
 from core.cache.store import CacheStore, make_cache_key
 from core.context.tiers import build_t1
+from core.exceptions import CacheMissError
 from core.export.loader import load_export
 from core.types import (
     VERDICT_LANES,
@@ -24,6 +25,7 @@ from report.retrieval_split_types import (
 )
 from runners.autonomous.types import AUTONOMOUS_RUNNER_ID
 from runners.pairing import pair_subject_verdicts
+from runners.types import ALLOWED_ADJUDICATION_SAMPLE_INDICES, THREE_SAMPLE_INDICES
 
 
 class TraceSchemaInsufficientError(ValueError):
@@ -134,6 +136,38 @@ def _rollup_from_pairs(
     )
 
 
+def _probe_sample_indices(
+    *,
+    store: CacheStore,
+    bundle: Any,
+    model_id: str,
+) -> list[int]:
+    """Walk the samples that exist on disk: three or five."""
+    subject = next((item for item in bundle.subjects if item.locations), None)
+    if subject is None:
+        return list(THREE_SAMPLE_INDICES)
+    context = build_t1(subject.request, subject)
+
+    def _has_sample(index: int) -> bool:
+        key = make_cache_key(
+            context=context,
+            model_id=model_id,
+            runner_id=AUTONOMOUS_RUNNER_ID,
+            case_id=subject.subject_id,
+            sample_index=index,
+        )
+        try:
+            store.get(key)
+        except CacheMissError:
+            return False
+        return True
+
+    five = list(range(5))
+    if all(_has_sample(index) for index in five):
+        return five
+    return list(THREE_SAMPLE_INDICES)
+
+
 def build_retrieval_split_report(
     *,
     export_dir: Path | None = None,
@@ -141,19 +175,32 @@ def build_retrieval_split_report(
     model_id: str,
     cache_mode: str = "offline",
     sample_index: int = 0,
+    sample_indices: list[int] | None = None,
 ) -> RetrievalSplitReport:
     """Build retrieval-vs-reasoning split from committed autonomous cache traces."""
-    if sample_index not in range(5):
-        raise ValueError(f"sample_index must be 0..4, got {sample_index}")
-
     export_path = export_dir or Path("export")
     cache_path = cache_root or Path("cache")
     bundle = load_export(export_path)
     manifest = bundle.verify_provenance()
     store = CacheStore(root=cache_path, cache_mode=cache_mode)
 
+    if sample_indices is None:
+        resolved_indices = _probe_sample_indices(
+            store=store,
+            bundle=bundle,
+            model_id=model_id,
+        )
+    else:
+        resolved_indices = list(sample_indices)
+        if tuple(resolved_indices) not in ALLOWED_ADJUDICATION_SAMPLE_INDICES:
+            raise ValueError("sample_indices must be [0, 1, 2] or [0, 1, 2, 3, 4]")
+    if sample_index not in resolved_indices:
+        raise ValueError(
+            f"sample_index must be one of {resolved_indices}, got {sample_index}"
+        )
+
     sample_rollups: list[RetrievalSplitSampleRollup] = []
-    for current_sample_index in range(5):
+    for current_sample_index in resolved_indices:
         classified_pairs: list[tuple[ModelVerdict, ExpectedLabel, list[ToolCallTrace]]] = []
         for subject in bundle.subjects:
             context = build_t1(subject.request, subject)

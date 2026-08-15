@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from core.exceptions import ConfigurationError
 from core.model.credentials import resolve_provider_api_key
 from core.model.fake import FakeModelSeam
@@ -9,7 +11,11 @@ from core.model.roles import LIVE_ROLE_IDS, get_role_descriptor
 from core.model.seam import ModelConfig, ModelSeam, load_model_config
 
 
-def create_model_seam(*, config: ModelConfig | None = None) -> ModelSeam:
+def create_model_seam(
+    *,
+    config: ModelConfig | None = None,
+    export_dir: Path | None = None,
+) -> ModelSeam:
     """Return the model seam for the current cache mode and model role."""
     resolved = config or load_model_config()
 
@@ -44,7 +50,8 @@ def create_model_seam(*, config: ModelConfig | None = None) -> ModelSeam:
                 role_id=descriptor.role_id,
                 provider_model_id=descriptor.provider_model_id,
                 api_key=credential.api_key,
-            )
+            ),
+            export_dir=export_dir,
         )
 
     if descriptor.provider == "google":

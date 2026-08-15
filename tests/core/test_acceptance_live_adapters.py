@@ -2,18 +2,24 @@
 
 from __future__ import annotations
 
+import json
+import shutil
+from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
 import pytest
 
 from core.exceptions import ModelResponseError
+from core.model.adapter_common import resolve_adjudication_location_ids
 from core.model.anthropic_adapter import AnthropicModelSeam
 from core.model.anthropic_adapter import LiveAdapterConfig as AnthropicConfig
 from core.model.gemini_adapter import GeminiModelSeam
 from core.model.gemini_adapter import LiveAdapterConfig as GeminiConfig
 from core.model.roles import get_role_descriptor
 from core.types import AdjudicationSessionResult, ContextBundle, ErasureRequest
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
 
 CLAUDE_CONFIG = AnthropicConfig(
     role_id="claude-sonnet-5",
@@ -434,6 +440,54 @@ def test_autonomous_empty_context_locations_rejects_empty_verdicts() -> None:
             case_id="mixed-fanout-subject",
             tool_registry=_FakeToolRegistry(),
         )
+
+
+def test_t1_live_resolution_uses_supplied_export_dir_not_repository_export(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    custom_export = tmp_path / "custom-export"
+    shutil.copytree(REPO_ROOT / "export", custom_export)
+    loaded: list[Path] = []
+    from core.export import loader as loader_mod
+
+    real_load = loader_mod.load_export
+
+    def _spy(path: Path):
+        loaded.append(Path(path).resolve())
+        return real_load(path)
+
+    monkeypatch.setattr(loader_mod, "load_export", _spy)
+
+    bundle = real_load(custom_export)
+    subject = bundle.subjects[0]
+    context = ContextBundle(tier="t1", request=subject.request, locations=[])
+    location_ids = resolve_adjudication_location_ids(
+        context=context,
+        case_id=subject.subject_id,
+        export_dir=custom_export,
+    )
+    assert location_ids == [location.location_id for location in subject.locations]
+    assert loaded == [custom_export.resolve()]
+    assert (REPO_ROOT / "export").resolve() not in loaded
+
+    loaded.clear()
+    client = MagicMock()
+    client.messages.create.return_value = _anthropic_text_response(
+        json.dumps(
+            {
+                "verdicts": [
+                    {"location_id": location_id, "verdict": "erase"}
+                    for location_id in location_ids
+                ]
+            }
+        )
+    )
+    seam = AnthropicModelSeam(CLAUDE_CONFIG, client=client, export_dir=custom_export)
+    seam.adjudicate(context=context, case_id=subject.subject_id)
+    assert loaded
+    assert all(path == custom_export.resolve() for path in loaded)
+    assert (REPO_ROOT / "export").resolve() not in loaded
 
 
 def test_adapter_respects_max_tool_rounds() -> None:

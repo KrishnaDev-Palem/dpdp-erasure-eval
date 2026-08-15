@@ -36,7 +36,9 @@ from report.figures.style import (
 from report.figures.types import (
     CONTEXT_TIERS,
     FAMILY_DISPLAY,
+    FIVE_SAMPLE_AGREEMENT_BUCKETS,
     LANE_DISPLAY,
+    THREE_SAMPLE_AGREEMENT_BUCKETS,
     TIER_DISPLAY,
     VERDICT_LANES_ORDERED,
     AdjudicationFigureData,
@@ -295,6 +297,18 @@ def render_adversarial_detection_by_family(
     _save_figure(path, dpi=dpi, fmt=fmt)
 
 
+def _agreement_bucket_labels(
+    variance_by_tier: dict[str, VerdictAgreementDistribution],
+) -> list[str]:
+    first = next(iter(variance_by_tier.values()), None)
+    if first is None:
+        return list(THREE_SAMPLE_AGREEMENT_BUCKETS)
+    keys = first.bucket_counts
+    if "5/5 unanimous" in keys:
+        return list(FIVE_SAMPLE_AGREEMENT_BUCKETS)
+    return list(THREE_SAMPLE_AGREEMENT_BUCKETS)
+
+
 def render_verdict_variance_by_tier(
     variance_by_tier: dict[str, VerdictAgreementDistribution],
     path: Path,
@@ -303,7 +317,8 @@ def render_verdict_variance_by_tier(
     fmt: str,
 ) -> None:
     tiers = [tier for tier in CONTEXT_TIERS if tier in variance_by_tier]
-    buckets = ["5/5 unanimous", "4/5", "3/5", "split"]
+    buckets = _agreement_bucket_labels(variance_by_tier)
+    sample_count = 5 if buckets == list(FIVE_SAMPLE_AGREEMENT_BUCKETS) else 3
     bucket_matrix = []
     for tier in tiers:
         distribution = variance_by_tier[tier]
@@ -312,12 +327,13 @@ def render_verdict_variance_by_tier(
 
     data = np.array(bucket_matrix)
     x = np.arange(len(tiers))
-    width = 0.18
-    colors = ["#4C72B0", "#55A868", "#C44E52", "#8172B2"]
+    width = 0.18 if len(buckets) == 4 else 0.22
+    colors = ["#4C72B0", "#55A868", "#C44E52", "#8172B2"][: len(buckets)]
+    midpoint = (len(buckets) - 1) / 2
 
     fig, ax = plt.subplots(figsize=VARIANCE_SIZE)
     for bucket_idx, bucket in enumerate(buckets):
-        offsets = x + (bucket_idx - 1.5) * width
+        offsets = x + (bucket_idx - midpoint) * width
         ax.bar(
             offsets,
             data[:, bucket_idx],
@@ -332,7 +348,7 @@ def render_verdict_variance_by_tier(
     ax.set_xticklabels([TIER_DISPLAY[tier] for tier in tiers])
     ax.set_ylabel("share of cases")
     ax.set_xlabel("context tier")
-    ax.set_title("Verdict variance by context tier (N=5 samples per case)")
+    ax.set_title(f"Verdict variance by context tier (N={sample_count} samples per case)")
     limit = rate_axis_upper_limit(float(data.max()) if data.size else 0.0)
     ax.set_ylim(0.0, limit)
     ax.set_yticks(rate_axis_ticks(limit, step=0.20))
