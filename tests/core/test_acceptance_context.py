@@ -6,11 +6,16 @@ from core.cache import prompt_hash
 from core.context import build_t1, build_t2, build_t3
 from core.export import load_export
 from core.types import AdjudicationSubject, ErasureRequest
+from tests.conftest import ARCHIVE_V1_EXPORT_DIR
 from tests.core.conftest import subject_with_tag
 
 
+def _archive_export():
+    return load_export(ARCHIVE_V1_EXPORT_DIR)
+
+
 def test_t1_request_only() -> None:
-    export = load_export()
+    export = _archive_export()
     subject = subject_with_tag(export.subjects, "mixed_fanout")
     bundle = build_t1(subject.request, subject)
     assert bundle.tier == "t1"
@@ -21,7 +26,7 @@ def test_t1_request_only() -> None:
 
 
 def test_t2_records_without_expected() -> None:
-    export = load_export()
+    export = _archive_export()
     subject = subject_with_tag(export.subjects, "mixed_fanout")
     bundle = build_t2(subject.request, subject)
     assert bundle.tier == "t2"
@@ -34,7 +39,7 @@ def test_t2_records_without_expected() -> None:
 
 
 def test_t3_adds_rules_corpus() -> None:
-    export = load_export()
+    export = _archive_export()
     subject = subject_with_tag(export.subjects, "mixed_fanout")
     bundle = build_t3(subject.request, subject, export.rules)
     assert bundle.tier == "t3"
@@ -43,7 +48,7 @@ def test_t3_adds_rules_corpus() -> None:
 
 
 def test_adjacent_tier_delta() -> None:
-    export = load_export()
+    export = _archive_export()
     subject = subject_with_tag(export.subjects, "mixed_fanout")
     t1 = build_t1(subject.request, subject)
     t2 = build_t2(subject.request, subject)
@@ -55,7 +60,7 @@ def test_adjacent_tier_delta() -> None:
 
 
 def test_ground_truth_excluded() -> None:
-    export = load_export()
+    export = _archive_export()
     subject = subject_with_tag(export.subjects, "mixed_fanout")
     for builder in (build_t2,):
         bundle = builder(subject.request, subject)
@@ -77,13 +82,13 @@ def test_zero_locations_subject_does_not_invent_records() -> None:
     )
     assert subject.locations == []
     t2 = build_t2(subject.request, subject)
-    t3 = build_t3(subject.request, subject, load_export().rules)
+    t3 = build_t3(subject.request, subject, _archive_export().rules)
     assert t2.locations == []
     assert t3.locations == []
 
 
 def test_bundles_hash_consistently() -> None:
-    export = load_export()
+    export = _archive_export()
     subject = subject_with_tag(export.subjects, "mixed_fanout")
     t1 = build_t1(subject.request, subject)
     assert prompt_hash(t1) == prompt_hash(build_t1(subject.request, subject))

@@ -8,11 +8,16 @@ from core.exceptions import ModelResponseError
 from core.export import load_export
 from core.model import FakeModelSeam, load_model_config
 from core.types import ContextBundle
+from tests.conftest import ARCHIVE_V1_EXPORT_DIR
 from tests.core.conftest import subject_with_tag
 
 
+def _archive_export():
+    return load_export(ARCHIVE_V1_EXPORT_DIR)
+
+
 def _sample_context() -> ContextBundle:
-    export = load_export()
+    export = _archive_export()
     subject = subject_with_tag(export.subjects, "mixed_fanout")
     from core.context import build_t2
 
@@ -21,7 +26,7 @@ def _sample_context() -> ContextBundle:
 
 def test_fake_model_seam_records_calls() -> None:
     context = _sample_context()
-    export = load_export()
+    export = _archive_export()
     subject = subject_with_tag(export.subjects, "mixed_fanout")
     verdict_map = {
         location.location_id: location.expected.verdict for location in subject.locations
@@ -41,7 +46,7 @@ def test_classify_note_is_text_only() -> None:
 
 def test_adjudicate_returns_one_verdict_per_location() -> None:
     context = _sample_context()
-    export = load_export()
+    export = _archive_export()
     subject = subject_with_tag(export.subjects, "mixed_fanout")
     verdict_map = {
         location.location_id: location.expected.verdict for location in subject.locations
@@ -53,7 +58,7 @@ def test_adjudicate_returns_one_verdict_per_location() -> None:
 
 def test_invalid_verdict_raises_model_response_error() -> None:
     context = _sample_context()
-    export = load_export()
+    export = _archive_export()
     subject = subject_with_tag(export.subjects, "mixed_fanout")
     first_location = subject.locations[0].location_id
     seam = FakeModelSeam(adjudication_verdicts={first_location: "retain"})
@@ -69,7 +74,7 @@ def test_load_model_config_without_api_key() -> None:
 
 def test_fake_model_seam_regression_unchanged() -> None:
     """Regression guard: FakeModelSeam contract unchanged from Feature 001."""
-    export = load_export()
+    export = _archive_export()
     subject = subject_with_tag(export.subjects, "mixed_fanout")
     verdict_map = {
         location.location_id: location.expected.verdict for location in subject.locations

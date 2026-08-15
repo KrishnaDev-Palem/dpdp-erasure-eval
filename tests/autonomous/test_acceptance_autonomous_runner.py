@@ -18,7 +18,6 @@ from core.types import VERDICT_LANES, ExpectedLabel, ModelVerdict
 from runners.autonomous.runner import run_autonomous_sweep
 from runners.autonomous.types import AUTONOMOUS_RUNNER_ID
 from runners.pairing import PairingValidationError
-from tests.core.conftest import subject_with_tag
 
 
 def test_all_export_subjects_visited(fake_seam, autonomous_config, export_dir) -> None:
@@ -120,7 +119,7 @@ def test_invalid_verdict_enum_rejected(
     autonomous_config,
 ) -> None:
     export = load_export(export_dir)
-    subject = subject_with_tag(export.subjects, "mixed_fanout")
+    subject = export.subjects[0]
     location_ids = [location.location_id for location in subject.locations]
     context = build_t1(subject.request, subject)
     key = make_cache_key(

@@ -129,8 +129,8 @@ def test_live_autonomous_cache_retrieval_split_report(
     assert report.total_incorrect == (
         report.retrieval_failure.numerator + report.reasoning_failure.numerator
     )
-    assert len(report.sample_rollups) == 5
-    assert [item.sample_index for item in report.sample_rollups] == [0, 1, 2, 3, 4]
+    assert len(report.sample_rollups) == 3
+    assert [item.sample_index for item in report.sample_rollups] == [0, 1, 2]
     lane_incorrect = sum(row.incorrect_count for row in report.per_lane)
     assert lane_incorrect == report.total_incorrect
 

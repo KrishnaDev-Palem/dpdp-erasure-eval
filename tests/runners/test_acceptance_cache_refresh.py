@@ -11,7 +11,6 @@ from core.cache.store import CacheStore, make_cache_key
 from core.context import build_t2
 from core.export import load_export
 from core.model import FakeModelSeam
-from tests.core.conftest import subject_with_tag
 
 
 @pytest.mark.refresh
@@ -24,7 +23,7 @@ def test_refresh_cache_hit_replays_without_live_call(
     monkeypatch.setenv("MODEL_ID", "primary")
 
     export = load_export(export_dir)
-    subject = subject_with_tag(export.subjects, "mixed_fanout")
+    subject = export.subjects[0]
     context = build_t2(subject.request, subject)
     key = make_cache_key(
         context=context,
@@ -58,7 +57,7 @@ def test_tier_refresh_integration_with_factory_seam(
     monkeypatch.setenv("MODEL_ID", "claude-sonnet-5")
 
     export = load_export(export_dir)
-    subject = subject_with_tag(export.subjects, "mixed_fanout")
+    subject = export.subjects[0]
     context = build_t2(subject.request, subject)
     key = make_cache_key(
         context=context,
@@ -110,7 +109,7 @@ def test_refresh_writes_cache_entry_on_miss(
     monkeypatch.setenv("MODEL_ID", "primary")
 
     export = load_export(export_dir)
-    subject = subject_with_tag(export.subjects, "mixed_fanout")
+    subject = export.subjects[0]
     context = build_t2(subject.request, subject)
     key = make_cache_key(
         context=context,

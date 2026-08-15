@@ -23,7 +23,7 @@ def _config(export_dir: Path, cache_dir: Path, **kwargs) -> SweepConfig:
         "runner_id": "t1",
         "model_id": "primary",
         "cache_mode": "offline",
-        "sample_indices": [0, 1, 2, 3, 4],
+        "sample_indices": [0, 1, 2],
         "export_dir": export_dir,
         "cache_root": cache_dir,
     }
@@ -107,7 +107,7 @@ def test_invalid_verdict_enum_rejected(
     from core.context import build_t2
 
     export = load_export(export_dir)
-    subject = subject_with_tag(export.subjects, "mixed_fanout")
+    subject = export.subjects[0]
     location_ids = [location.location_id for location in subject.locations]
     context = build_t2(subject.request, subject)
     key = make_cache_key(
@@ -162,14 +162,14 @@ def test_invalid_verdict_enum_rejected(
 
 def test_missing_verdict_rejected(
     fake_seam: FakeModelSeam,
-    export_dir: Path,
-    cache_dir: Path,
+    archive_export_dir: Path,
     tmp_path: Path,
 ) -> None:
     from core.cache.store import make_cache_key
     from core.context import build_t2
+    from scripts.seed_runner_cache import seed_tier
 
-    export = load_export(export_dir)
+    export = load_export(archive_export_dir)
     subject = subject_with_tag(export.subjects, "mixed_fanout")
     location_ids = [location.location_id for location in subject.locations]
     context = build_t2(subject.request, subject)
@@ -181,7 +181,7 @@ def test_missing_verdict_rejected(
         sample_index=0,
     )
     bad_cache = tmp_path / "cache"
-    shutil.copytree(cache_dir / "primary", bad_cache / "primary")
+    seed_tier("t2", export_dir=archive_export_dir, cache_root=bad_cache)
     entry_path = (
         bad_cache
         / key.model_id
@@ -211,7 +211,7 @@ def test_missing_verdict_rejected(
         run_tier_sweep(
             tier="t2",
             seam=fake_seam,
-            config=_config(export_dir, bad_cache, tier="t2", runner_id="t2"),
+            config=_config(archive_export_dir, bad_cache, tier="t2", runner_id="t2"),
         )
     message = str(exc_info.value)
     assert subject.subject_id in message
@@ -232,5 +232,5 @@ def test_cache_miss_identifies_subject_and_sample(
             config=_config(export_dir, empty_cache, tier="t2", runner_id="t2"),
         )
     message = str(exc_info.value)
-    assert "subj-" in message
+    assert "subj-" in message or "gen-" in message
     assert fake_seam.adjudicate_calls == []

@@ -14,9 +14,9 @@ from tests.core.conftest import subject_with_tag
     "subject_id",
     ["subj-mixed-fanout", "subj-payment-inside-floors"],
 )
-def test_get_location_records_matches_t2(subject_id: str, export_bundle) -> None:
-    registry = build_retrieval_tool_registry(export_bundle)
-    subject = next(item for item in export_bundle.subjects if item.subject_id == subject_id)
+def test_get_location_records_matches_t2(subject_id: str, archive_export_bundle) -> None:
+    registry = build_retrieval_tool_registry(archive_export_bundle)
+    subject = next(item for item in archive_export_bundle.subjects if item.subject_id == subject_id)
     t2 = build_t2(subject.request, subject)
     result = registry.invoke("get_location_records", {"subject_id": subject_id})
     assert result["locations"] == t2.locations
@@ -42,10 +42,10 @@ def test_get_location_records_unknown_subject(export_bundle) -> None:
     assert result["subject_id"] == "nonexistent-subject"
 
 
-def test_get_retention_floors_matches_t3(export_bundle) -> None:
-    registry = build_retrieval_tool_registry(export_bundle)
-    subject = subject_with_tag(export_bundle.subjects, "mixed_fanout")
-    t3 = build_t3(subject.request, subject, export_bundle.rules)
+def test_get_retention_floors_matches_t3(archive_export_bundle) -> None:
+    registry = build_retrieval_tool_registry(archive_export_bundle)
+    subject = subject_with_tag(archive_export_bundle.subjects, "mixed_fanout")
+    t3 = build_t3(subject.request, subject, archive_export_bundle.rules)
     result = registry.invoke("get_retention_floors", {})
     assert result["retention_floors"] == [
         floor.model_dump(mode="json") for floor in t3.retention_floors
@@ -53,19 +53,19 @@ def test_get_retention_floors_matches_t3(export_bundle) -> None:
     assert len(result["retention_floors"]) == 5
 
 
-def test_get_governance_map_matches_t3(export_bundle) -> None:
-    registry = build_retrieval_tool_registry(export_bundle)
-    subject = subject_with_tag(export_bundle.subjects, "mixed_fanout")
-    t3 = build_t3(subject.request, subject, export_bundle.rules)
+def test_get_governance_map_matches_t3(archive_export_bundle) -> None:
+    registry = build_retrieval_tool_registry(archive_export_bundle)
+    subject = subject_with_tag(archive_export_bundle.subjects, "mixed_fanout")
+    t3 = build_t3(subject.request, subject, archive_export_bundle.rules)
     result = registry.invoke("get_governance_map", {})
     assert result["governance_map"] == [
         entry.model_dump(mode="json") for entry in t3.governance_map
     ]
 
 
-def test_tools_read_export_via_loader_only(export_bundle) -> None:
-    registry = build_retrieval_tool_registry(export_bundle)
-    subject = subject_with_tag(export_bundle.subjects, "mixed_fanout")
+def test_tools_read_export_via_loader_only(archive_export_bundle) -> None:
+    registry = build_retrieval_tool_registry(archive_export_bundle)
+    subject = subject_with_tag(archive_export_bundle.subjects, "mixed_fanout")
     floors = registry.invoke("get_retention_floors", {})
     assert floors["retention_floors"]
     records = registry.invoke("get_location_records", {"subject_id": subject.subject_id})

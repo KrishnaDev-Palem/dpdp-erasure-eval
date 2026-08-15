@@ -31,7 +31,7 @@ def test_model_id_from_environment(
         runner_id="t1",
         model_id=os.environ["MODEL_ID"],
         cache_mode=os.environ["CACHE_MODE"],
-        sample_indices=[0, 1, 2, 3, 4],
+        sample_indices=[0, 1, 2],
         export_dir=export_dir,
         cache_root=custom_cache,
     )
@@ -122,5 +122,5 @@ def test_default_offline_sweep_is_three_samples(
 ) -> None:
     result = run_tier_sweep(tier="t1", seam=fake_seam, export_dir=export_dir, cache_root=cache_dir)
     assert len(result.samples) == 3
-    assert result.samples[0].grouped.by_cell == {}
-    assert all(not groups for groups in result.samples[0].grouped.by_stratum.values())
+    assert result.samples[0].grouped.by_cell
+    assert any(groups for groups in result.samples[0].grouped.by_stratum.values())

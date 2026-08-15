@@ -15,6 +15,7 @@ from runners.autonomous.types import AutonomousSweepConfig
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 EXPORT_DIR = REPO_ROOT / "export"
+ARCHIVE_EXPORT_DIR = REPO_ROOT / "archive" / "v1" / "export"
 CACHE_DIR = REPO_ROOT / "cache"
 
 
@@ -50,6 +51,11 @@ def export_bundle(export_dir: Path):
 
 
 @pytest.fixture
+def archive_export_bundle():
+    return load_export(ARCHIVE_EXPORT_DIR)
+
+
+@pytest.fixture
 def empty_locations_subject() -> AdjudicationSubject:
     return AdjudicationSubject(
         subject_id="synthetic-empty-subject",
@@ -74,7 +80,7 @@ def make_autonomous_sweep_config(
     return AutonomousSweepConfig(
         model_id=model_id or os.environ.get("MODEL_ID", "primary"),
         cache_mode=cache_mode or os.environ.get("CACHE_MODE", "offline"),
-        sample_indices=[0, 1, 2, 3, 4],
+        sample_indices=[0, 1, 2],
         export_dir=export_dir,
         cache_root=cache_root,
     )

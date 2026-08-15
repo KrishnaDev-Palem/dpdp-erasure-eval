@@ -94,7 +94,9 @@ def test_split_is_copied_from_the_case() -> None:
 
 
 def test_v1_locations_without_strata_produce_empty_groups() -> None:
-    export = load_export()
+    from tests.conftest import ARCHIVE_V1_EXPORT_DIR
+
+    export = load_export(ARCHIVE_V1_EXPORT_DIR)
     locations = {
         location.location_id: location
         for subject in export.subjects

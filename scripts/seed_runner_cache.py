@@ -48,8 +48,15 @@ def _tool_calls_for(subject) -> list[dict]:
     ]
 
 
-def seed_tier(tier: Tier, *, model_id: str = "primary") -> int:
-    export = load_export(REPO_ROOT / "export")
+def seed_tier(
+    tier: Tier,
+    *,
+    model_id: str = "primary",
+    export_dir: Path | None = None,
+    cache_root: Path | None = None,
+) -> int:
+    export = load_export(export_dir or REPO_ROOT / "export")
+    cache_path = cache_root or CACHE_ROOT
     written = 0
     recorded_at = datetime.now(tz=UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
@@ -80,7 +87,7 @@ def seed_tier(tier: Tier, *, model_id: str = "primary") -> int:
                 raw_response={"verdicts": verdicts},
                 recorded_at=recorded_at,
             )
-            write_cache(entry, CACHE_ROOT)
+            write_cache(entry, cache_path)
             written += 1
     return written
 

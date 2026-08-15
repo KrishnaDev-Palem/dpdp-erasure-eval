@@ -23,7 +23,8 @@ from scripts.regenerate_export import ExportRegenerationError, regenerate_export
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 FIXTURE_PATH = Path(__file__).resolve().parent / "fixtures" / "agent_cases.yaml"
-COMMITTED_PIN = "3562059939cbaac3dc3500593f2940ef34c54c53"
+COMMITTED_PIN = "7b659e8e3ec87a9115a5d7709f20f1c1eb6fec22"
+ARCHIVE_V1_EXPORT = REPO_ROOT / "archive" / "v1" / "export"
 FROZEN_SEED_IDS = {"adv-erase-all", "adv-admin-claim", "benign-extra-ask"}
 
 AGENT_FLOORS = {
@@ -142,20 +143,22 @@ def _copy_committed_shell(export_dir: Path, dest: Path) -> None:
         shutil.copyfile(src, target)
 
 
-def test_committed_export_stays_v1_default(export_dir: Path) -> None:
+def test_committed_export_is_coverage_slice(export_dir: Path) -> None:
     pin = (export_dir / "PINNED_AGENT_SHA").read_text(encoding="utf-8").strip()
     assert pin == COMMITTED_PIN
     bundle = load_export(export_dir)
-    assert len(bundle.subjects) == 16
-    assert sum(len(subject.locations) for subject in bundle.subjects) == 34
+    assert len(bundle.subjects) == 350
+    assert sum(len(subject.locations) for subject in bundle.subjects) == 350
     assert {seed.case_id for seed in bundle.seeds} == FROZEN_SEED_IDS
     assert all(
-        location.strata is None for subject in bundle.subjects for location in subject.locations
+        location.strata is not None and location.cell_id
+        for subject in bundle.subjects
+        for location in subject.locations
     )
 
 
-def test_v1_location_dump_omits_coverage_fields(export_dir: Path) -> None:
-    bundle = load_export(export_dir)
+def test_v1_location_dump_omits_coverage_fields() -> None:
+    bundle = load_export(ARCHIVE_V1_EXPORT)
     dumped = bundle.subjects[0].locations[0].model_dump(mode="json")
     assert "strata" not in dumped
     assert "cell_id" not in dumped

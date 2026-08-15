@@ -13,10 +13,10 @@ from tests.core.conftest import subject_with_tag
 
 def test_t2_includes_location_records(
     fake_seam: FakeModelSeam,
-    export_dir: Path,
+    archive_export_dir: Path,
     cache_dir: Path,
 ) -> None:
-    export = load_export(export_dir)
+    export = load_export(archive_export_dir)
     subject = subject_with_tag(export.subjects, "mixed_fanout")
     bundle = build_t2(subject.request, subject)
     assert bundle.locations

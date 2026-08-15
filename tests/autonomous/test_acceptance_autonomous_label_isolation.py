@@ -30,15 +30,15 @@ def _mixed_fanout_subject(export_bundle):
 
 
 @pytest.mark.context_isolation
-def test_t1_initial_context_has_no_expected(export_bundle) -> None:
-    subject = _mixed_fanout_subject(export_bundle)
+def test_t1_initial_context_has_no_expected(archive_export_bundle) -> None:
+    subject = _mixed_fanout_subject(archive_export_bundle)
     context = build_t1(subject.request, subject)
     _assert_no_expected(context.model_dump(mode="json"))
 
 
 @pytest.mark.context_isolation
-def test_autonomous_cache_key_context_has_no_expected(export_bundle) -> None:
-    subject = _mixed_fanout_subject(export_bundle)
+def test_autonomous_cache_key_context_has_no_expected(archive_export_bundle) -> None:
+    subject = _mixed_fanout_subject(archive_export_bundle)
     context = build_t1(subject.request, subject)
     key = make_cache_key(
         context=context,
@@ -60,7 +60,7 @@ def test_offline_cache_payload_has_no_expected(
 ) -> None:
     from core.cache.store import CacheStore
 
-    subject = _mixed_fanout_subject(export_bundle)
+    subject = export_bundle.subjects[0]
     context = build_t1(subject.request, subject)
     registry = build_retrieval_tool_registry(export_bundle)
     store = CacheStore(root=autonomous_config.cache_root, cache_mode=autonomous_config.cache_mode)
@@ -78,9 +78,9 @@ def test_offline_cache_payload_has_no_expected(
 
 
 @pytest.mark.tool_isolation
-def test_location_records_has_no_expected(export_bundle) -> None:
-    registry = build_retrieval_tool_registry(export_bundle)
-    subject = _mixed_fanout_subject(export_bundle)
+def test_location_records_has_no_expected(archive_export_bundle) -> None:
+    registry = build_retrieval_tool_registry(archive_export_bundle)
+    subject = _mixed_fanout_subject(archive_export_bundle)
     result = registry.invoke(
         "get_location_records",
         {"subject_id": subject.subject_id},

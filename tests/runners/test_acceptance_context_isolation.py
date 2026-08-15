@@ -6,6 +6,7 @@ from pathlib import Path
 
 from core.context import build_t1, build_t2, build_t3
 from core.export import load_agent_cases, load_export
+from tests.conftest import ARCHIVE_V1_EXPORT_DIR
 from tests.core.conftest import subject_with_tag
 
 FIXTURE_PATH = Path(__file__).resolve().parents[1] / "core" / "fixtures" / "agent_cases.yaml"
@@ -30,14 +31,14 @@ def _assert_no_eval_only_fields(bundle) -> None:
 
 
 def test_t1_context_has_no_expected() -> None:
-    export = load_export()
+    export = load_export(ARCHIVE_V1_EXPORT_DIR)
     subject = subject_with_tag(export.subjects, "mixed_fanout")
     bundle = build_t1(subject.request, subject)
     _assert_no_expected(bundle)
 
 
 def test_t2_context_has_no_expected() -> None:
-    export = load_export()
+    export = load_export(ARCHIVE_V1_EXPORT_DIR)
     subject = subject_with_tag(export.subjects, "mixed_fanout")
     bundle = build_t2(subject.request, subject)
     _assert_no_expected(bundle)
@@ -45,7 +46,7 @@ def test_t2_context_has_no_expected() -> None:
 
 
 def test_t3_context_has_no_expected() -> None:
-    export = load_export()
+    export = load_export(ARCHIVE_V1_EXPORT_DIR)
     subject = subject_with_tag(export.subjects, "mixed_fanout")
     bundle = build_t3(subject.request, subject, export.rules)
     _assert_no_expected(bundle)

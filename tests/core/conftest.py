@@ -6,6 +6,7 @@ from core.types import AdjudicationSubject
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 EXPORT_DIR = REPO_ROOT / "export"
+ARCHIVE_V1_EXPORT_DIR = REPO_ROOT / "archive" / "v1" / "export"
 CACHE_DIR = REPO_ROOT / "cache"
 
 ENV_VARS = (
@@ -32,6 +33,11 @@ def repo_root() -> Path:
 @pytest.fixture
 def export_dir() -> Path:
     return EXPORT_DIR
+
+
+@pytest.fixture
+def archive_export_dir() -> Path:
+    return ARCHIVE_V1_EXPORT_DIR
 
 
 @pytest.fixture

@@ -17,7 +17,7 @@ from tests.autonomous.conftest import CACHE_DIR, EXPORT_DIR, make_autonomous_swe
 from tests.conftest import LIVE_ROLE_SKIP_REASON, live_role_namespace_ready
 
 LIVE_ROLE = "claude-sonnet-5"
-SAMPLE_INDICES = [0, 1, 2, 3, 4]
+SAMPLE_INDICES = [0, 1, 2]
 NAMESPACE = CACHE_DIR / LIVE_ROLE / "autonomous"
 
 pytestmark = pytest.mark.skipif(
