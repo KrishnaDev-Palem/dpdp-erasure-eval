@@ -8,10 +8,12 @@ from report.adjudication_types import TierAdjudicationReportTables
 from report.types import GateReportTables
 
 CONTEXT_TIERS: tuple[str, ...] = ("t1", "t2", "t3")
+ADJUDICATION_SETTINGS: tuple[str, ...] = ("t1", "t2", "t3", "autonomous")
 TIER_DISPLAY: dict[str, str] = {
     "t1": "T1",
     "t2": "T2",
     "t3": "T3",
+    "autonomous": "Autonomous",
 }
 
 LANE_DISPLAY: dict[str, str] = {
