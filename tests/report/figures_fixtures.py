@@ -11,6 +11,7 @@ from report.figures.types import (
     GateFigureData,
     VerdictAgreementDistribution,
 )
+from runners.autonomous.types import AutonomousSweepResult
 from runners.types import TierSweepResult
 from tests.gate.conftest import make_hand_crafted_scoring_fixture
 from tests.report.conftest import (
@@ -65,7 +66,31 @@ def make_variance_by_tier() -> dict[str, VerdictAgreementDistribution]:
             },
             total_cases=33,
         ),
+        "autonomous": VerdictAgreementDistribution(
+            tier="autonomous",
+            bucket_counts={
+                "5/5 unanimous": 19,
+                "4/5": 9,
+                "3/5": 3,
+                "split": 2,
+            },
+            total_cases=33,
+        ),
     }
+
+
+def make_autonomous_sweep(
+    scoring: AdjudicationScoringResult | None = None,
+) -> AutonomousSweepResult:
+    resolved_scoring = scoring or make_hand_crafted_adjudication_scoring()
+    return AutonomousSweepResult(
+        runner_id="autonomous",
+        model_id="primary",
+        cache_mode="offline",
+        export_agent_sha="a" * 40,
+        samples=make_sample_rollups(resolved_scoring),
+        variance=make_variance_summary(resolved_scoring),
+    )
 
 
 def make_complete_figure_inputs() -> FigureInputs:
@@ -73,6 +98,9 @@ def make_complete_figure_inputs() -> FigureInputs:
         tier: build_tier_adjudication_report(make_tier_sweep(tier), sample_index=0)
         for tier in ("t1", "t2", "t3")
     }
+    tier_reports["autonomous"] = build_tier_adjudication_report(
+        make_autonomous_sweep(), sample_index=0
+    )
     gate_scoring = make_hand_crafted_scoring_fixture()
     return FigureInputs(
         adjudication=AdjudicationFigureData(

@@ -18,6 +18,7 @@ from report.figures.types import (
 )
 from report.figures.variance import compute_verdict_agreement_by_tier
 from runners.adversarial_gate.runner import run_adversarial_gate_sweep
+from runners.autonomous.runner import run_autonomous_sweep
 from runners.t1 import run_t1_sweep
 from runners.t2 import run_t2_sweep
 from runners.t3 import run_t3_sweep
@@ -79,10 +80,17 @@ def load_figure_inputs(
             cache_root=cache_path,
             sample_indices=adjudication_samples,
         )
+        autonomous = run_autonomous_sweep(
+            seam=seam,
+            export_dir=export_path,
+            cache_root=cache_path,
+            sample_indices=adjudication_samples,
+        )
         tier_reports = {
             "t1": build_tier_adjudication_report(t1, sample_index=sample_index),
             "t2": build_tier_adjudication_report(t2, sample_index=sample_index),
             "t3": build_tier_adjudication_report(t3, sample_index=sample_index),
+            "autonomous": build_tier_adjudication_report(autonomous, sample_index=sample_index),
         }
         variance_by_tier = compute_verdict_agreement_by_tier(
             export_dir=export_path,
