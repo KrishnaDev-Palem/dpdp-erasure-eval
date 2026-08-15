@@ -195,9 +195,7 @@ def build_retrieval_split_report(
         if tuple(resolved_indices) not in ALLOWED_ADJUDICATION_SAMPLE_INDICES:
             raise ValueError("sample_indices must be [0, 1, 2] or [0, 1, 2, 3, 4]")
     if sample_index not in resolved_indices:
-        raise ValueError(
-            f"sample_index must be one of {resolved_indices}, got {sample_index}"
-        )
+        raise ValueError(f"sample_index must be one of {resolved_indices}, got {sample_index}")
 
     sample_rollups: list[RetrievalSplitSampleRollup] = []
     for current_sample_index in resolved_indices:
