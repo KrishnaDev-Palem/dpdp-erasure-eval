@@ -477,8 +477,7 @@ def test_t1_live_resolution_uses_supplied_export_dir_not_repository_export(
         json.dumps(
             {
                 "verdicts": [
-                    {"location_id": location_id, "verdict": "erase"}
-                    for location_id in location_ids
+                    {"location_id": location_id, "verdict": "erase"} for location_id in location_ids
                 ]
             }
         )
