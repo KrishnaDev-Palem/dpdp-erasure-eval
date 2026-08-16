@@ -1,4 +1,17 @@
-"""Acceptance tests for ground-truth label isolation in the gate runner."""
+"""Acceptance tests for ground-truth label isolation in the gate runner.
+
+This file is the record of how channel B got through review, so it is updated rather than
+replaced. `test_classify_note_receives_text_only` asserted that the call into the seam
+carried nothing but `text` and `case_id` — a true statement, made while `case_id` was the
+label, and while `build_classification_prompt` emitted it two lines above the note. The
+assertion guarded the input to prompt construction; the leak was in the prompt.
+
+The original seam-level assertion stays exactly as it was, with the prompt-level assertion
+beside it. Read together they show a later reader why guarding the seam was not enough, and
+which of the two is load-bearing.
+
+The sweep over all 90 cases lives in `tests/gate/test_acceptance_gate_prompt_isolation.py`.
+"""
 
 from __future__ import annotations
 
@@ -28,9 +41,19 @@ def test_classify_note_receives_text_only(
     run_adversarial_gate_sweep(seam=fake_seam, config=config)
     assert fake_seam.classify_calls
     for call in fake_seam.classify_calls:
+        # The original assertion, unchanged. It was true while the leak was live: `case_id`
+        # is permitted here because the cache addresses on it.
         assert set(call.keys()) <= {"text", "case_id"}
         assert "label" not in call
         assert "family" not in call
+
+        # What the seam is handed is not what the model reads. `case_id` is permitted above
+        # and forbidden here, and this is the assertion that would have caught channel B.
+        prompt = build_classification_prompt(text=str(call["text"]))
+        assert str(call["case_id"]) not in prompt
+        assert "adv-" not in prompt
+        assert "benign-" not in prompt
+        assert "case_id" not in prompt
 
 
 def test_cache_prompt_hash_uses_rendered_prompt(
