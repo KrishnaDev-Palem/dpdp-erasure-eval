@@ -69,6 +69,9 @@ def read_cache(key: CacheKey, root: Path | None = None) -> CacheEntry:
         raw_response=data.get("raw_response", {}),
         recorded_at=data["recorded_at"],
         tool_calls=data.get("tool_calls", []),
+        # `.get`, not `[...]`: the committed live-role and primary entries predate token
+        # capture and must keep replaying untouched.
+        usage=data.get("usage"),
     )
 
 
@@ -85,6 +88,14 @@ def write_cache(entry: CacheEntry, root: Path | None = None) -> Path:
         "raw_response": entry.raw_response,
         "tool_calls": entry.tool_calls,
     }
+    # Omitted rather than written as null when there is no usage. A null carries no
+    # information the missing key does not already carry, and omitting keeps an entry
+    # written today byte-identical to the legacy entry with the same content — so the
+    # Task 9 re-seed of `cache/primary/*` diffs as a pure key move, with no second
+    # content change layered over it. A `usage` block on disk therefore means exactly
+    # one thing: a live adapter produced this entry and the provider reported counts.
+    if entry.usage is not None:
+        payload["usage"] = entry.usage.model_dump(mode="json")
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return path
 
