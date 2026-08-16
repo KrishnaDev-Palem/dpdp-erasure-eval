@@ -11,6 +11,7 @@ from core.cache.store import CacheStore
 from core.context import build_t1
 from core.exceptions import CacheMissError
 from core.model import FakeModelSeam
+from core.pseudonymize import opaque_case_id
 from core.tools import build_retrieval_tool_registry
 from runners.autonomous.cache import resolve_autonomous_entry
 from runners.autonomous.types import AUTONOMOUS_RUNNER_ID
@@ -108,7 +109,7 @@ def test_resolve_autonomous_entry_refresh_miss_writes_tool_calls(
         type="tool_use",
         id="tool-1",
         name="get_location_records",
-        input={"subject_id": subject.subject_id},
+        input={"subject_id": opaque_case_id(subject.subject_id)},
     )
     text_block = SimpleNamespace(
         type="text",

@@ -11,6 +11,7 @@ from core.cache import make_cache_key, prompt_hash
 from core.context import build_t1, build_t2
 from core.export import load_agent_cases
 from core.export.loader import ExportBundle
+from core.pseudonymize import opaque_case_id
 from core.tools import build_retrieval_tool_registry
 from runners.autonomous.cache import resolve_autonomous_entry
 from runners.autonomous.types import AUTONOMOUS_RUNNER_ID
@@ -83,7 +84,7 @@ def test_location_records_has_no_expected(archive_export_bundle) -> None:
     subject = _mixed_fanout_subject(archive_export_bundle)
     result = registry.invoke(
         "get_location_records",
-        {"subject_id": subject.subject_id},
+        {"subject_id": opaque_case_id(subject.subject_id)},
     )
     _assert_no_expected(result)
     assert result["locations"]
@@ -133,8 +134,10 @@ def test_location_records_strip_eval_only_keep_oracle_facts(export_bundle) -> No
     registry = build_retrieval_tool_registry(bundle)
     kyc_id = "gen-ordinary_kyc_open_retain-00000"
     inactivity_id = "gen-ordinary_inactivity_erase_payment-00000"
-    kyc = registry.invoke("get_location_records", {"subject_id": kyc_id})
-    inactivity = registry.invoke("get_location_records", {"subject_id": inactivity_id})
+    kyc = registry.invoke("get_location_records", {"subject_id": opaque_case_id(kyc_id)})
+    inactivity = registry.invoke(
+        "get_location_records", {"subject_id": opaque_case_id(inactivity_id)}
+    )
     for payload in (kyc, inactivity):
         dumped = str(payload)
         for field in _EVAL_ONLY:

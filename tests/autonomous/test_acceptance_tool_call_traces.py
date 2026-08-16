@@ -11,6 +11,7 @@ from core.cache import make_cache_key, read_cache, write_cache
 from core.cache.store import CacheStore
 from core.context import build_t1
 from core.model import FakeModelSeam
+from core.pseudonymize import opaque_case_id
 from core.tools import build_retrieval_tool_registry
 from core.types import CacheEntry, ToolCallTrace
 from runners.autonomous.cache import resolve_autonomous_entry
@@ -152,7 +153,7 @@ def test_refresh_path_persists_tool_calls(
             location.location_id: location.expected.verdict for location in subject.locations
         },
         planned_tool_calls=[
-            ("get_location_records", {"subject_id": subject.subject_id}),
+            ("get_location_records", {"subject_id": opaque_case_id(subject.subject_id)}),
         ],
     )
     session = resolve_autonomous_entry(
