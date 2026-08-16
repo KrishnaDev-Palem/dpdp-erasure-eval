@@ -11,10 +11,16 @@ from core.types import VERDICT_LANES, ExpectedLabel, ModelVerdict
 from runners.t1 import run_t1_sweep
 
 
-def test_t1_sweep_binds_runner_export_dir_onto_seam(
+def test_t1_sweep_binds_no_export_dir_onto_seam(
     export_dir: Path,
     cache_dir: Path,
 ) -> None:
+    """The seam has no reason to know where the export lives.
+
+    It was bound so the live adapter could fill `Required location_ids` from the export at
+    prompt-render time. The T1 bundle carries those ids now, so nothing binds and the
+    prompt path has no route to the export at all.
+    """
     bound: list[Path] = []
 
     class _RecordingSeam(FakeModelSeam):
@@ -26,7 +32,7 @@ def test_t1_sweep_binds_runner_export_dir_onto_seam(
         export_dir=export_dir,
         cache_root=cache_dir,
     )
-    assert bound == [export_dir]
+    assert bound == []
 
 
 def test_t1_full_sweep_all_subjects(

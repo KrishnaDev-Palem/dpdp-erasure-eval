@@ -3,13 +3,13 @@
 from __future__ import annotations
 
 import json
-import shutil
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
 import pytest
 
+from core.context import build_t1
 from core.exceptions import ModelResponseError
 from core.model.adapter_common import resolve_adjudication_location_ids
 from core.model.anthropic_adapter import AnthropicModelSeam
@@ -17,6 +17,7 @@ from core.model.anthropic_adapter import LiveAdapterConfig as AnthropicConfig
 from core.model.gemini_adapter import GeminiModelSeam
 from core.model.gemini_adapter import LiveAdapterConfig as GeminiConfig
 from core.model.roles import get_role_descriptor
+from core.pseudonymize import opaque_location_id
 from core.types import AdjudicationSessionResult, ContextBundle, ErasureRequest
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -442,36 +443,38 @@ def test_autonomous_empty_context_locations_rejects_empty_verdicts() -> None:
         )
 
 
-def test_t1_live_resolution_uses_supplied_export_dir_not_repository_export(
-    tmp_path: Path,
+def test_t1_live_resolution_reads_the_bundle_and_never_loads_the_export(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    custom_export = tmp_path / "custom-export"
-    shutil.copytree(REPO_ROOT / "export", custom_export)
-    loaded: list[Path] = []
+    """The prompt path is closed against the export.
+
+    It used to reach into `export/` at render time to fill `Required location_ids`, which
+    is how real design-cell names got into T1 prompts. T1 bundles now carry their own
+    (opaque) ids, so any `load_export` call from here is a regression.
+    """
     from core.export import loader as loader_mod
 
     real_load = loader_mod.load_export
+    loaded: list[Path] = []
 
-    def _spy(path: Path):
-        loaded.append(Path(path).resolve())
-        return real_load(path)
+    def _forbidden(path: Path | None = None):
+        loaded.append(Path(path).resolve() if path is not None else Path("export").resolve())
+        raise AssertionError("the prompt path must not load the export")
 
-    monkeypatch.setattr(loader_mod, "load_export", _spy)
+    export = real_load(REPO_ROOT / "export")
+    subject = next(item for item in export.subjects if item.locations)
+    context = build_t1(subject.request, subject)
 
-    bundle = real_load(custom_export)
-    subject = bundle.subjects[0]
-    context = ContextBundle(tier="t1", request=subject.request, locations=[])
+    monkeypatch.setattr(loader_mod, "load_export", _forbidden)
+
     location_ids = resolve_adjudication_location_ids(
         context=context,
         case_id=subject.subject_id,
-        export_dir=custom_export,
     )
-    assert location_ids == [location.location_id for location in subject.locations]
-    assert loaded == [custom_export.resolve()]
-    assert (REPO_ROOT / "export").resolve() not in loaded
+    expected = [opaque_location_id(location.location_id) for location in subject.locations]
+    assert location_ids == expected
+    assert all(location.location_id not in location_ids for location in subject.locations)
 
-    loaded.clear()
     client = MagicMock()
     client.messages.create.return_value = _anthropic_text_response(
         json.dumps(
@@ -482,11 +485,10 @@ def test_t1_live_resolution_uses_supplied_export_dir_not_repository_export(
             }
         )
     )
-    seam = AnthropicModelSeam(CLAUDE_CONFIG, client=client, export_dir=custom_export)
-    seam.adjudicate(context=context, case_id=subject.subject_id)
-    assert loaded
-    assert all(path == custom_export.resolve() for path in loaded)
-    assert (REPO_ROOT / "export").resolve() not in loaded
+    seam = AnthropicModelSeam(CLAUDE_CONFIG, client=client)
+    verdicts = seam.adjudicate(context=context, case_id=subject.subject_id)
+    assert [item.location_id for item in verdicts] == expected
+    assert loaded == []
 
 
 def test_adapter_respects_max_tool_rounds() -> None:
