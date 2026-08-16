@@ -11,6 +11,7 @@ from core.cache import make_cache_key, prompt_hash
 from core.context import build_t1, build_t2
 from core.export import load_agent_cases
 from core.export.loader import ExportBundle
+from core.model.adapter_common import build_adjudication_prompt
 from core.pseudonymize import opaque_case_id, opaque_location_id
 from core.tools import build_retrieval_tool_registry
 from runners.autonomous.cache import resolve_autonomous_entry
@@ -49,7 +50,9 @@ def test_autonomous_cache_key_context_has_no_expected(archive_export_bundle) -> 
         sample_index=0,
     )
     _assert_no_expected(context.model_dump(mode="json"))
-    assert key.prompt_hash == prompt_hash(context)
+    assert key.prompt_hash == prompt_hash(
+        build_adjudication_prompt(context=context, case_id=subject.subject_id)
+    )
 
 
 @pytest.mark.context_isolation

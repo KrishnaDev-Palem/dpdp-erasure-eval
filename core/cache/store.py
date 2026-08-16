@@ -9,6 +9,7 @@ from pathlib import Path
 
 from core.cache.canonicalize import prompt_hash
 from core.exceptions import CacheMissError
+from core.model.adapter_common import build_adjudication_prompt
 from core.model.seam import ModelSeam
 from core.types import CacheEntry, CacheKey, ContextBundle
 
@@ -41,12 +42,18 @@ def make_cache_key(
     case_id: str,
     sample_index: int,
 ) -> CacheKey:
+    """Address one cached adjudication response by the prompt the model was sent.
+
+    The key digests the rendered prompt, not the `ContextBundle`, so any change to what
+    crosses the seam forces a miss by construction rather than by anyone remembering to
+    bump something. The signature stays context-shaped: no caller threads a prompt.
+    """
     _validate_sample_index(sample_index)
     return CacheKey(
         model_id=model_id,
         runner_id=runner_id,
         case_id=case_id,
-        prompt_hash=prompt_hash(context),
+        prompt_hash=prompt_hash(build_adjudication_prompt(context=context, case_id=case_id)),
         sample_index=sample_index,
     )
 

@@ -11,6 +11,7 @@ from core.cache.store import CacheStore
 from core.context import build_t1
 from core.exceptions import CacheMissError
 from core.model import FakeModelSeam
+from core.model.adapter_common import build_adjudication_prompt
 from core.pseudonymize import opaque_case_id, opaque_location_id
 from core.tools import build_retrieval_tool_registry
 from runners.autonomous.cache import resolve_autonomous_entry
@@ -39,7 +40,7 @@ def test_offline_replay_via_autonomous_runner_id(
     assert fake_seam.adjudicate_calls == []
 
 
-def test_cache_prompt_identity_from_t1_context_only(export_bundle) -> None:
+def test_cache_prompt_identity_from_rendered_t1_prompt(export_bundle) -> None:
     subject = export_bundle.subjects[0]
     context = build_t1(subject.request, subject)
     key = make_cache_key(
@@ -49,7 +50,9 @@ def test_cache_prompt_identity_from_t1_context_only(export_bundle) -> None:
         case_id=subject.subject_id,
         sample_index=0,
     )
-    assert key.prompt_hash == prompt_hash(context)
+    assert key.prompt_hash == prompt_hash(
+        build_adjudication_prompt(context=context, case_id=subject.subject_id)
+    )
     assert context.tier == "t1"
     assert context.locations == [
         {"location_id": opaque_location_id(location.location_id)} for location in subject.locations
