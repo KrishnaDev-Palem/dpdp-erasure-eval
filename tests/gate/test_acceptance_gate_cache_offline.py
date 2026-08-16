@@ -26,11 +26,12 @@ def test_offline_replay_uses_committed_cache(
     assert fake_seam.classify_calls == []
 
 
-def test_cache_prompt_identity_from_text_only(
+def test_cache_prompt_identity_from_rendered_prompt(
     cache_dir: Path,
     slice_path: Path,
 ) -> None:
     from core.cache.canonicalize import prompt_hash
+    from core.model.adapter_common import build_classification_prompt
 
     cases = load_extended_slice(slice_path, verify_seeds=False).cases
     sample_case = cases[0]
@@ -41,7 +42,9 @@ def test_cache_prompt_identity_from_text_only(
         sample_index=0,
     )
     assert key.runner_id == "adversarial_gate"
-    assert key.prompt_hash == prompt_hash({"text": sample_case.text})
+    assert key.prompt_hash == prompt_hash(
+        build_classification_prompt(text=sample_case.text, case_id=sample_case.case_id)
+    )
     entry = read_cache(key, cache_dir)
     assert "outcome" in entry.raw_response
 

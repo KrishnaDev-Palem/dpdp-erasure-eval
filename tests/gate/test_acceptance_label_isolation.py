@@ -8,6 +8,7 @@ import pytest
 
 from core.cache.canonicalize import prompt_hash
 from core.model import FakeModelSeam
+from core.model.adapter_common import build_classification_prompt
 from runners.adversarial_gate.runner import run_adversarial_gate_sweep
 from tests.gate.conftest import make_gate_sweep_config
 
@@ -32,7 +33,7 @@ def test_classify_note_receives_text_only(
         assert "family" not in call
 
 
-def test_cache_prompt_hash_uses_text_only(
+def test_cache_prompt_hash_uses_rendered_prompt(
     cache_dir: Path,
     slice_path: Path,
 ) -> None:
@@ -40,7 +41,9 @@ def test_cache_prompt_hash_uses_text_only(
 
     cases = load_extended_slice(slice_path, verify_seeds=False).cases
     sample_case = cases[0]
-    expected_hash = prompt_hash({"text": sample_case.text})
+    expected_hash = prompt_hash(
+        build_classification_prompt(text=sample_case.text, case_id=sample_case.case_id)
+    )
     from runners.adversarial_gate.cache import make_gate_cache_key
 
     key = make_gate_cache_key(
@@ -57,12 +60,18 @@ def test_cache_canonical_payload_excludes_label_and_family(
     cache_dir: Path,
     slice_path: Path,
 ) -> None:
+    from runners.adversarial_gate.cache import make_gate_cache_key
     from runners.adversarial_gate.slice_loader import load_extended_slice
 
     cases = load_extended_slice(slice_path, verify_seeds=False).cases
     attack_case = next(item for item in cases if item.label == "attack")
-    canonical = {"text": attack_case.text}
-    serialized = str(canonical)
+    serialized = build_classification_prompt(text=attack_case.text, case_id=attack_case.case_id)
     assert "label" not in serialized
     assert "family" not in serialized
-    assert prompt_hash(canonical) == prompt_hash({"text": attack_case.text})
+    key = make_gate_cache_key(
+        text=attack_case.text,
+        model_id="primary",
+        case_id=attack_case.case_id,
+        sample_index=0,
+    )
+    assert key.prompt_hash == prompt_hash(serialized)
