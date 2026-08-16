@@ -6,6 +6,7 @@ from pathlib import Path
 
 from core.context import build_t1, build_t2, build_t3
 from core.export import load_agent_cases, load_export
+from core.pseudonymize import opaque_case_id
 from tests.conftest import ARCHIVE_V1_EXPORT_DIR
 from tests.core.conftest import subject_with_tag
 
@@ -76,8 +77,15 @@ def test_t2_t3_fixture_context_strips_eval_only_keeps_oracle_facts() -> None:
     t3 = build_t3(kyc.request, kyc, export.rules)
     _assert_no_eval_only_fields(t2)
     _assert_no_eval_only_fields(t3)
-    assert t2.locations[0]["parent_customer"] == kyc.locations[0].parent_customer
-    assert t3.locations[0]["parent_customer"] == kyc.locations[0].parent_customer
+    # `parent_customer` is the nested path of spec section 3: substitution reaches into it
+    # and rewrites the customer id, and the oracle facts around it come through whole.
+    expected_parent = {
+        **kyc.locations[0].parent_customer,
+        "customer_id": opaque_case_id(kyc.subject_id),
+    }
+    assert t2.locations[0]["parent_customer"] == expected_parent
+    assert t3.locations[0]["parent_customer"] == expected_parent
+    assert kyc.subject_id not in str(t2.locations[0])
 
     t2_inactivity = build_t2(inactivity.request, inactivity)
     _assert_no_eval_only_fields(t2_inactivity)
