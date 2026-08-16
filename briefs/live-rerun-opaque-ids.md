@@ -272,7 +272,7 @@ for s in b.subjects:
         assert hit is None, f"{s.subject_id}: cell name {hit!r} in prompt"
 
 for case in load_extended_slice(Path("fixtures/adversarial_slice/cases.yaml"), verify_seeds=False).cases:
-    p = build_classification_prompt(text=case.text, case_id=case.case_id)
+    p = build_classification_prompt(text=case.text)
     assert case.case_id not in p and "adv-" not in p and "benign-" not in p, case.case_id
 print("no cell name or label in any rendered prompt")
 ```

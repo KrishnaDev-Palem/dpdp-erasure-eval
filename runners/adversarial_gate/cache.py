@@ -32,7 +32,7 @@ def make_gate_cache_key(
         model_id=model_id,
         runner_id=GATE_RUNNER_ID,
         case_id=case_id,
-        prompt_hash=prompt_hash(build_classification_prompt(text=text, case_id=case_id)),
+        prompt_hash=prompt_hash(build_classification_prompt(text=text)),
         sample_index=sample_index,
     )
 

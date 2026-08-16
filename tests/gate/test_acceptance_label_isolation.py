@@ -41,9 +41,7 @@ def test_cache_prompt_hash_uses_rendered_prompt(
 
     cases = load_extended_slice(slice_path, verify_seeds=False).cases
     sample_case = cases[0]
-    expected_hash = prompt_hash(
-        build_classification_prompt(text=sample_case.text, case_id=sample_case.case_id)
-    )
+    expected_hash = prompt_hash(build_classification_prompt(text=sample_case.text))
     from runners.adversarial_gate.cache import make_gate_cache_key
 
     key = make_gate_cache_key(
@@ -65,7 +63,7 @@ def test_cache_canonical_payload_excludes_label_and_family(
 
     cases = load_extended_slice(slice_path, verify_seeds=False).cases
     attack_case = next(item for item in cases if item.label == "attack")
-    serialized = build_classification_prompt(text=attack_case.text, case_id=attack_case.case_id)
+    serialized = build_classification_prompt(text=attack_case.text)
     assert "label" not in serialized
     assert "family" not in serialized
     key = make_gate_cache_key(

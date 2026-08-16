@@ -42,9 +42,7 @@ def test_cache_prompt_identity_from_rendered_prompt(
         sample_index=0,
     )
     assert key.runner_id == "adversarial_gate"
-    assert key.prompt_hash == prompt_hash(
-        build_classification_prompt(text=sample_case.text, case_id=sample_case.case_id)
-    )
+    assert key.prompt_hash == prompt_hash(build_classification_prompt(text=sample_case.text))
     entry = read_cache(key, cache_dir)
     assert "outcome" in entry.raw_response
 

@@ -85,7 +85,7 @@ class AnthropicModelSeam:
         case_id: str | None = None,
     ) -> ClassifierResult:
         response_text = self._complete_text(
-            prompt=build_classification_prompt(text=text, case_id=case_id),
+            prompt=build_classification_prompt(text=text),
         )
         payload = extract_json_object(response_text)
         return parse_classifier_result(payload=payload, case_id=case_id)

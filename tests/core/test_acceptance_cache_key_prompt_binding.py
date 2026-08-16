@@ -88,8 +88,8 @@ def test_gate_key_moves_with_one_rendered_prompt_byte() -> None:
     case = _gate_case()
     perturbed_text = _flip_last_byte(case.text)
 
-    prompt = build_classification_prompt(text=case.text, case_id=case.case_id)
-    perturbed_prompt = build_classification_prompt(text=perturbed_text, case_id=case.case_id)
+    prompt = build_classification_prompt(text=case.text)
+    perturbed_prompt = build_classification_prompt(text=perturbed_text)
     assert _differing_byte_count(prompt, perturbed_prompt) == 1
 
     key = make_gate_cache_key(
