@@ -11,6 +11,7 @@ import pytest
 from core.exceptions import CacheMissError, ExportLoadError, ProvenanceError
 from core.export import load_export
 from core.model import FakeModelSeam
+from core.pseudonymize import opaque_location_id
 from runners.pairing import PairingValidationError
 from runners.spine import run_tier_sweep
 from runners.types import SweepConfig
@@ -109,6 +110,9 @@ def test_invalid_verdict_enum_rejected(
     export = load_export(export_dir)
     subject = export.subjects[0]
     location_ids = [location.location_id for location in subject.locations]
+    # The model only ever saw opaque ids, so a cache entry names locations that way; the
+    # error the sweep raises still names the real id, after translation.
+    opaque_location_ids = [opaque_location_id(item) for item in location_ids]
     context = build_t2(subject.request, subject)
     key = make_cache_key(
         context=context,
@@ -137,10 +141,10 @@ def test_invalid_verdict_enum_rejected(
         "recorded_at": "2026-07-01T12:00:00Z",
         "raw_response": {
             "verdicts": [
-                {"location_id": location_ids[0], "verdict": "invalid", "detail": None},
+                {"location_id": opaque_location_ids[0], "verdict": "invalid", "detail": None},
                 *[
                     {"location_id": lid, "verdict": "erase", "detail": None}
-                    for lid in location_ids[1:]
+                    for lid in opaque_location_ids[1:]
                 ],
             ]
         },
@@ -200,7 +204,11 @@ def test_missing_verdict_rejected(
         "recorded_at": "2026-07-01T12:00:00Z",
         "raw_response": {
             "verdicts": [
-                {"location_id": location_ids[0], "verdict": "retain", "detail": None},
+                {
+                    "location_id": opaque_location_id(location_ids[0]),
+                    "verdict": "retain",
+                    "detail": None,
+                },
             ]
         },
         "tool_calls": [],

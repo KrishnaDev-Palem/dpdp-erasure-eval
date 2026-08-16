@@ -14,6 +14,11 @@ from core.model.seam import ModelSeam, load_model_config
 from core.scoring.adjudication import score_adjudication, score_adjudication_grouped
 from core.types import ContextBundle, LabeledLocation, RulesCorpus, Tier
 from runners.pairing import pair_subject_verdicts
+from runners.translation import (
+    location_id_inverse,
+    to_real_location_ids,
+    translate_raw_verdicts,
+)
 from runners.types import (
     DEFAULT_ADJUDICATION_SAMPLE_INDICES,
     SampleRollup,
@@ -111,10 +116,14 @@ def run_tier_sweep(
                     else builder(subject.request, subject)
                 )
             )
-            context_location_ids = [location["location_id"] for location in context.locations]
-            export_location_ids = [location.location_id for location in subject.locations]
-            pairing_location_ids = (
-                context_location_ids if context_location_ids else export_location_ids
+            # Pair over exactly the locations the model was shown, resolved back to real
+            # ids. Every builder now fills the bundle, so the old fallback to the export
+            # list was dead code that yielded real ids on one branch and opaque on the
+            # other; deriving from the context keeps a builder that drops a location
+            # visible instead of papering over it.
+            inverse = location_id_inverse(subject)
+            pairing_location_ids = to_real_location_ids(
+                (location["location_id"] for location in context.locations), inverse
             )
             if not pairing_location_ids:
                 continue
@@ -132,7 +141,9 @@ def run_tier_sweep(
                 sample_index=sample_index,
                 locations=subject.locations,
                 pairing_location_ids=pairing_location_ids,
-                raw_verdicts=entry.raw_response.get("verdicts", []),
+                raw_verdicts=translate_raw_verdicts(
+                    entry.raw_response.get("verdicts", []), inverse
+                ),
             )
             all_pairs.extend(pairs)
 
