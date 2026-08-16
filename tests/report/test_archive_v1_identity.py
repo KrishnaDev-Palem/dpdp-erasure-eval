@@ -36,14 +36,17 @@ def test_archive_results_are_not_byte_identical_to_default_results() -> None:
     assert len(archived) == 12
 
 
-def test_archive_writeup_is_byte_identical_to_default_writeup() -> None:
-    assert (ARCHIVE_V1 / "docs" / "writeup.md").read_bytes() == (
+def test_archive_writeup_is_not_byte_identical_to_default_writeup() -> None:
+    assert (ARCHIVE_V1 / "docs" / "writeup.md").read_bytes() != (
         REPO_ROOT / "docs" / "writeup.md"
     ).read_bytes()
 
 
-def test_archive_figures_are_byte_identical_to_default_figures() -> None:
-    assert _file_map(ARCHIVE_V1 / "docs" / "figures") == _file_map(REPO_ROOT / "docs" / "figures")
+def test_archive_figures_are_not_byte_identical_to_default_figures() -> None:
+    archived = _file_map(ARCHIVE_V1 / "docs" / "figures")
+    default = _file_map(REPO_ROOT / "docs" / "figures")
+    assert archived != default
+    assert archived.keys() == default.keys()
 
 
 def test_archive_readme_names_tag_pin_and_replay_command() -> None:
