@@ -25,7 +25,12 @@ def canonicalize(context: ContextBundle | dict[str, Any]) -> str:
     return json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
 
 
-def prompt_hash(context: ContextBundle | dict[str, Any]) -> str:
-    """Return SHA-256 hex digest of canonical context JSON."""
-    digest = hashlib.sha256(canonicalize(context).encode("utf-8"))
+def prompt_hash(context: ContextBundle | dict[str, Any] | str) -> str:
+    """Return SHA-256 hex digest of canonical context JSON, or of a rendered prompt.
+
+    A `str` argument is the exact prompt string sent to the provider. Spec section 6 binds
+    the cache key to those bytes, so it is hashed as it stands and never re-serialized.
+    """
+    payload = context if isinstance(context, str) else canonicalize(context)
+    digest = hashlib.sha256(payload.encode("utf-8"))
     return digest.hexdigest()
