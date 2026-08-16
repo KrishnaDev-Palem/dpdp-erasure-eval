@@ -113,6 +113,8 @@ def resolve_autonomous_entry(
             .isoformat()
             .replace("+00:00", "Z"),
             tool_calls=_serialize_tool_calls(session.tool_calls),
+            # Summed across every tool round of this session, not just the final answer.
+            usage=seam.take_token_usage(),
         )
         store.put(entry)
         return AdjudicationSessionResult(

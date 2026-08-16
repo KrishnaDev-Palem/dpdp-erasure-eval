@@ -131,6 +131,7 @@ class CacheStore:
                 .replace(microsecond=0)
                 .isoformat()
                 .replace("+00:00", "Z"),
+                usage=seam.take_token_usage(),
             )
             self.put(entry)
             return entry

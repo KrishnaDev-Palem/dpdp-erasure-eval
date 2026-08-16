@@ -75,6 +75,7 @@ def classify_with_cache(
             .replace(microsecond=0)
             .isoformat()
             .replace("+00:00", "Z"),
+            usage=seam.take_token_usage(),
         )
         store.put(entry)
         return result
