@@ -11,12 +11,18 @@ from core.model.seam import ModelSeam
 from core.tools.registry import ToolRegistry
 from core.types import (
     AdjudicationSessionResult,
+    AdjudicationSubject,
     CacheEntry,
     ContextBundle,
     ModelVerdict,
     ToolCallTrace,
 )
 from runners.autonomous.types import AUTONOMOUS_RUNNER_ID
+from runners.translation import (
+    location_id_inverse,
+    translate_raw_verdicts,
+    translate_verdicts,
+)
 
 
 def _parse_verdicts(
@@ -49,14 +55,23 @@ def _serialize_tool_calls(tool_calls: list[ToolCallTrace]) -> list[dict[str, Any
 def resolve_autonomous_entry(
     *,
     context: ContextBundle,
-    subject_id: str,
+    subject: AdjudicationSubject,
     sample_index: int,
     model_id: str,
     store: CacheStore,
     seam: ModelSeam,
     tool_registry: ToolRegistry,
 ) -> AdjudicationSessionResult:
-    """Resolve one autonomous adjudication session from cache or refresh path."""
+    """Resolve one autonomous adjudication session from cache or refresh path.
+
+    Takes the subject rather than its id: the cache still addresses on the real id, but
+    resolving opaque verdict ids needs the subject's locations too, and one authoritative
+    object beats two arguments that must agree. Both the cached and the refreshed session
+    come back with real location ids on `verdicts` and on `raw_verdicts` — the sweep pairs
+    on the latter, so translating only the parsed list would leave the bug live.
+    """
+    subject_id = subject.subject_id
+    inverse = location_id_inverse(subject)
     key = make_cache_key(
         context=context,
         model_id=model_id,
@@ -68,8 +83,8 @@ def resolve_autonomous_entry(
         entry = store.get(key)
         verdicts, raw_verdicts = _parse_verdicts(entry.raw_response)
         return AdjudicationSessionResult(
-            verdicts=verdicts,
-            raw_verdicts=raw_verdicts,
+            verdicts=translate_verdicts(verdicts, inverse),
+            raw_verdicts=translate_raw_verdicts(raw_verdicts, inverse),
             tool_calls=_parse_tool_calls(entry.tool_calls),
         )
     except CacheMissError:
@@ -87,11 +102,12 @@ def resolve_autonomous_entry(
             raise TypeError(
                 "Expected AdjudicationSessionResult when tool_registry is provided"
             ) from None
+        # The entry records what the model returned, so it goes to disk opaque and stays
+        # that way; translation is in-memory, on the way out.
+        raw_verdicts = [item.model_dump(mode="json") for item in session.verdicts]
         entry = CacheEntry(
             key=key,
-            raw_response={
-                "verdicts": [item.model_dump(mode="json") for item in session.verdicts],
-            },
+            raw_response={"verdicts": raw_verdicts},
             recorded_at=datetime.now(tz=UTC)
             .replace(microsecond=0)
             .isoformat()
@@ -100,7 +116,7 @@ def resolve_autonomous_entry(
         )
         store.put(entry)
         return AdjudicationSessionResult(
-            verdicts=session.verdicts,
-            raw_verdicts=[item.model_dump(mode="json") for item in session.verdicts],
+            verdicts=translate_verdicts(session.verdicts, inverse),
+            raw_verdicts=translate_raw_verdicts(raw_verdicts, inverse),
             tool_calls=session.tool_calls,
         )

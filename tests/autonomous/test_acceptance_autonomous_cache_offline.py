@@ -29,7 +29,7 @@ def test_offline_replay_via_autonomous_runner_id(
     store = CacheStore(root=autonomous_config.cache_root, cache_mode="offline")
     session = resolve_autonomous_entry(
         context=context,
-        subject_id=subject.subject_id,
+        subject=subject,
         sample_index=0,
         model_id=autonomous_config.model_id,
         store=store,
@@ -74,7 +74,7 @@ def test_offline_cache_miss_names_identifiers(
     with pytest.raises(CacheMissError) as exc_info:
         resolve_autonomous_entry(
             context=context,
-            subject_id=subject.subject_id,
+            subject=subject,
             sample_index=0,
             model_id="primary",
             store=store,
@@ -102,7 +102,8 @@ def test_resolve_autonomous_entry_refresh_miss_writes_tool_calls(
     monkeypatch.setenv("CACHE_MODE", "refresh")
     subject = export_bundle.subjects[0]
     verdict_json = ", ".join(
-        f'{{"location_id": "{location.location_id}", "verdict": "{location.expected.verdict}"}}'
+        f'{{"location_id": "{opaque_location_id(location.location_id)}", '
+        f'"verdict": "{location.expected.verdict}"}}'
         for location in subject.locations
     )
     context = build_t1(subject.request, subject)
@@ -136,7 +137,7 @@ def test_resolve_autonomous_entry_refresh_miss_writes_tool_calls(
     )
     session = resolve_autonomous_entry(
         context=context,
-        subject_id=subject.subject_id,
+        subject=subject,
         sample_index=0,
         model_id="claude-sonnet-5",
         store=store,
@@ -169,14 +170,17 @@ def test_refresh_path_available(
     cache_root = tmp_path / "cache"
     store = CacheStore(root=cache_root, cache_mode="refresh")
     seam = FakeModelSeam(
-        pairing_location_ids=[location.location_id for location in subject.locations],
+        pairing_location_ids=[
+            opaque_location_id(location.location_id) for location in subject.locations
+        ],
         adjudication_verdicts={
-            location.location_id: location.expected.verdict for location in subject.locations
+            opaque_location_id(location.location_id): location.expected.verdict
+            for location in subject.locations
         },
     )
     session = resolve_autonomous_entry(
         context=context,
-        subject_id=subject.subject_id,
+        subject=subject,
         sample_index=0,
         model_id="primary",
         store=store,

@@ -70,7 +70,7 @@ def test_offline_cache_payload_has_no_expected(
     store = CacheStore(root=autonomous_config.cache_root, cache_mode=autonomous_config.cache_mode)
     session = resolve_autonomous_entry(
         context=context,
-        subject_id=subject.subject_id,
+        subject=subject,
         sample_index=0,
         model_id=autonomous_config.model_id,
         store=store,

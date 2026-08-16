@@ -20,6 +20,7 @@ from runners.autonomous.types import (
     AutonomousSweepResult,
 )
 from runners.pairing import pair_subject_verdicts
+from runners.translation import location_id_inverse, to_real_location_ids
 from runners.types import SampleRollup
 from runners.variance import compute_variance_summary
 
@@ -70,17 +71,20 @@ def run_autonomous_sweep(
         all_pairs: list[tuple[Any, Any]] = []
         for subject in bundle.subjects:
             context = build_t1(subject.request, subject)
-            context_location_ids = [location["location_id"] for location in context.locations]
-            export_location_ids = [location.location_id for location in subject.locations]
-            pairing_location_ids = (
-                context_location_ids if context_location_ids else export_location_ids
+            # `build_t1` fills the bundle for every subject now, so the fallback to the
+            # export list that used to sit here is dead; the autonomous path was its last
+            # real user. Translating the context ids instead keeps pairing anchored to
+            # what the model was shown.
+            pairing_location_ids = to_real_location_ids(
+                (location["location_id"] for location in context.locations),
+                location_id_inverse(subject),
             )
             if not pairing_location_ids:
                 continue
 
             session = resolve_autonomous_entry(
                 context=context,
-                subject_id=subject.subject_id,
+                subject=subject,
                 sample_index=sample_index,
                 model_id=resolved.model_id,
                 store=store,

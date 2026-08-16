@@ -56,7 +56,7 @@ def _replay_sessions(export_bundle) -> dict[tuple[str, int], object]:
         for sample_index in SAMPLE_INDICES:
             sessions[(subject.subject_id, sample_index)] = resolve_autonomous_entry(
                 context=context,
-                subject_id=subject.subject_id,
+                subject=subject,
                 sample_index=sample_index,
                 model_id=LIVE_ROLE,
                 store=store,

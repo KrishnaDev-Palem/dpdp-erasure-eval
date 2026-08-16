@@ -11,7 +11,7 @@ from core.cache import make_cache_key, read_cache, write_cache
 from core.cache.store import CacheStore
 from core.context import build_t1
 from core.model import FakeModelSeam
-from core.pseudonymize import opaque_case_id
+from core.pseudonymize import opaque_case_id, opaque_location_id
 from core.tools import build_retrieval_tool_registry
 from core.types import CacheEntry, ToolCallTrace
 from runners.autonomous.cache import resolve_autonomous_entry
@@ -53,7 +53,7 @@ def test_offline_replay_reads_stored_tool_calls(
     store = CacheStore(root=autonomous_config.cache_root, cache_mode="offline")
     session = resolve_autonomous_entry(
         context=context,
-        subject_id=subject.subject_id,
+        subject=subject,
         sample_index=0,
         model_id=autonomous_config.model_id,
         store=store,
@@ -76,7 +76,7 @@ def test_offline_replay_does_not_reexecute_tools(
     store = CacheStore(root=autonomous_config.cache_root, cache_mode="offline")
     resolve_autonomous_entry(
         context=context,
-        subject_id=subject.subject_id,
+        subject=subject,
         sample_index=0,
         model_id=autonomous_config.model_id,
         store=store,
@@ -107,7 +107,7 @@ def test_empty_tool_calls_valid_when_no_tools_invoked(
             raw_response={
                 "verdicts": [
                     {
-                        "location_id": location.location_id,
+                        "location_id": opaque_location_id(location.location_id),
                         "verdict": location.expected.verdict,
                         "detail": None,
                     }
@@ -123,7 +123,7 @@ def test_empty_tool_calls_valid_when_no_tools_invoked(
     store = CacheStore(root=cache_root, cache_mode="offline")
     session = resolve_autonomous_entry(
         context=context,
-        subject_id=subject.subject_id,
+        subject=subject,
         sample_index=0,
         model_id="primary",
         store=store,
@@ -146,11 +146,12 @@ def test_refresh_path_persists_tool_calls(
     registry = build_retrieval_tool_registry(export_bundle)
     cache_root = tmp_path / "cache"
     store = CacheStore(root=cache_root, cache_mode="refresh")
-    location_ids = [location.location_id for location in subject.locations]
+    location_ids = [opaque_location_id(location.location_id) for location in subject.locations]
     seam = FakeModelSeam(
         pairing_location_ids=location_ids,
         adjudication_verdicts={
-            location.location_id: location.expected.verdict for location in subject.locations
+            opaque_location_id(location.location_id): location.expected.verdict
+            for location in subject.locations
         },
         planned_tool_calls=[
             ("get_location_records", {"subject_id": opaque_case_id(subject.subject_id)}),
@@ -158,7 +159,7 @@ def test_refresh_path_persists_tool_calls(
     )
     session = resolve_autonomous_entry(
         context=context,
-        subject_id=subject.subject_id,
+        subject=subject,
         sample_index=0,
         model_id="primary",
         store=store,
