@@ -11,7 +11,7 @@ from core.cache.store import CacheStore
 from core.context import build_t1
 from core.exceptions import CacheMissError
 from core.model import FakeModelSeam
-from core.pseudonymize import opaque_case_id
+from core.pseudonymize import opaque_case_id, opaque_location_id
 from core.tools import build_retrieval_tool_registry
 from runners.autonomous.cache import resolve_autonomous_entry
 from runners.autonomous.types import AUTONOMOUS_RUNNER_ID
@@ -51,7 +51,9 @@ def test_cache_prompt_identity_from_t1_context_only(export_bundle) -> None:
     )
     assert key.prompt_hash == prompt_hash(context)
     assert context.tier == "t1"
-    assert context.locations == []
+    assert context.locations == [
+        {"location_id": opaque_location_id(location.location_id)} for location in subject.locations
+    ]
 
 
 @pytest.mark.cache_miss

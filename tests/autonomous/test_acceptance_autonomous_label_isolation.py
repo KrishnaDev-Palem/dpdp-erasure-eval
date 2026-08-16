@@ -11,7 +11,7 @@ from core.cache import make_cache_key, prompt_hash
 from core.context import build_t1, build_t2
 from core.export import load_agent_cases
 from core.export.loader import ExportBundle
-from core.pseudonymize import opaque_case_id
+from core.pseudonymize import opaque_case_id, opaque_location_id
 from core.tools import build_retrieval_tool_registry
 from runners.autonomous.cache import resolve_autonomous_entry
 from runners.autonomous.types import AUTONOMOUS_RUNNER_ID
@@ -125,7 +125,9 @@ def test_autonomous_initial_context_strips_eval_only_fields() -> None:
     dumped = str(serialized)
     for field in _EVAL_ONLY:
         assert f"'{field}'" not in dumped and f'"{field}"' not in dumped
-    assert context.locations == []
+    assert context.locations == [
+        {"location_id": opaque_location_id(location.location_id)} for location in subject.locations
+    ]
 
 
 @pytest.mark.tool_isolation
