@@ -9,7 +9,6 @@ from typing import Any
 from core.cache.store import CacheStore
 from core.context.tiers import build_t1
 from core.export.loader import load_export
-from core.model.adapter_common import bind_seam_export_dir
 from core.model.seam import ModelSeam
 from core.scoring.adjudication import score_adjudication, score_adjudication_grouped
 from core.tools.registry import build_retrieval_tool_registry
@@ -53,7 +52,6 @@ def run_autonomous_sweep(
     resolved = _resolve_config(config, export_dir, cache_root, sample_indices)
     export_path = resolved.export_dir or Path("export")
     cache_path = resolved.cache_root or Path("cache")
-    bind_seam_export_dir(seam, export_path)
 
     bundle = load_export(export_path)
     manifest = bundle.verify_provenance()

@@ -117,7 +117,7 @@ def _run_adjudication_command(
             file=sys.stderr,
         )
         return 1
-    seam = create_model_seam(export_dir=args.export_dir)
+    seam = create_model_seam()
     sweep_kwargs: dict[str, Any] = {
         "seam": seam,
         "export_dir": args.export_dir,

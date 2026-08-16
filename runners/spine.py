@@ -10,7 +10,6 @@ from typing import Any
 from core.cache.store import CacheStore, make_cache_key
 from core.context.tiers import build_t1, build_t2, build_t3
 from core.export.loader import ExportBundle, load_export
-from core.model.adapter_common import bind_seam_export_dir
 from core.model.seam import ModelSeam, load_model_config
 from core.scoring.adjudication import score_adjudication, score_adjudication_grouped
 from core.types import ContextBundle, LabeledLocation, RulesCorpus, Tier
@@ -87,7 +86,6 @@ def run_tier_sweep(
     resolved = _resolve_config(tier, config, export_dir, cache_root, sample_indices)
     export_path = resolved.export_dir or Path("export")
     cache_path = resolved.cache_root or Path("cache")
-    bind_seam_export_dir(seam, export_path)
 
     bundle: ExportBundle = load_export(export_path)
     manifest = bundle.verify_provenance()
