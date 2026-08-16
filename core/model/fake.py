@@ -13,6 +13,7 @@ from core.types import (
     ClassifierResult,
     ContextBundle,
     ModelVerdict,
+    TokenUsage,
     ToolCallTrace,
     Verdict,
 )
@@ -89,3 +90,12 @@ class FakeModelSeam:
         if outcome not in {"clean", "adversarial"}:
             raise ModelResponseError(f"Invalid classification outcome: {outcome!r}")
         return ClassifierResult(outcome=outcome)
+
+    def take_token_usage(self) -> TokenUsage | None:
+        """Always `None`: the fake makes no provider call, so there is nothing to count.
+
+        Implemented rather than left off, so the offline path exercises the same accessor
+        the live path does and every cache entry it writes carries no usage by
+        construction.
+        """
+        return None

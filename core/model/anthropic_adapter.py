@@ -17,12 +17,14 @@ from core.model.adapter_common import (
     resolve_adjudication_location_ids,
     run_tool_registry_loop,
 )
+from core.model.usage import TokenUsageAccumulator, extract_anthropic_usage
 from core.tools.registry import ToolRegistry
 from core.types import (
     AdjudicationSessionResult,
     ClassifierResult,
     ContextBundle,
     ModelVerdict,
+    TokenUsage,
 )
 
 
@@ -49,12 +51,16 @@ class AnthropicModelSeam:
         client: Any | None = None,
     ) -> None:
         self._config = config
+        self._usage = TokenUsageAccumulator()
         if client is not None:
             self._client = client
         else:
             import anthropic
 
             self._client = anthropic.Anthropic(api_key=config.api_key)
+
+    def take_token_usage(self) -> TokenUsage | None:
+        return self._usage.take()
 
     def adjudicate(
         self,
@@ -63,6 +69,9 @@ class AnthropicModelSeam:
         case_id: str,
         tool_registry: ToolRegistry | None = None,
     ) -> list[ModelVerdict] | AdjudicationSessionResult:
+        # Reset first, before anything can raise: counts from the previous case — or from
+        # a call of this one that failed partway — must never reach the next entry.
+        self._usage.reset()
         location_ids = resolve_adjudication_location_ids(context=context, case_id=case_id)
         if tool_registry is None:
             text = self._complete_text(
@@ -84,6 +93,7 @@ class AnthropicModelSeam:
         text: str,
         case_id: str | None = None,
     ) -> ClassifierResult:
+        self._usage.reset()
         response_text = self._complete_text(
             prompt=build_classification_prompt(text=text),
         )
@@ -98,6 +108,7 @@ class AnthropicModelSeam:
             messages=[{"role": "user", "content": prompt}],
             timeout=self._config.request_timeout_seconds,
         )
+        self._usage.add(extract_anthropic_usage(response))
         return self._extract_text(response)
 
     def _adjudicate_with_tools(
@@ -126,6 +137,9 @@ class AnthropicModelSeam:
                 tools=tools,
                 timeout=self._config.request_timeout_seconds,
             )
+            # One provider call per round, one cache entry per session: the counts have to
+            # sum across the loop, not report the last round.
+            self._usage.add(extract_anthropic_usage(response))
             tool_uses = [
                 block for block in response.content if getattr(block, "type", None) == "tool_use"
             ]

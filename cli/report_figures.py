@@ -34,6 +34,10 @@ class _OfflineOnlySeam:
     def classify_note(self, **_kwargs):
         raise RuntimeError("model seam must not be invoked during report figures")
 
+    def take_token_usage(self):
+        """No call was made, so there is nothing to count. Keeps this a full seam."""
+        return None
+
 
 @dataclass
 class LoadFigureInputsResult:
