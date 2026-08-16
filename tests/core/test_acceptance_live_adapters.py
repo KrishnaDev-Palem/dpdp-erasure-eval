@@ -11,13 +11,17 @@ import pytest
 
 from core.context import build_t1
 from core.exceptions import ModelResponseError
-from core.model.adapter_common import resolve_adjudication_location_ids
+from core.export import load_export
+from core.model.adapter_common import (
+    build_adjudication_prompt,
+    resolve_adjudication_location_ids,
+)
 from core.model.anthropic_adapter import AnthropicModelSeam
 from core.model.anthropic_adapter import LiveAdapterConfig as AnthropicConfig
 from core.model.gemini_adapter import GeminiModelSeam
 from core.model.gemini_adapter import LiveAdapterConfig as GeminiConfig
 from core.model.roles import get_role_descriptor
-from core.pseudonymize import opaque_location_id
+from core.pseudonymize import opaque_case_id, opaque_location_id
 from core.types import AdjudicationSessionResult, ContextBundle, ErasureRequest
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -489,6 +493,45 @@ def test_t1_live_resolution_reads_the_bundle_and_never_loads_the_export(
     verdicts = seam.adjudicate(context=context, case_id=subject.subject_id)
     assert [item.location_id for item in verdicts] == expected
     assert loaded == []
+
+
+def test_adjudication_prompt_renders_the_case_id_opaque() -> None:
+    """`case_id` was the last real identifier left in the rendered payload.
+
+    The parameter stays real — `make_cache_key` and the cache path layout are addressed by
+    it — but what renders is the opaque handle, which is also the one the model hands back
+    to `get_location_records`. Everything else about the prompt is byte-stable, so the
+    header lines and the payload key order are asserted alongside.
+    """
+    export = load_export(REPO_ROOT / "export")
+    subject = next(item for item in export.subjects if item.locations)
+
+    prompt = build_adjudication_prompt(
+        context=build_t1(subject.request, subject),
+        case_id=subject.subject_id,
+    )
+
+    assert f'"case_id": "{opaque_case_id(subject.subject_id)}"' in prompt
+    assert subject.subject_id not in prompt
+    for location in subject.locations:
+        assert location.location_id not in prompt
+        if location.cell_id:
+            assert location.cell_id not in prompt
+
+    assert prompt.startswith(
+        "Adjudicate erasure for each location. Return JSON only:\n"
+        '{"verdicts": [{"location_id": "<id>", "verdict": "erase|retain|escalate"}]}\n'
+        "Required location_ids: "
+    )
+    payload = json.loads(prompt.split("Context:\n", 1)[1])
+    assert list(payload) == [
+        "case_id",
+        "tier",
+        "request",
+        "locations",
+        "retention_floors",
+        "governance_map",
+    ]
 
 
 def test_adapter_respects_max_tool_rounds() -> None:

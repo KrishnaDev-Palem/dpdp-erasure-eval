@@ -7,6 +7,7 @@ import re
 from typing import Any
 
 from core.exceptions import ModelResponseError
+from core.pseudonymize import opaque_case_id
 from core.tools.registry import ToolRegistry
 from core.tools.trace import summarize_tool_result
 from core.types import (
@@ -39,8 +40,15 @@ def build_adjudication_prompt(
     context: ContextBundle,
     case_id: str,
 ) -> str:
+    """Render the prompt. `case_id` arrives real and is rendered opaque.
+
+    The parameter stays real because the cache addresses on it — `make_cache_key` and the
+    cache path layout both take the subject id — but the real id names the design cell, so
+    what the model reads is the opaque handle. It is also the handle the model passes to
+    `get_location_records`, which accepts nothing else.
+    """
     payload = {
-        "case_id": case_id,
+        "case_id": opaque_case_id(case_id),
         "tier": context.tier,
         "request": context.request.model_dump(mode="json"),
         "locations": context.locations,
