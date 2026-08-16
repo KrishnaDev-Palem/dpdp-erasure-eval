@@ -25,6 +25,11 @@ from report.retrieval_split_types import (
 )
 from runners.autonomous.types import AUTONOMOUS_RUNNER_ID
 from runners.pairing import pair_subject_verdicts
+from runners.translation import (
+    location_id_inverse,
+    to_real_location_ids,
+    translate_raw_verdicts,
+)
 from runners.types import ALLOWED_ADJUDICATION_SAMPLE_INDICES, THREE_SAMPLE_INDICES
 
 
@@ -202,10 +207,12 @@ def build_retrieval_split_report(
         classified_pairs: list[tuple[ModelVerdict, ExpectedLabel, list[ToolCallTrace]]] = []
         for subject in bundle.subjects:
             context = build_t1(subject.request, subject)
-            context_location_ids = [location["location_id"] for location in context.locations]
-            export_location_ids = [location.location_id for location in subject.locations]
-            pairing_location_ids = (
-                context_location_ids if context_location_ids else export_location_ids
+            # The split itself keys on `floor_ids` and is unaffected by substitution, but
+            # it is a third `pair_subject_verdicts` caller and pairs on the same two
+            # opaque inputs as the sweeps. Same resolution, same dead fallback removed.
+            inverse = location_id_inverse(subject)
+            pairing_location_ids = to_real_location_ids(
+                (location["location_id"] for location in context.locations), inverse
             )
             if not pairing_location_ids:
                 continue
@@ -218,7 +225,7 @@ def build_retrieval_split_report(
                 sample_index=current_sample_index,
             )
             entry = store.get(key)
-            raw_verdicts = _parse_raw_verdicts(entry.raw_response)
+            raw_verdicts = translate_raw_verdicts(_parse_raw_verdicts(entry.raw_response), inverse)
             tool_calls = _parse_tool_calls(entry.tool_calls)
             pairs = pair_subject_verdicts(
                 subject_id=subject.subject_id,
