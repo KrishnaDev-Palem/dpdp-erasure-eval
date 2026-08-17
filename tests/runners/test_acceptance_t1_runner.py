@@ -147,6 +147,7 @@ def _cached_verdicts_for_subject(
     from core.context import build_t1
     from core.exceptions import CacheMissError
     from core.export import load_export
+    from runners.translation import location_id_inverse, translate_raw_verdicts
 
     export = load_export()
     subject = next(item for item in export.subjects if item.subject_id == subject_id)
@@ -162,4 +163,9 @@ def _cached_verdicts_for_subject(
         entry = read_cache(key, cache_dir)
     except CacheMissError:
         return []
-    return entry.raw_response.get("verdicts", [])
+    # A cache entry records what the model returned, so its ids are opaque. The caller
+    # pairs them against export locations by real id, which is the same translation
+    # `runners/spine.py` applies on every cache read.
+    return translate_raw_verdicts(
+        entry.raw_response.get("verdicts", []), location_id_inverse(subject)
+    )

@@ -18,6 +18,7 @@ from core.types import VERDICT_LANES, ExpectedLabel, ModelVerdict
 from runners.autonomous.runner import run_autonomous_sweep
 from runners.autonomous.types import AUTONOMOUS_RUNNER_ID
 from runners.pairing import PairingValidationError
+from runners.translation import location_id_inverse, translate_raw_verdicts
 
 
 def test_all_export_subjects_visited(fake_seam, autonomous_config, export_dir) -> None:
@@ -129,6 +130,10 @@ def test_invalid_verdict_enum_rejected(
         case_id=subject.subject_id,
         sample_index=0,
     )
+    # What the model saw, and therefore what a cache entry holds. The invalid verdict
+    # enum is what this test corrupts; writing a real id instead would fail earlier, in
+    # translation, and never reach the pairing check being asserted.
+    opaque_ids = [location["location_id"] for location in context.locations]
     bad_cache = tmp_path / "cache"
     shutil.copytree(cache_dir / "primary", bad_cache / "primary")
     entry_path = (
@@ -149,10 +154,10 @@ def test_invalid_verdict_enum_rejected(
         "recorded_at": "2026-07-01T12:00:00Z",
         "raw_response": {
             "verdicts": [
-                {"location_id": location_ids[0], "verdict": "invalid", "detail": None},
+                {"location_id": opaque_ids[0], "verdict": "invalid", "detail": None},
                 *[
                     {"location_id": lid, "verdict": "erase", "detail": None}
-                    for lid in location_ids[1:]
+                    for lid in opaque_ids[1:]
                 ],
             ]
         },
@@ -189,4 +194,9 @@ def _cached_verdicts_for_subject(
         entry = read_cache(key, cache_dir)
     except CacheMissError:
         return []
-    return entry.raw_response.get("verdicts", [])
+    # A cache entry records what the model returned, so its ids are opaque. The caller
+    # pairs them against export locations by real id, which is the same translation
+    # `runners/autonomous/cache.py` applies on every cache read.
+    return translate_raw_verdicts(
+        entry.raw_response.get("verdicts", []), location_id_inverse(subject)
+    )

@@ -7,6 +7,7 @@ import pytest
 from core.exceptions import ModelResponseError
 from core.export import load_export
 from core.model import FakeModelSeam, load_model_config
+from core.pseudonymize import build_substitution_map
 from core.types import ContextBundle
 from tests.conftest import ARCHIVE_V1_EXPORT_DIR
 from tests.core.conftest import subject_with_tag
@@ -28,8 +29,9 @@ def test_fake_model_seam_records_calls() -> None:
     context = _sample_context()
     export = _archive_export()
     subject = subject_with_tag(export.subjects, "mixed_fanout")
+    mapping = build_substitution_map(subject)
     verdict_map = {
-        location.location_id: location.expected.verdict for location in subject.locations
+        mapping[location.location_id]: location.expected.verdict for location in subject.locations
     }
     seam = FakeModelSeam(adjudication_verdicts=verdict_map)
     verdicts = seam.adjudicate(context=context, case_id=subject.subject_id)
@@ -48,8 +50,9 @@ def test_adjudicate_returns_one_verdict_per_location() -> None:
     context = _sample_context()
     export = _archive_export()
     subject = subject_with_tag(export.subjects, "mixed_fanout")
+    mapping = build_substitution_map(subject)
     verdict_map = {
-        location.location_id: location.expected.verdict for location in subject.locations
+        mapping[location.location_id]: location.expected.verdict for location in subject.locations
     }
     seam = FakeModelSeam(adjudication_verdicts=verdict_map)
     verdicts = seam.adjudicate(context=context, case_id=subject.subject_id)
@@ -76,8 +79,9 @@ def test_fake_model_seam_regression_unchanged() -> None:
     """Regression guard: FakeModelSeam contract unchanged from Feature 001."""
     export = _archive_export()
     subject = subject_with_tag(export.subjects, "mixed_fanout")
+    mapping = build_substitution_map(subject)
     verdict_map = {
-        location.location_id: location.expected.verdict for location in subject.locations
+        mapping[location.location_id]: location.expected.verdict for location in subject.locations
     }
     seam = FakeModelSeam(adjudication_verdicts=verdict_map)
     context = _sample_context()
