@@ -1,0 +1,33 @@
+{
+  "case_id": "gen-marketing_withdrawn-00234",
+  "model_id": "primary",
+  "prompt_hash": "57fe39690cd0e05c240f283ffa79ed8ea51ba9988b6c8b583bcbafadf78a280b",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-4f25800a3bc8",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-17T03:47:51Z",
+  "runner_id": "autonomous",
+  "sample_index": 1,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "case-971a9cfc4c8a"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "loc-4f25800a3bc8"
+        ],
+        "subject_id": "case-971a9cfc4c8a"
+      },
+      "sequence": 0,
+      "tool_name": "get_location_records"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "case_id": "gen-ordinary_erase_payment-00160",
+  "model_id": "primary",
+  "prompt_hash": "9d7afd95c29d3cb0fd1a142517abcb134674a807f7e919f234f656eef4f34fb8",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-bffe64e78633",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-17T03:47:51Z",
+  "runner_id": "autonomous",
+  "sample_index": 0,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "case-596a8208bb67"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "loc-bffe64e78633"
+        ],
+        "subject_id": "case-596a8208bb67"
+      },
+      "sequence": 0,
+      "tool_name": "get_location_records"
+    }
+  ]
+}

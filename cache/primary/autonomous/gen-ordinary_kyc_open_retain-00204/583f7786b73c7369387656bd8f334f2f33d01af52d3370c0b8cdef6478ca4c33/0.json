@@ -1,0 +1,33 @@
+{
+  "case_id": "gen-ordinary_kyc_open_retain-00204",
+  "model_id": "primary",
+  "prompt_hash": "583f7786b73c7369387656bd8f334f2f33d01af52d3370c0b8cdef6478ca4c33",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-3e373c9a2b2f",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-17T03:47:51Z",
+  "runner_id": "autonomous",
+  "sample_index": 0,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "case-d67dad4f320d"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "loc-3e373c9a2b2f"
+        ],
+        "subject_id": "case-d67dad4f320d"
+      },
+      "sequence": 0,
+      "tool_name": "get_location_records"
+    }
+  ]
+}

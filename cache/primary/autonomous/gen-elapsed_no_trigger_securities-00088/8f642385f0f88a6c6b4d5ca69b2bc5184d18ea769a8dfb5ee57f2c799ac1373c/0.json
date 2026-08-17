@@ -1,0 +1,33 @@
+{
+  "case_id": "gen-elapsed_no_trigger_securities-00088",
+  "model_id": "primary",
+  "prompt_hash": "8f642385f0f88a6c6b4d5ca69b2bc5184d18ea769a8dfb5ee57f2c799ac1373c",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-91ff71d7d483",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-17T03:47:51Z",
+  "runner_id": "autonomous",
+  "sample_index": 0,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "case-6bae271203b8"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "loc-91ff71d7d483"
+        ],
+        "subject_id": "case-6bae271203b8"
+      },
+      "sequence": 0,
+      "tool_name": "get_location_records"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-ordinary_open_customer_retain-00359",
+  "model_id": "primary",
+  "prompt_hash": "f91ea8a5db49f1fc62853d238fe33b8f5d9f40cbf1c0dd3240567b86b5ef1860",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-abc8597056c6",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-17T03:47:41Z",
+  "runner_id": "t2",
+  "sample_index": 0,
+  "tool_calls": []
+}

@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-ordinary_erase_securities-00151",
+  "model_id": "primary",
+  "prompt_hash": "5a85d104d472ebd31c70aca16a0cedb62258efb552e00e14977975bbe0700f4d",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-3da9c397453e",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-17T03:47:46Z",
+  "runner_id": "t3",
+  "sample_index": 0,
+  "tool_calls": []
+}

@@ -1,0 +1,33 @@
+{
+  "case_id": "gen-elapsed_no_trigger_customer-00023",
+  "model_id": "primary",
+  "prompt_hash": "9d96b1d6eb852e0bb48411ed04ad6e27e942f5d5e2d4f51b1d3f2a182fd0f9e7",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-c5319e43c14a",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-17T03:47:51Z",
+  "runner_id": "autonomous",
+  "sample_index": 1,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "case-62357895372d"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "loc-c5319e43c14a"
+        ],
+        "subject_id": "case-62357895372d"
+      },
+      "sequence": 0,
+      "tool_name": "get_location_records"
+    }
+  ]
+}

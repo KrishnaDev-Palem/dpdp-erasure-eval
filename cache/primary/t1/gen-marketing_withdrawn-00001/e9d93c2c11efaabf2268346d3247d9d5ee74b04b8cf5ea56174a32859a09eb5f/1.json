@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-marketing_withdrawn-00001",
+  "model_id": "primary",
+  "prompt_hash": "e9d93c2c11efaabf2268346d3247d9d5ee74b04b8cf5ea56174a32859a09eb5f",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-22a485a2bab5",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-17T03:47:36Z",
+  "runner_id": "t1",
+  "sample_index": 1,
+  "tool_calls": []
+}
