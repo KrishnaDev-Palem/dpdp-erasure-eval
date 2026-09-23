@@ -4,29 +4,29 @@
   "cache_mode": "offline",
   "export_agent_sha": "7b659e8e3ec87a9115a5d7709f20f1c1eb6fec22",
   "primary_sample_index": 0,
-  "total_incorrect": 101,
+  "total_incorrect": 133,
   "retrieval_failure": {
     "numerator": 0,
-    "denominator": 101,
+    "denominator": 133,
     "value": 0.0
   },
   "reasoning_failure": {
-    "numerator": 101,
-    "denominator": 101,
+    "numerator": 133,
+    "denominator": 133,
     "value": 1.0
   },
   "per_lane": [
     {
       "lane": "erase",
-      "incorrect_count": 15,
+      "incorrect_count": 41,
       "retrieval_failure_count": 0,
-      "reasoning_failure_count": 15
+      "reasoning_failure_count": 41
     },
     {
       "lane": "retain",
-      "incorrect_count": 86,
+      "incorrect_count": 92,
       "retrieval_failure_count": 0,
-      "reasoning_failure_count": 86
+      "reasoning_failure_count": 92
     },
     {
       "lane": "escalate",
@@ -38,21 +38,21 @@
   "sample_rollups": [
     {
       "sample_index": 0,
-      "total_incorrect": 101,
+      "total_incorrect": 133,
       "retrieval_failure_count": 0,
-      "reasoning_failure_count": 101,
+      "reasoning_failure_count": 133,
       "per_lane": [
         {
           "lane": "erase",
-          "incorrect_count": 15,
+          "incorrect_count": 41,
           "retrieval_failure_count": 0,
-          "reasoning_failure_count": 15
+          "reasoning_failure_count": 41
         },
         {
           "lane": "retain",
-          "incorrect_count": 86,
+          "incorrect_count": 92,
           "retrieval_failure_count": 0,
-          "reasoning_failure_count": 86
+          "reasoning_failure_count": 92
         },
         {
           "lane": "escalate",
@@ -64,21 +64,21 @@
     },
     {
       "sample_index": 1,
-      "total_incorrect": 98,
+      "total_incorrect": 143,
       "retrieval_failure_count": 0,
-      "reasoning_failure_count": 98,
+      "reasoning_failure_count": 143,
       "per_lane": [
         {
           "lane": "erase",
-          "incorrect_count": 15,
+          "incorrect_count": 46,
           "retrieval_failure_count": 0,
-          "reasoning_failure_count": 15
+          "reasoning_failure_count": 46
         },
         {
           "lane": "retain",
-          "incorrect_count": 83,
+          "incorrect_count": 97,
           "retrieval_failure_count": 0,
-          "reasoning_failure_count": 83
+          "reasoning_failure_count": 97
         },
         {
           "lane": "escalate",
@@ -90,21 +90,21 @@
     },
     {
       "sample_index": 2,
-      "total_incorrect": 101,
+      "total_incorrect": 136,
       "retrieval_failure_count": 0,
-      "reasoning_failure_count": 101,
+      "reasoning_failure_count": 136,
       "per_lane": [
         {
           "lane": "erase",
-          "incorrect_count": 17,
+          "incorrect_count": 44,
           "retrieval_failure_count": 0,
-          "reasoning_failure_count": 17
+          "reasoning_failure_count": 44
         },
         {
           "lane": "retain",
-          "incorrect_count": 84,
+          "incorrect_count": 92,
           "retrieval_failure_count": 0,
-          "reasoning_failure_count": 84
+          "reasoning_failure_count": 92
         },
         {
           "lane": "escalate",
