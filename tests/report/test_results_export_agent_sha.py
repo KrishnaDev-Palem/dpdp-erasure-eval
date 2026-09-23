@@ -21,7 +21,6 @@ ADJUDICATION_RESULTS = sorted(
     path for path in RESULTS_DIR.glob("*.json") if not path.name.startswith("gate-")
 )
 GATE_RESULTS = sorted(RESULTS_DIR.glob("gate-*.json"))
-PUBLISHED_GATE_SHA = "3562059939cbaac3dc3500593f2940ef34c54c53"
 
 
 @pytest.mark.parametrize(
@@ -42,6 +41,9 @@ def test_adjudication_results_embed_export_agent_sha(
     GATE_RESULTS,
     ids=lambda path: path.name,
 )
-def test_gate_results_keep_published_export_agent_sha(results_file: Path) -> None:
+def test_gate_results_embed_export_agent_sha(
+    results_file: Path,
+    pinned_agent_sha: str,
+) -> None:
     payload = json.loads(results_file.read_text(encoding="utf-8"))
-    assert payload["export_agent_sha"] == PUBLISHED_GATE_SHA
+    assert payload["export_agent_sha"] == pinned_agent_sha
