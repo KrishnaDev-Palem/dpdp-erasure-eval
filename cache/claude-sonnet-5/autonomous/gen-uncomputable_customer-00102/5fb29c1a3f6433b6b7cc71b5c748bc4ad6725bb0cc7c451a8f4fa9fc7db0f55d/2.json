@@ -1,0 +1,72 @@
+{
+  "case_id": "gen-uncomputable_customer-00102",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "5fb29c1a3f6433b6b7cc71b5c748bc4ad6725bb0cc7c451a8f4fa9fc7db0f55d",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-6bd67b9ef5d7",
+        "verdict": "escalate"
+      }
+    ]
+  },
+  "recorded_at": "2026-09-23T21:39:10Z",
+  "runner_id": "autonomous",
+  "sample_index": 2,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "case-2dfe85ff5bdc"
+      },
+      "result_summary": {
+        "categories": [
+          "customer",
+          "kyc_document",
+          "marketing_consent",
+          "payment_transaction",
+          "securities_transaction"
+        ],
+        "entry_count": 5
+      },
+      "sequence": 0,
+      "tool_name": "get_governance_map"
+    },
+    {
+      "arguments": {
+        "subject_id": "case-2dfe85ff5bdc"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "loc-6bd67b9ef5d7"
+        ],
+        "subject_id": "case-2dfe85ff5bdc"
+      },
+      "sequence": 1,
+      "tool_name": "get_location_records"
+    },
+    {
+      "arguments": {
+        "subject_id": "case-2dfe85ff5bdc"
+      },
+      "result_summary": {
+        "floor_count": 5,
+        "floor_ids": [
+          "companies_act",
+          "gst",
+          "income_tax",
+          "pmla_kyc",
+          "sebi"
+        ]
+      },
+      "sequence": 2,
+      "tool_name": "get_retention_floors"
+    }
+  ],
+  "usage": {
+    "call_count": 2,
+    "input_tokens": 2685,
+    "output_tokens": 371
+  }
+}

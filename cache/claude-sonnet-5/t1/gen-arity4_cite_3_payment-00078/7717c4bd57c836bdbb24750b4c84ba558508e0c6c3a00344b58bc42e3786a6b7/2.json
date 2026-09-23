@@ -1,0 +1,23 @@
+{
+  "case_id": "gen-arity4_cite_3_payment-00078",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "7717c4bd57c836bdbb24750b4c84ba558508e0c6c3a00344b58bc42e3786a6b7",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-37cff14c535e",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-09-23T18:02:09Z",
+  "runner_id": "t1",
+  "sample_index": 2,
+  "tool_calls": [],
+  "usage": {
+    "call_count": 1,
+    "input_tokens": 253,
+    "output_tokens": 40
+  }
+}

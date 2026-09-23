@@ -1,0 +1,23 @@
+{
+  "case_id": "gen-boundary_unelapsed_1d_customer-00158",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "97528a9b68718bb7ea4bf2baf4cdb6461b300cb96895357693ee2428f8e5b026",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-79d7ccd10b71",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-09-23T17:48:25Z",
+  "runner_id": "t1",
+  "sample_index": 0,
+  "tool_calls": [],
+  "usage": {
+    "call_count": 1,
+    "input_tokens": 253,
+    "output_tokens": 47
+  }
+}

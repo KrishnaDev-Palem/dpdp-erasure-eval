@@ -1,0 +1,23 @@
+{
+  "case_id": "gen-ordinary_erase_payment-00363",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "03ed33d60e4f85e05fe03f578b8ad3eca7e0b69a083a431246e797108ea3a328",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-653d9f060cb0",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-09-23T18:58:21Z",
+  "runner_id": "t3",
+  "sample_index": 0,
+  "tool_calls": [],
+  "usage": {
+    "call_count": 1,
+    "input_tokens": 1011,
+    "output_tokens": 357
+  }
+}

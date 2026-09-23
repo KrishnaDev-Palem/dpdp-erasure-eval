@@ -1,0 +1,23 @@
+{
+  "case_id": "gen-boundary_elapsed_1d_payment_pmla-00167",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "4389b86ade1bee4015de9656e3b47acf0ee8b310037c88d47e19c29188f38c2d",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-f99801529502",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-09-23T18:49:04Z",
+  "runner_id": "t3",
+  "sample_index": 0,
+  "tool_calls": [],
+  "usage": {
+    "call_count": 1,
+    "input_tokens": 991,
+    "output_tokens": 509
+  }
+}

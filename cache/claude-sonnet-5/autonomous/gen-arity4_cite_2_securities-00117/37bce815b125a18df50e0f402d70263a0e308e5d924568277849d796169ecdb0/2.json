@@ -1,0 +1,72 @@
+{
+  "case_id": "gen-arity4_cite_2_securities-00117",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "37bce815b125a18df50e0f402d70263a0e308e5d924568277849d796169ecdb0",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-d4a39912c6e7",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-09-23T21:12:47Z",
+  "runner_id": "autonomous",
+  "sample_index": 2,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "case-612f6d0794a7"
+      },
+      "result_summary": {
+        "categories": [
+          "customer",
+          "kyc_document",
+          "marketing_consent",
+          "payment_transaction",
+          "securities_transaction"
+        ],
+        "entry_count": 5
+      },
+      "sequence": 0,
+      "tool_name": "get_governance_map"
+    },
+    {
+      "arguments": {
+        "subject_id": "case-612f6d0794a7"
+      },
+      "result_summary": {
+        "floor_count": 5,
+        "floor_ids": [
+          "companies_act",
+          "gst",
+          "income_tax",
+          "pmla_kyc",
+          "sebi"
+        ]
+      },
+      "sequence": 1,
+      "tool_name": "get_retention_floors"
+    },
+    {
+      "arguments": {
+        "subject_id": "case-612f6d0794a7"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "loc-d4a39912c6e7"
+        ],
+        "subject_id": "case-612f6d0794a7"
+      },
+      "sequence": 2,
+      "tool_name": "get_location_records"
+    }
+  ],
+  "usage": {
+    "call_count": 2,
+    "input_tokens": 2675,
+    "output_tokens": 505
+  }
+}

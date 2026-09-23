@@ -1,0 +1,23 @@
+{
+  "case_id": "gen-elapsed_no_trigger_customer-00147",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "a75a5b35ce418f73e4df560c2d5665caa4694a52ecd8e849f4ebfc9326f1c193",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-6e7bd9fe8168",
+        "verdict": "escalate"
+      }
+    ]
+  },
+  "recorded_at": "2026-09-23T19:18:26Z",
+  "runner_id": "t3",
+  "sample_index": 1,
+  "tool_calls": [],
+  "usage": {
+    "call_count": 1,
+    "input_tokens": 1005,
+    "output_tokens": 489
+  }
+}
