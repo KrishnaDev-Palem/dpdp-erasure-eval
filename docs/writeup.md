@@ -36,7 +36,7 @@ The ground-truth composition across the 350 pairs is 84 erase, 238 retain, and 2
 
 **The slice is design-weighted, not representative.** Every cell gets 14 or 15 locations regardless of how common that shape of case would be in a real erasure queue, so hard and rare shapes (a floor elapsed by one day, an anchor that cannot be computed) are heavily over-sampled. The pooled rates are rates on this designed mix. They are not estimates of how often a model would err on a real company's requests. The per-stratum and per-cell tables are the unit of analysis; the pooled headline is a summary of them.
 
-Two strata are not independent of the others, so they cannot be read as separate effects. `split` is confounded with `floor_set`: the 74 `eval` locations are exactly the five securities cells (`floor_set = pmla_kyc,income_tax,companies_act,sebi`), and their rows are identical. `collision_arity` likewise tracks `entity_type` and `floor_set` one-for-one on this slice.
+Two strata are not independent of the others, so they cannot be read as separate effects. `split` is confounded with `floor_set`: the 74 `eval` locations are exactly the five securities cells (`floor_set = pmla_kyc,income_tax,companies_act,sebi`), and their rows are identical. `collision_arity` is fixed by `entity_type` on this slice (0 for marketing consents, 1 for customers and KYC documents, 4 for transactions), so its rows repeat rows of other strata.
 
 ### Metrics
 
