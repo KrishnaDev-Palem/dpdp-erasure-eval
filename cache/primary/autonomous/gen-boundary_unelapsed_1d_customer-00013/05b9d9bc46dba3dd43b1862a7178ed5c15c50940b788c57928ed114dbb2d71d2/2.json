@@ -1,0 +1,33 @@
+{
+  "case_id": "gen-boundary_unelapsed_1d_customer-00013",
+  "model_id": "primary",
+  "prompt_hash": "05b9d9bc46dba3dd43b1862a7178ed5c15c50940b788c57928ed114dbb2d71d2",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-22350b9e1789",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-17T03:47:51Z",
+  "runner_id": "autonomous",
+  "sample_index": 2,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "case-f43cca104c13"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "loc-22350b9e1789"
+        ],
+        "subject_id": "case-f43cca104c13"
+      },
+      "sequence": 0,
+      "tool_name": "get_location_records"
+    }
+  ]
+}

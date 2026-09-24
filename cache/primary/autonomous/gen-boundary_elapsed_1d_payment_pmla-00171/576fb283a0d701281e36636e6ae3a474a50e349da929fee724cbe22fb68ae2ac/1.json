@@ -1,0 +1,33 @@
+{
+  "case_id": "gen-boundary_elapsed_1d_payment_pmla-00171",
+  "model_id": "primary",
+  "prompt_hash": "576fb283a0d701281e36636e6ae3a474a50e349da929fee724cbe22fb68ae2ac",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-424cc34e3611",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-17T03:47:51Z",
+  "runner_id": "autonomous",
+  "sample_index": 1,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "case-3a8c45d11ef3"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "loc-424cc34e3611"
+        ],
+        "subject_id": "case-3a8c45d11ef3"
+      },
+      "sequence": 0,
+      "tool_name": "get_location_records"
+    }
+  ]
+}

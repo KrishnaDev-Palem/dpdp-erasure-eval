@@ -19,8 +19,14 @@ from tests.core.conftest import subject_with_tag
 SYNTHETIC_EMPTY_SUBJECT_ID = "synthetic-empty-subject"
 
 
+def _coverage_subject():
+    return load_export().subjects[0]
+
+
 def _mixed_fanout_subject():
-    export = load_export()
+    from tests.conftest import ARCHIVE_V1_EXPORT_DIR
+
+    export = load_export(ARCHIVE_V1_EXPORT_DIR)
     return subject_with_tag(export.subjects, "mixed_fanout")
 
 
@@ -44,7 +50,7 @@ def _empty_subject() -> AdjudicationSubject:
 
 
 def test_cache_hit(export_dir: Path, cache_dir: Path) -> None:
-    subject = _mixed_fanout_subject()
+    subject = _coverage_subject()
     context = _t1_context(subject)
     key = make_cache_key(
         context=context,
@@ -79,9 +85,9 @@ def test_canonical_hash_stability() -> None:
     assert canonicalize(context) == canonicalize(context)
 
 
-@pytest.mark.parametrize("sample_index", [0, 1, 2, 3, 4])
+@pytest.mark.parametrize("sample_index", [0, 1, 2])
 def test_sample_index_keys(sample_index: int, cache_dir: Path) -> None:
-    subject = _mixed_fanout_subject()
+    subject = _coverage_subject()
     context = _t1_context(subject)
     key = make_cache_key(
         context=context,

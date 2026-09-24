@@ -1,14 +1,25 @@
 #!/usr/bin/env python3
-"""Generate extended adversarial slice fixture and committed gate cache entries."""
+"""Generate extended adversarial slice fixture and committed gate cache entries.
+
+Generation and seeding are separable. `--cache-only` reseeds the 450 committed entries
+from the slice already on disk and never writes `cases.yaml`: the 90 notes, their labels,
+and their families are frozen by spec sections 2 and 7, so regenerating them to move a
+cache key is not on the table. That is the path a cache-key change takes.
+"""
 
 from __future__ import annotations
 
+import argparse
+import shutil
+from collections.abc import Sequence
 from pathlib import Path
 
 import yaml
 
 from core.export.loader import load_export
+from core.types import AdversarialSeedCase
 from runners.adversarial_gate.cache import write_gate_cache_entry
+from runners.adversarial_gate.slice_loader import load_extended_slice
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SLICE_PATH = REPO_ROOT / "fixtures" / "adversarial_slice" / "cases.yaml"
@@ -155,18 +166,18 @@ def build_cases() -> list[dict]:
     return cases
 
 
-def outcome_for(case: dict, sample_index: int) -> str:
-    if case["label"] == "attack":
+def outcome_for(case: AdversarialSeedCase, sample_index: int) -> str:
+    if case.label == "attack":
         return "adversarial"
     # Introduce false-alarm variance on sample 1 for first five benign controls.
-    if case["case_id"].startswith("benign-control-") and sample_index == 1:
-        number = int(case["case_id"].split("-")[-1])
+    if case.case_id.startswith("benign-control-") and sample_index == 1:
+        number = int(case.case_id.split("-")[-1])
         if number <= 5:
             return "adversarial"
     return "clean"
 
 
-def main() -> None:
+def write_slice() -> list[AdversarialSeedCase]:
     cases = build_cases()
     SLICE_PATH.parent.mkdir(parents=True, exist_ok=True)
     SLICE_PATH.write_text(
@@ -174,20 +185,55 @@ def main() -> None:
         encoding="utf-8",
     )
     print(f"Wrote {len(cases)} cases to {SLICE_PATH}")
+    return [AdversarialSeedCase.model_validate(item) for item in cases]
 
-    for case_dict in cases:
-        from core.types import AdversarialSeedCase
 
-        case = AdversarialSeedCase.model_validate(case_dict)
+def seed_gate_cache(
+    cases: Sequence[AdversarialSeedCase],
+    *,
+    cache_root: Path | None = None,
+) -> int:
+    """Write five samples per case, clearing each case directory first.
+
+    The entry path carries the prompt hash, so a rekeyed seed left beside the old one
+    would double the namespace rather than replace it. Clearing per case keeps the count
+    at five however often this runs.
+    """
+    root = cache_root or REPO_ROOT / "cache"
+    written = 0
+    for case in cases:
+        case_dir = root / "primary" / "adversarial_gate" / case.case_id
+        if case_dir.is_dir():
+            shutil.rmtree(case_dir)
         for sample_index in range(5):
             write_gate_cache_entry(
                 case=case,
                 sample_index=sample_index,
                 model_id="primary",
-                outcome=outcome_for(case_dict, sample_index),
-                cache_root=REPO_ROOT / "cache",
+                outcome=outcome_for(case, sample_index),
+                cache_root=root,
             )
-    print(f"Wrote cache entries under {CACHE_ROOT}")
+            written += 1
+    return written
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--cache-only",
+        action="store_true",
+        help="Reseed the gate cache from the committed slice without rewriting cases.yaml.",
+    )
+    args = parser.parse_args()
+
+    if args.cache_only:
+        cases = load_extended_slice(SLICE_PATH, export_dir=REPO_ROOT / "export").cases
+        print(f"Loaded {len(cases)} cases from {SLICE_PATH}")
+    else:
+        cases = write_slice()
+
+    written = seed_gate_cache(cases)
+    print(f"Wrote {written} cache entries under {CACHE_ROOT}")
 
 
 if __name__ == "__main__":

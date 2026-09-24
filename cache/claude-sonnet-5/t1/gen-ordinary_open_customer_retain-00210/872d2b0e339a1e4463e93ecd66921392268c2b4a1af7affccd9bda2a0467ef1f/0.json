@@ -1,0 +1,23 @@
+{
+  "case_id": "gen-ordinary_open_customer_retain-00210",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "872d2b0e339a1e4463e93ecd66921392268c2b4a1af7affccd9bda2a0467ef1f",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-80259cc4b3f2",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-09-23T17:52:08Z",
+  "runner_id": "t1",
+  "sample_index": 0,
+  "tool_calls": [],
+  "usage": {
+    "call_count": 1,
+    "input_tokens": 253,
+    "output_tokens": 47
+  }
+}

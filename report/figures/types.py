@@ -8,10 +8,12 @@ from report.adjudication_types import TierAdjudicationReportTables
 from report.types import GateReportTables
 
 CONTEXT_TIERS: tuple[str, ...] = ("t1", "t2", "t3")
+ADJUDICATION_SETTINGS: tuple[str, ...] = ("t1", "t2", "t3", "autonomous")
 TIER_DISPLAY: dict[str, str] = {
     "t1": "T1",
     "t2": "T2",
     "t3": "T3",
+    "autonomous": "Autonomous",
 }
 
 LANE_DISPLAY: dict[str, str] = {
@@ -30,7 +32,17 @@ FAMILY_DISPLAY: dict[str, str] = {
     "exfiltration": "exfiltration",
 }
 
-AGREEMENT_BUCKETS: tuple[str, ...] = ("5/5 unanimous", "4/5", "3/5", "split")
+FIVE_SAMPLE_AGREEMENT_BUCKETS: tuple[str, ...] = ("5/5 unanimous", "4/5", "3/5", "split")
+THREE_SAMPLE_AGREEMENT_BUCKETS: tuple[str, ...] = ("3/3 unanimous", "2/3", "split")
+AGREEMENT_BUCKETS: tuple[str, ...] = FIVE_SAMPLE_AGREEMENT_BUCKETS
+
+
+def agreement_buckets_for(sample_count: int) -> tuple[str, ...]:
+    if sample_count == 3:
+        return THREE_SAMPLE_AGREEMENT_BUCKETS
+    if sample_count == 5:
+        return FIVE_SAMPLE_AGREEMENT_BUCKETS
+    raise ValueError(f"sample_count must be 3 or 5, got {sample_count}")
 
 
 @dataclass(frozen=True)

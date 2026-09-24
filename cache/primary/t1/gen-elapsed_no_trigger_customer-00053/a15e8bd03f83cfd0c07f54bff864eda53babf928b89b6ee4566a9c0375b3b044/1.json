@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-elapsed_no_trigger_customer-00053",
+  "model_id": "primary",
+  "prompt_hash": "a15e8bd03f83cfd0c07f54bff864eda53babf928b89b6ee4566a9c0375b3b044",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-013b7446cf27",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-17T03:47:36Z",
+  "runner_id": "t1",
+  "sample_index": 1,
+  "tool_calls": []
+}

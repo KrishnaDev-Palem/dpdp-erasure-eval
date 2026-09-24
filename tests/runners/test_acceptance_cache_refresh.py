@@ -11,7 +11,7 @@ from core.cache.store import CacheStore, make_cache_key
 from core.context import build_t2
 from core.export import load_export
 from core.model import FakeModelSeam
-from tests.core.conftest import subject_with_tag
+from core.pseudonymize import build_substitution_map
 
 
 @pytest.mark.refresh
@@ -24,7 +24,7 @@ def test_refresh_cache_hit_replays_without_live_call(
     monkeypatch.setenv("MODEL_ID", "primary")
 
     export = load_export(export_dir)
-    subject = subject_with_tag(export.subjects, "mixed_fanout")
+    subject = export.subjects[0]
     context = build_t2(subject.request, subject)
     key = make_cache_key(
         context=context,
@@ -58,7 +58,7 @@ def test_tier_refresh_integration_with_factory_seam(
     monkeypatch.setenv("MODEL_ID", "claude-sonnet-5")
 
     export = load_export(export_dir)
-    subject = subject_with_tag(export.subjects, "mixed_fanout")
+    subject = export.subjects[0]
     context = build_t2(subject.request, subject)
     key = make_cache_key(
         context=context,
@@ -71,8 +71,13 @@ def test_tier_refresh_integration_with_factory_seam(
     client = MagicMock()
     from types import SimpleNamespace
 
+    # A real provider answers the prompt it was sent, and that prompt names locations by
+    # their opaque ids. Echoing real ids here would be a response no live adapter could
+    # produce, and it fails in translation rather than exercising the refresh path.
+    mapping = build_substitution_map(subject)
     verdict_json = ", ".join(
-        f'{{"location_id": "{location.location_id}", "verdict": "{location.expected.verdict}"}}'
+        f'{{"location_id": "{mapping[location.location_id]}", '
+        f'"verdict": "{location.expected.verdict}"}}'
         for location in subject.locations
     )
     client.messages.create.return_value = SimpleNamespace(
@@ -110,7 +115,7 @@ def test_refresh_writes_cache_entry_on_miss(
     monkeypatch.setenv("MODEL_ID", "primary")
 
     export = load_export(export_dir)
-    subject = subject_with_tag(export.subjects, "mixed_fanout")
+    subject = export.subjects[0]
     context = build_t2(subject.request, subject)
     key = make_cache_key(
         context=context,
@@ -121,9 +126,11 @@ def test_refresh_writes_cache_entry_on_miss(
     )
 
     cache_root = tmp_path / "cache"
+    mapping = build_substitution_map(subject)
     seam = FakeModelSeam(
         adjudication_verdicts={
-            location.location_id: location.expected.verdict for location in subject.locations
+            mapping[location.location_id]: location.expected.verdict
+            for location in subject.locations
         }
     )
     store = CacheStore(root=cache_root, cache_mode="refresh")

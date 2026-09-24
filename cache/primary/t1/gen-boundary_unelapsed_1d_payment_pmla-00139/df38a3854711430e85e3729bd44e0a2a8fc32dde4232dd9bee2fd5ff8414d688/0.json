@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-boundary_unelapsed_1d_payment_pmla-00139",
+  "model_id": "primary",
+  "prompt_hash": "df38a3854711430e85e3729bd44e0a2a8fc32dde4232dd9bee2fd5ff8414d688",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-1abfba13dd6c",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-17T03:47:36Z",
+  "runner_id": "t1",
+  "sample_index": 0,
+  "tool_calls": []
+}

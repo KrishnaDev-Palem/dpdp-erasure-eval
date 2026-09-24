@@ -1,0 +1,72 @@
+{
+  "case_id": "gen-marketing_withdrawn-00168",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "0144044fb4fac941afbe09cb5e67f90d070832631c08d3b40e0700f24eadb1a3",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-ef40744e4e35",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-09-23T20:54:13Z",
+  "runner_id": "autonomous",
+  "sample_index": 1,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "case-147d27c72bad"
+      },
+      "result_summary": {
+        "categories": [
+          "customer",
+          "kyc_document",
+          "marketing_consent",
+          "payment_transaction",
+          "securities_transaction"
+        ],
+        "entry_count": 5
+      },
+      "sequence": 0,
+      "tool_name": "get_governance_map"
+    },
+    {
+      "arguments": {
+        "subject_id": "case-147d27c72bad"
+      },
+      "result_summary": {
+        "floor_count": 5,
+        "floor_ids": [
+          "companies_act",
+          "gst",
+          "income_tax",
+          "pmla_kyc",
+          "sebi"
+        ]
+      },
+      "sequence": 1,
+      "tool_name": "get_retention_floors"
+    },
+    {
+      "arguments": {
+        "subject_id": "case-147d27c72bad"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "loc-ef40744e4e35"
+        ],
+        "subject_id": "case-147d27c72bad"
+      },
+      "sequence": 2,
+      "tool_name": "get_location_records"
+    }
+  ],
+  "usage": {
+    "call_count": 2,
+    "input_tokens": 2664,
+    "output_tokens": 294
+  }
+}

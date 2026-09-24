@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-ordinary_inactivity_erase_payment-00262",
+  "model_id": "primary",
+  "prompt_hash": "ff0960eb3ccde83860940d66994d1c524bbf9afd4ba3c9d22464b3b36a30d352",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-ce0651030a3a",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-17T03:47:36Z",
+  "runner_id": "t1",
+  "sample_index": 1,
+  "tool_calls": []
+}

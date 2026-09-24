@@ -1,0 +1,72 @@
+{
+  "case_id": "gen-arity4_cite_2_payment-00168",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "27a6bb5b9c3300345bd5283cd0c80e3520ef12ee7d7eb9a12f9646dda960fb80",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-0795c2a63e9c",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-09-23T21:11:07Z",
+  "runner_id": "autonomous",
+  "sample_index": 2,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "case-17f791c0682d"
+      },
+      "result_summary": {
+        "categories": [
+          "customer",
+          "kyc_document",
+          "marketing_consent",
+          "payment_transaction",
+          "securities_transaction"
+        ],
+        "entry_count": 5
+      },
+      "sequence": 0,
+      "tool_name": "get_governance_map"
+    },
+    {
+      "arguments": {
+        "subject_id": "case-17f791c0682d"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "loc-0795c2a63e9c"
+        ],
+        "subject_id": "case-17f791c0682d"
+      },
+      "sequence": 1,
+      "tool_name": "get_location_records"
+    },
+    {
+      "arguments": {
+        "subject_id": "case-17f791c0682d"
+      },
+      "result_summary": {
+        "floor_count": 5,
+        "floor_ids": [
+          "companies_act",
+          "gst",
+          "income_tax",
+          "pmla_kyc",
+          "sebi"
+        ]
+      },
+      "sequence": 2,
+      "tool_name": "get_retention_floors"
+    }
+  ],
+  "usage": {
+    "call_count": 2,
+    "input_tokens": 2664,
+    "output_tokens": 358
+  }
+}

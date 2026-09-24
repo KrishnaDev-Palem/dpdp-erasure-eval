@@ -1,0 +1,72 @@
+{
+  "case_id": "gen-marketing_withdrawn-00234",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "57fe39690cd0e05c240f283ffa79ed8ea51ba9988b6c8b583bcbafadf78a280b",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-4f25800a3bc8",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-09-23T21:28:22Z",
+  "runner_id": "autonomous",
+  "sample_index": 2,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "case-971a9cfc4c8a"
+      },
+      "result_summary": {
+        "categories": [
+          "customer",
+          "kyc_document",
+          "marketing_consent",
+          "payment_transaction",
+          "securities_transaction"
+        ],
+        "entry_count": 5
+      },
+      "sequence": 0,
+      "tool_name": "get_governance_map"
+    },
+    {
+      "arguments": {
+        "subject_id": "case-971a9cfc4c8a"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "loc-4f25800a3bc8"
+        ],
+        "subject_id": "case-971a9cfc4c8a"
+      },
+      "sequence": 1,
+      "tool_name": "get_location_records"
+    },
+    {
+      "arguments": {
+        "subject_id": "case-971a9cfc4c8a"
+      },
+      "result_summary": {
+        "floor_count": 5,
+        "floor_ids": [
+          "companies_act",
+          "gst",
+          "income_tax",
+          "pmla_kyc",
+          "sebi"
+        ]
+      },
+      "sequence": 2,
+      "tool_name": "get_retention_floors"
+    }
+  ],
+  "usage": {
+    "call_count": 2,
+    "input_tokens": 2729,
+    "output_tokens": 340
+  }
+}

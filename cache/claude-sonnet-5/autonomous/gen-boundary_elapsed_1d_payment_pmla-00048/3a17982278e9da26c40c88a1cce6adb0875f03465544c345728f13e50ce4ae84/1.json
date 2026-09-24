@@ -1,0 +1,72 @@
+{
+  "case_id": "gen-boundary_elapsed_1d_payment_pmla-00048",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "3a17982278e9da26c40c88a1cce6adb0875f03465544c345728f13e50ce4ae84",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-c5008cfd5c98",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-09-23T20:43:56Z",
+  "runner_id": "autonomous",
+  "sample_index": 1,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "case-af83fc389cd0"
+      },
+      "result_summary": {
+        "categories": [
+          "customer",
+          "kyc_document",
+          "marketing_consent",
+          "payment_transaction",
+          "securities_transaction"
+        ],
+        "entry_count": 5
+      },
+      "sequence": 0,
+      "tool_name": "get_governance_map"
+    },
+    {
+      "arguments": {
+        "subject_id": "case-af83fc389cd0"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "loc-c5008cfd5c98"
+        ],
+        "subject_id": "case-af83fc389cd0"
+      },
+      "sequence": 1,
+      "tool_name": "get_location_records"
+    },
+    {
+      "arguments": {
+        "subject_id": "case-af83fc389cd0"
+      },
+      "result_summary": {
+        "floor_count": 5,
+        "floor_ids": [
+          "companies_act",
+          "gst",
+          "income_tax",
+          "pmla_kyc",
+          "sebi"
+        ]
+      },
+      "sequence": 2,
+      "tool_name": "get_retention_floors"
+    }
+  ],
+  "usage": {
+    "call_count": 2,
+    "input_tokens": 2672,
+    "output_tokens": 418
+  }
+}

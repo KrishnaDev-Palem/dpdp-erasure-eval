@@ -8,6 +8,7 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 CACHE_DIR = REPO_ROOT / "cache"
+ARCHIVE_V1_EXPORT_DIR = REPO_ROOT / "archive" / "v1" / "export"
 
 LIVE_ROLE_SKIP_REASON = "Committed live-role cache namespace is missing or empty."
 
@@ -21,3 +22,8 @@ def _default_primary_model_role(monkeypatch: pytest.MonkeyPatch) -> None:
 def live_role_namespace_ready(*parts: str) -> bool:
     namespace = CACHE_DIR.joinpath(*parts)
     return namespace.is_dir() and any(namespace.rglob("*.json"))
+
+
+@pytest.fixture
+def archive_export_dir() -> Path:
+    return ARCHIVE_V1_EXPORT_DIR

@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-elapsed_no_trigger_securities-00225",
+  "model_id": "primary",
+  "prompt_hash": "5e86fcd9f57a0b8d7dd98fb2c8d2ffbac719355e1832e279a0b8269beeb003e7",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-c1cd5df588d2",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-17T03:47:46Z",
+  "runner_id": "t3",
+  "sample_index": 2,
+  "tool_calls": []
+}

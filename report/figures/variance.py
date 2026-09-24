@@ -11,9 +11,10 @@ from core.context.tiers import build_t1, build_t2, build_t3
 from core.export.loader import ExportBundle, load_export
 from core.types import ContextBundle, RulesCorpus, Tier, Verdict
 from report.figures.types import (
-    AGREEMENT_BUCKETS,
+    ADJUDICATION_SETTINGS,
     CONTEXT_TIERS,
     VerdictAgreementDistribution,
+    agreement_buckets_for,
 )
 
 ContextBuilder = Callable[..., ContextBundle]
@@ -58,13 +59,78 @@ def _extract_verdict(raw_verdicts: list[dict], location_id: str) -> Verdict:
 def _agreement_bucket(verdicts: list[Verdict]) -> str:
     counts = Counter(verdicts)
     max_count = max(counts.values())
-    if max_count == 5:
-        return "5/5 unanimous"
-    if max_count == 4:
-        return "4/5"
-    if max_count == 3:
-        return "3/5"
-    return "split"
+    sample_count = len(verdicts)
+    if sample_count == 5:
+        if max_count == 5:
+            return "5/5 unanimous"
+        if max_count == 4:
+            return "4/5"
+        if max_count == 3:
+            return "3/5"
+        return "split"
+    if sample_count == 3:
+        if max_count == 3:
+            return "3/3 unanimous"
+        if max_count == 2:
+            return "2/3"
+        return "split"
+    raise ValueError(f"agreement buckets require 3 or 5 samples, got {sample_count}")
+
+
+def _agreement_for_setting(
+    *,
+    bundle: ExportBundle,
+    store: CacheStore,
+    model_id: str,
+    runner_id: str,
+    setting: str,
+    indices: list[int],
+    buckets: tuple[str, ...],
+    context_for_subject,
+) -> VerdictAgreementDistribution:
+    bucket_counts = {bucket: 0 for bucket in buckets}
+    total_cases = 0
+    for subject in sorted(bundle.subjects, key=lambda item: item.subject_id):
+        context = context_for_subject(subject)
+        location_ids = _pairing_location_ids(subject, context)
+        for location_id in location_ids:
+            verdicts: list[Verdict] = []
+            for sample_index in indices:
+                key = make_cache_key(
+                    context=context,
+                    model_id=model_id,
+                    runner_id=runner_id,
+                    case_id=subject.subject_id,
+                    sample_index=sample_index,
+                )
+                entry = store.get(key)
+                verdicts.append(
+                    _extract_verdict(entry.raw_response.get("verdicts", []), location_id)
+                )
+            bucket = _agreement_bucket(verdicts)
+            bucket_counts[bucket] += 1
+            total_cases += 1
+    return VerdictAgreementDistribution(
+        tier=setting,
+        bucket_counts=bucket_counts,
+        total_cases=total_cases,
+    )
+
+
+def _context_and_runner_for_setting(
+    setting: str, bundle: ExportBundle
+) -> tuple[str, ContextBuilder]:
+    if setting in CONTEXT_TIERS:
+
+        def build(subject) -> ContextBundle:
+            return _build_context(tier=setting, subject=subject, rules=bundle.rules)
+
+        return setting, build
+
+    def build_autonomous(subject) -> ContextBundle:
+        return build_t1(subject.request, subject)
+
+    return "autonomous", build_autonomous
 
 
 def compute_verdict_agreement_by_tier(
@@ -74,38 +140,23 @@ def compute_verdict_agreement_by_tier(
     model_id: str,
     sample_indices: list[int] | None = None,
 ) -> dict[str, VerdictAgreementDistribution]:
-    """Compute per-tier verdict agreement buckets from offline cache reads."""
-    indices = sample_indices if sample_indices is not None else [0, 1, 2, 3, 4]
+    """Compute per-setting verdict agreement buckets from offline cache reads."""
+    indices = sample_indices if sample_indices is not None else [0, 1, 2]
+    buckets = agreement_buckets_for(len(indices))
     bundle: ExportBundle = load_export(export_dir)
     store = CacheStore(root=cache_root, cache_mode="offline")
     distributions: dict[str, VerdictAgreementDistribution] = {}
 
-    for tier in CONTEXT_TIERS:
-        bucket_counts = {bucket: 0 for bucket in AGREEMENT_BUCKETS}
-        total_cases = 0
-        for subject in sorted(bundle.subjects, key=lambda item: item.subject_id):
-            context = _build_context(tier=tier, subject=subject, rules=bundle.rules)
-            location_ids = _pairing_location_ids(subject, context)
-            for location_id in location_ids:
-                verdicts: list[Verdict] = []
-                for sample_index in indices:
-                    key = make_cache_key(
-                        context=context,
-                        model_id=model_id,
-                        runner_id=tier,
-                        case_id=subject.subject_id,
-                        sample_index=sample_index,
-                    )
-                    entry = store.get(key)
-                    verdicts.append(
-                        _extract_verdict(entry.raw_response.get("verdicts", []), location_id)
-                    )
-                bucket = _agreement_bucket(verdicts)
-                bucket_counts[bucket] += 1
-                total_cases += 1
-        distributions[tier] = VerdictAgreementDistribution(
-            tier=tier,
-            bucket_counts=bucket_counts,
-            total_cases=total_cases,
+    for setting in ADJUDICATION_SETTINGS:
+        runner_id, context_for_subject = _context_and_runner_for_setting(setting, bundle)
+        distributions[setting] = _agreement_for_setting(
+            bundle=bundle,
+            store=store,
+            model_id=model_id,
+            runner_id=runner_id,
+            setting=setting,
+            indices=indices,
+            buckets=buckets,
+            context_for_subject=context_for_subject,
         )
     return distributions

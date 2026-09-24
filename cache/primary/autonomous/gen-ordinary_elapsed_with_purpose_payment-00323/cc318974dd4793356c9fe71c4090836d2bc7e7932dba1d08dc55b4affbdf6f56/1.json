@@ -1,0 +1,33 @@
+{
+  "case_id": "gen-ordinary_elapsed_with_purpose_payment-00323",
+  "model_id": "primary",
+  "prompt_hash": "cc318974dd4793356c9fe71c4090836d2bc7e7932dba1d08dc55b4affbdf6f56",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-2d78b6f440ad",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-17T03:47:51Z",
+  "runner_id": "autonomous",
+  "sample_index": 1,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "case-32e96737451a"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "loc-2d78b6f440ad"
+        ],
+        "subject_id": "case-32e96737451a"
+      },
+      "sequence": 0,
+      "tool_name": "get_location_records"
+    }
+  ]
+}

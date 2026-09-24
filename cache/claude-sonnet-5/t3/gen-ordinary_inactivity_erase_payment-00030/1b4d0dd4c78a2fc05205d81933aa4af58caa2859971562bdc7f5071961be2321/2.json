@@ -1,0 +1,23 @@
+{
+  "case_id": "gen-ordinary_inactivity_erase_payment-00030",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "1b4d0dd4c78a2fc05205d81933aa4af58caa2859971562bdc7f5071961be2321",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-d0d135fa1a71",
+        "verdict": "escalate"
+      }
+    ]
+  },
+  "recorded_at": "2026-09-23T19:52:52Z",
+  "runner_id": "t3",
+  "sample_index": 2,
+  "tool_calls": [],
+  "usage": {
+    "call_count": 1,
+    "input_tokens": 1005,
+    "output_tokens": 728
+  }
+}

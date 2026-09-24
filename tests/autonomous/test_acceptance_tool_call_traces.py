@@ -11,11 +11,11 @@ from core.cache import make_cache_key, read_cache, write_cache
 from core.cache.store import CacheStore
 from core.context import build_t1
 from core.model import FakeModelSeam
+from core.pseudonymize import opaque_case_id, opaque_location_id
 from core.tools import build_retrieval_tool_registry
 from core.types import CacheEntry, ToolCallTrace
 from runners.autonomous.cache import resolve_autonomous_entry
 from runners.autonomous.types import AUTONOMOUS_RUNNER_ID
-from tests.core.conftest import subject_with_tag
 
 
 def test_tool_call_trace_model_validates_tool_name() -> None:
@@ -47,13 +47,13 @@ def test_offline_replay_reads_stored_tool_calls(
     export_bundle,
     autonomous_config,
 ) -> None:
-    subject = subject_with_tag(export_bundle.subjects, "mixed_fanout")
+    subject = export_bundle.subjects[0]
     context = build_t1(subject.request, subject)
     registry = build_retrieval_tool_registry(export_bundle)
     store = CacheStore(root=autonomous_config.cache_root, cache_mode="offline")
     session = resolve_autonomous_entry(
         context=context,
-        subject_id=subject.subject_id,
+        subject=subject,
         sample_index=0,
         model_id=autonomous_config.model_id,
         store=store,
@@ -70,13 +70,13 @@ def test_offline_replay_does_not_reexecute_tools(
     export_bundle,
     autonomous_config,
 ) -> None:
-    subject = subject_with_tag(export_bundle.subjects, "mixed_fanout")
+    subject = export_bundle.subjects[0]
     context = build_t1(subject.request, subject)
     registry = build_retrieval_tool_registry(export_bundle)
     store = CacheStore(root=autonomous_config.cache_root, cache_mode="offline")
     resolve_autonomous_entry(
         context=context,
-        subject_id=subject.subject_id,
+        subject=subject,
         sample_index=0,
         model_id=autonomous_config.model_id,
         store=store,
@@ -91,9 +91,7 @@ def test_empty_tool_calls_valid_when_no_tools_invoked(
     export_bundle,
     tmp_path: Path,
 ) -> None:
-    subject = next(
-        item for item in export_bundle.subjects if item.subject_id == "subj-payment-inside-floors"
-    )
+    subject = export_bundle.subjects[0]
     context = build_t1(subject.request, subject)
     key = make_cache_key(
         context=context,
@@ -109,7 +107,7 @@ def test_empty_tool_calls_valid_when_no_tools_invoked(
             raw_response={
                 "verdicts": [
                     {
-                        "location_id": location.location_id,
+                        "location_id": opaque_location_id(location.location_id),
                         "verdict": location.expected.verdict,
                         "detail": None,
                     }
@@ -125,7 +123,7 @@ def test_empty_tool_calls_valid_when_no_tools_invoked(
     store = CacheStore(root=cache_root, cache_mode="offline")
     session = resolve_autonomous_entry(
         context=context,
-        subject_id=subject.subject_id,
+        subject=subject,
         sample_index=0,
         model_id="primary",
         store=store,
@@ -143,24 +141,25 @@ def test_refresh_path_persists_tool_calls(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setenv("CACHE_MODE", "refresh")
-    subject = subject_with_tag(export_bundle.subjects, "mixed_fanout")
+    subject = export_bundle.subjects[0]
     context = build_t1(subject.request, subject)
     registry = build_retrieval_tool_registry(export_bundle)
     cache_root = tmp_path / "cache"
     store = CacheStore(root=cache_root, cache_mode="refresh")
-    location_ids = [location.location_id for location in subject.locations]
+    location_ids = [opaque_location_id(location.location_id) for location in subject.locations]
     seam = FakeModelSeam(
         pairing_location_ids=location_ids,
         adjudication_verdicts={
-            location.location_id: location.expected.verdict for location in subject.locations
+            opaque_location_id(location.location_id): location.expected.verdict
+            for location in subject.locations
         },
         planned_tool_calls=[
-            ("get_location_records", {"subject_id": subject.subject_id}),
+            ("get_location_records", {"subject_id": opaque_case_id(subject.subject_id)}),
         ],
     )
     session = resolve_autonomous_entry(
         context=context,
-        subject_id=subject.subject_id,
+        subject=subject,
         sample_index=0,
         model_id="primary",
         store=store,

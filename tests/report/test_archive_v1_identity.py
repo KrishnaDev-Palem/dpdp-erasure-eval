@@ -22,26 +22,31 @@ def test_archive_export_pin_matches_published_agent_sha() -> None:
     assert pin == PINNED_AGENT_SHA
 
 
-def test_archive_export_is_byte_identical_to_default_export() -> None:
-    assert _file_map(ARCHIVE_V1 / "export") == _file_map(REPO_ROOT / "export")
+def test_archive_export_is_not_byte_identical_to_default_export() -> None:
+    archived = _file_map(ARCHIVE_V1 / "export")
+    default = _file_map(REPO_ROOT / "export")
+    assert archived != default
+    assert len(archived) == len(default)
 
 
-def test_archive_results_are_byte_identical_to_default_results() -> None:
+def test_archive_results_are_not_byte_identical_to_default_results() -> None:
     archived = _file_map(ARCHIVE_V1 / "results")
     default = _file_map(REPO_ROOT / "results")
-    assert set(archived) == set(default)
+    assert archived != default
     assert len(archived) == 12
-    assert archived == default
 
 
-def test_archive_writeup_is_byte_identical_to_default_writeup() -> None:
-    assert (ARCHIVE_V1 / "docs" / "writeup.md").read_bytes() == (
+def test_archive_writeup_is_not_byte_identical_to_default_writeup() -> None:
+    assert (ARCHIVE_V1 / "docs" / "writeup.md").read_bytes() != (
         REPO_ROOT / "docs" / "writeup.md"
     ).read_bytes()
 
 
-def test_archive_figures_are_byte_identical_to_default_figures() -> None:
-    assert _file_map(ARCHIVE_V1 / "docs" / "figures") == _file_map(REPO_ROOT / "docs" / "figures")
+def test_archive_figures_are_not_byte_identical_to_default_figures() -> None:
+    archived = _file_map(ARCHIVE_V1 / "docs" / "figures")
+    default = _file_map(REPO_ROOT / "docs" / "figures")
+    assert archived != default
+    assert archived.keys() == default.keys()
 
 
 def test_archive_readme_names_tag_pin_and_replay_command() -> None:

@@ -15,12 +15,14 @@ from core.model.adapter_common import (
     parse_verdicts,
     run_tool_registry_loop,
 )
+from core.model.usage import TokenUsageAccumulator, extract_gemini_usage
 from core.tools.registry import ToolRegistry
 from core.types import (
     AdjudicationSessionResult,
     ClassifierResult,
     ContextBundle,
     ModelVerdict,
+    TokenUsage,
 )
 
 
@@ -42,6 +44,7 @@ class GeminiModelSeam:
 
     def __init__(self, config: LiveAdapterConfig, *, client: Any | None = None) -> None:
         self._config = config
+        self._usage = TokenUsageAccumulator()
         if client is not None:
             self._client = client
         else:
@@ -55,6 +58,9 @@ class GeminiModelSeam:
                 ),
             )
 
+    def take_token_usage(self) -> TokenUsage | None:
+        return self._usage.take()
+
     def adjudicate(
         self,
         *,
@@ -62,6 +68,9 @@ class GeminiModelSeam:
         case_id: str,
         tool_registry: ToolRegistry | None = None,
     ) -> list[ModelVerdict] | AdjudicationSessionResult:
+        # Reset first, before anything can raise: counts from the previous case — or from
+        # a call of this one that failed partway — must never reach the next entry.
+        self._usage.reset()
         location_ids = [str(location["location_id"]) for location in context.locations]
         if tool_registry is None:
             text = self._complete_text(
@@ -83,8 +92,9 @@ class GeminiModelSeam:
         text: str,
         case_id: str | None = None,
     ) -> ClassifierResult:
+        self._usage.reset()
         response_text = self._complete_text(
-            prompt=build_classification_prompt(text=text, case_id=case_id),
+            prompt=build_classification_prompt(text=text),
         )
         payload = extract_json_object(response_text)
         return parse_classifier_result(payload=payload, case_id=case_id)
@@ -97,6 +107,7 @@ class GeminiModelSeam:
                 "thinking_config": {"thinking_level": "low"},
             },
         )
+        self._usage.add(extract_gemini_usage(response))
         return self._extract_text(response)
 
     def _adjudicate_with_tools(
@@ -122,6 +133,9 @@ class GeminiModelSeam:
                     "tools": tools,
                 },
             )
+            # One provider call per round, one cache entry per session: the counts have to
+            # sum across the loop, not report the last round.
+            self._usage.add(extract_gemini_usage(response))
             function_calls = self._extract_function_calls(response)
             if not function_calls:
                 text = self._extract_text(response)

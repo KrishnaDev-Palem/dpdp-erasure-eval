@@ -7,6 +7,7 @@ import re
 from typing import Any
 
 from core.exceptions import ModelResponseError
+from core.pseudonymize import opaque_case_id
 from core.tools.registry import ToolRegistry
 from core.tools.trace import summarize_tool_result
 from core.types import (
@@ -26,30 +27,28 @@ def resolve_adjudication_location_ids(
     context: ContextBundle,
     case_id: str,
 ) -> list[str]:
-    """Return location IDs the model must adjudicate for this context."""
-    location_ids = [str(location["location_id"]) for location in context.locations]
-    if location_ids or context.tier != "t1":
-        return location_ids
+    """Return location IDs the model must adjudicate for this context.
 
-    # T1 bundles are request-only (empty locations) but live adjudication still
-    # needs export location scope — same IDs tier runners pair against offline.
-    from pathlib import Path
-
-    from core.export.loader import load_export
-
-    export = load_export(Path("export"))
-    subject = next(
-        (item for item in export.subjects if item.subject_id == case_id),
-        None,
-    )
-    if subject is None:
-        return []
-    return [location.location_id for location in subject.locations]
+    Every tier, T1 included, carries its location ids in the bundle, so the prompt path
+    never reads the export. `case_id` is retained for the caller's error messages.
+    """
+    return [str(location["location_id"]) for location in context.locations]
 
 
-def build_adjudication_prompt(*, context: ContextBundle, case_id: str) -> str:
+def build_adjudication_prompt(
+    *,
+    context: ContextBundle,
+    case_id: str,
+) -> str:
+    """Render the prompt. `case_id` arrives real and is rendered opaque.
+
+    The parameter stays real because the cache addresses on it — `make_cache_key` and the
+    cache path layout both take the subject id — but the real id names the design cell, so
+    what the model reads is the opaque handle. It is also the handle the model passes to
+    `get_location_records`, which accepts nothing else.
+    """
     payload = {
-        "case_id": case_id,
+        "case_id": opaque_case_id(case_id),
         "tier": context.tier,
         "request": context.request.model_dump(mode="json"),
         "locations": context.locations,
@@ -65,11 +64,16 @@ def build_adjudication_prompt(*, context: ContextBundle, case_id: str) -> str:
     )
 
 
-def build_classification_prompt(*, text: str, case_id: str | None) -> str:
+def build_classification_prompt(*, text: str) -> str:
+    """Render the prompt. No `case_id` parameter, so none can reach the note.
+
+    The 90 slice ids are 45 `adv-*` and 45 `benign-*` in 1:1 correspondence with `label`,
+    so the prefix was the answer. `classify_note` still takes the id — the cache addresses
+    on it and the parse error names it — but it stops here.
+    """
     return (
         "Classify the note as clean or adversarial. Return JSON only:\n"
         '{"outcome": "clean|adversarial"}\n'
-        f"case_id: {case_id}\n"
         f"text:\n{text}"
     )
 

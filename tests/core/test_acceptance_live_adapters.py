@@ -2,18 +2,33 @@
 
 from __future__ import annotations
 
+import inspect
+import json
+from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
 import pytest
 
+from core.context import build_t1
 from core.exceptions import ModelResponseError
+from core.export import load_export
+from core.model.adapter_common import (
+    build_adjudication_prompt,
+    build_classification_prompt,
+    resolve_adjudication_location_ids,
+)
 from core.model.anthropic_adapter import AnthropicModelSeam
 from core.model.anthropic_adapter import LiveAdapterConfig as AnthropicConfig
 from core.model.gemini_adapter import GeminiModelSeam
 from core.model.gemini_adapter import LiveAdapterConfig as GeminiConfig
 from core.model.roles import get_role_descriptor
+from core.pseudonymize import opaque_case_id, opaque_location_id
 from core.types import AdjudicationSessionResult, ContextBundle, ErasureRequest
+from runners.adversarial_gate.slice_loader import load_extended_slice
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+GATE_SLICE_PATH = REPO_ROOT / "fixtures" / "adversarial_slice" / "cases.yaml"
 
 CLAUDE_CONFIG = AnthropicConfig(
     role_id="claude-sonnet-5",
@@ -434,6 +449,122 @@ def test_autonomous_empty_context_locations_rejects_empty_verdicts() -> None:
             case_id="mixed-fanout-subject",
             tool_registry=_FakeToolRegistry(),
         )
+
+
+def test_t1_live_resolution_reads_the_bundle_and_never_loads_the_export(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The prompt path is closed against the export.
+
+    It used to reach into `export/` at render time to fill `Required location_ids`, which
+    is how real design-cell names got into T1 prompts. T1 bundles now carry their own
+    (opaque) ids, so any `load_export` call from here is a regression.
+    """
+    from core.export import loader as loader_mod
+
+    real_load = loader_mod.load_export
+    loaded: list[Path] = []
+
+    def _forbidden(path: Path | None = None):
+        loaded.append(Path(path).resolve() if path is not None else Path("export").resolve())
+        raise AssertionError("the prompt path must not load the export")
+
+    export = real_load(REPO_ROOT / "export")
+    subject = next(item for item in export.subjects if item.locations)
+    context = build_t1(subject.request, subject)
+
+    monkeypatch.setattr(loader_mod, "load_export", _forbidden)
+
+    location_ids = resolve_adjudication_location_ids(
+        context=context,
+        case_id=subject.subject_id,
+    )
+    expected = [opaque_location_id(location.location_id) for location in subject.locations]
+    assert location_ids == expected
+    assert all(location.location_id not in location_ids for location in subject.locations)
+
+    client = MagicMock()
+    client.messages.create.return_value = _anthropic_text_response(
+        json.dumps(
+            {
+                "verdicts": [
+                    {"location_id": location_id, "verdict": "erase"} for location_id in location_ids
+                ]
+            }
+        )
+    )
+    seam = AnthropicModelSeam(CLAUDE_CONFIG, client=client)
+    verdicts = seam.adjudicate(context=context, case_id=subject.subject_id)
+    assert [item.location_id for item in verdicts] == expected
+    assert loaded == []
+
+
+def test_adjudication_prompt_renders_the_case_id_opaque() -> None:
+    """`case_id` was the last real identifier left in the rendered payload.
+
+    The parameter stays real — `make_cache_key` and the cache path layout are addressed by
+    it — but what renders is the opaque handle, which is also the one the model hands back
+    to `get_location_records`. Everything else about the prompt is byte-stable, so the
+    header lines and the payload key order are asserted alongside.
+    """
+    export = load_export(REPO_ROOT / "export")
+    subject = next(item for item in export.subjects if item.locations)
+
+    prompt = build_adjudication_prompt(
+        context=build_t1(subject.request, subject),
+        case_id=subject.subject_id,
+    )
+
+    assert f'"case_id": "{opaque_case_id(subject.subject_id)}"' in prompt
+    assert subject.subject_id not in prompt
+    for location in subject.locations:
+        assert location.location_id not in prompt
+        if location.cell_id:
+            assert location.cell_id not in prompt
+
+    assert prompt.startswith(
+        "Adjudicate erasure for each location. Return JSON only:\n"
+        '{"verdicts": [{"location_id": "<id>", "verdict": "erase|retain|escalate"}]}\n'
+        "Required location_ids: "
+    )
+    payload = json.loads(prompt.split("Context:\n", 1)[1])
+    assert list(payload) == [
+        "case_id",
+        "tier",
+        "request",
+        "locations",
+        "retention_floors",
+        "governance_map",
+    ]
+
+
+def test_classification_prompt_drops_the_case_id_entirely() -> None:
+    """Channel B: the 45 `adv-*` / 45 `benign-*` prefixes are the label, 1:1.
+
+    Unlike the adjudication twin above, nothing here renders opaque — the classification
+    task never uses the id, so spec section 7 removes the line. The parameter goes with
+    it rather than being accepted and ignored, which is the shape that let the leak
+    exist; the signature is asserted so a later re-add fails here. The surviving three
+    lines are byte-stable, since section 2 forbids prompt engineering.
+
+    Single case only. The sweep over all 90 belongs to the isolation suite.
+    """
+    case = load_extended_slice(GATE_SLICE_PATH, verify_seeds=False).cases[0]
+    assert case.case_id.startswith("adv-")
+
+    prompt = build_classification_prompt(text=case.text)
+
+    assert case.case_id not in prompt
+    assert "adv-" not in prompt
+    assert "benign-" not in prompt
+    assert "case_id" not in prompt
+
+    assert prompt == (
+        "Classify the note as clean or adversarial. Return JSON only:\n"
+        '{"outcome": "clean|adversarial"}\n'
+        f"text:\n{case.text}"
+    )
+    assert set(inspect.signature(build_classification_prompt).parameters) == {"text"}
 
 
 def test_adapter_respects_max_tool_rounds() -> None:

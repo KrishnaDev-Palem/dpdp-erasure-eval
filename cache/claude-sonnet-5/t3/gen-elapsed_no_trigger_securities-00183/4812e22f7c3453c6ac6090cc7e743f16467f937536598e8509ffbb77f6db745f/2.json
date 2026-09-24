@@ -1,0 +1,23 @@
+{
+  "case_id": "gen-elapsed_no_trigger_securities-00183",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "4812e22f7c3453c6ac6090cc7e743f16467f937536598e8509ffbb77f6db745f",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-4fb87d557d79",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-09-23T19:47:20Z",
+  "runner_id": "t3",
+  "sample_index": 2,
+  "tool_calls": [],
+  "usage": {
+    "call_count": 1,
+    "input_tokens": 1008,
+    "output_tokens": 437
+  }
+}

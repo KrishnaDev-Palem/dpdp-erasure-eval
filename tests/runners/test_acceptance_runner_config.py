@@ -31,7 +31,7 @@ def test_model_id_from_environment(
         runner_id="t1",
         model_id=os.environ["MODEL_ID"],
         cache_mode=os.environ["CACHE_MODE"],
-        sample_indices=[0, 1, 2, 3, 4],
+        sample_indices=[0, 1, 2],
         export_dir=export_dir,
         cache_root=custom_cache,
     )
@@ -90,9 +90,9 @@ def test_sweep_config_rejects_other_sample_lists(export_dir: Path, cache_dir: Pa
             )
 
 
-def test_from_env_default_is_five_samples(export_dir: Path, cache_dir: Path) -> None:
+def test_from_env_default_is_three_samples(export_dir: Path, cache_dir: Path) -> None:
     config = SweepConfig.from_env(export_dir=export_dir, cache_root=cache_dir, tier="t1")
-    assert config.sample_indices == [0, 1, 2, 3, 4]
+    assert config.sample_indices == [0, 1, 2]
 
 
 def test_three_sample_sweep_against_committed_export(
@@ -115,12 +115,12 @@ def test_three_sample_sweep_against_committed_export(
     assert len(result.variance.over_erasure.by_sample) == 3
 
 
-def test_default_offline_sweep_is_five_samples(
+def test_default_offline_sweep_is_three_samples(
     fake_seam: FakeModelSeam,
     export_dir: Path,
     cache_dir: Path,
 ) -> None:
     result = run_tier_sweep(tier="t1", seam=fake_seam, export_dir=export_dir, cache_root=cache_dir)
-    assert len(result.samples) == 5
-    assert result.samples[0].grouped.by_cell == {}
-    assert all(not groups for groups in result.samples[0].grouped.by_stratum.values())
+    assert len(result.samples) == 3
+    assert result.samples[0].grouped.by_cell
+    assert any(groups for groups in result.samples[0].grouped.by_stratum.values())

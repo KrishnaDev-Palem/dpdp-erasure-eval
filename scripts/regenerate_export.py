@@ -13,8 +13,7 @@ Coverage pin (human-run, not CI)::
 
 That command verifies pool hash ``d681eeec…`` and membership hash ``b93646fb…``.
 It refuses to overwrite the committed ``export/`` tree unless
-``--overwrite-committed`` is passed. Do not use that flag until the later
-archive + re-pin slice.
+``--overwrite-committed`` is passed. The committed pin is the coverage slice.
 
 This script MUST NOT run in CI or default workflows.
 """
@@ -262,7 +261,7 @@ def _assert_output_allowed(output_dir: Path, *, allow_overwrite_committed: bool)
         raise ExportRegenerationError(
             "Refusing to overwrite committed export/. "
             "Pass --output-dir to a different path, or --overwrite-committed "
-            "only when archiving v1 and re-pinning."
+            "only when replacing the committed coverage-slice export."
         )
 
 
@@ -412,7 +411,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--overwrite-committed",
         action="store_true",
-        help="Allow writing to the committed export/ tree (archive + re-pin only)",
+        help="Allow writing to the committed export/ tree (coverage-slice replace only)",
     )
     args = parser.parse_args(argv)
 

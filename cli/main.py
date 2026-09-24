@@ -27,11 +27,12 @@ def _add_adjudication_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--samples",
         type=int,
-        default=5,
+        default=3,
         choices=[3, 5],
         help=(
-            "How many times to retry each case (default: 5). "
+            "How many times to retry each case (default: 3). "
             "3 runs sample indices 0, 1, and 2. "
+            "5 remains legal for a five-sample cache. "
             "A sample is another try of the same case, not a new person."
         ),
     )
@@ -98,7 +99,7 @@ def _emit_report(
 
 
 def _adjudication_sample_indices(args: argparse.Namespace) -> list[int]:
-    count = getattr(args, "samples", 5)
+    count = getattr(args, "samples", 3)
     return list(range(count))
 
 

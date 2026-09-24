@@ -1,0 +1,33 @@
+{
+  "case_id": "gen-elapsed_no_trigger_payment-00261",
+  "model_id": "primary",
+  "prompt_hash": "1247a76d1b435555e8db293374a98e4f6efb91a0e261bf456116d89ddfc15004",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-d01ca833b531",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-17T03:47:51Z",
+  "runner_id": "autonomous",
+  "sample_index": 2,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "case-54b6a92c2d81"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "loc-d01ca833b531"
+        ],
+        "subject_id": "case-54b6a92c2d81"
+      },
+      "sequence": 0,
+      "tool_name": "get_location_records"
+    }
+  ]
+}

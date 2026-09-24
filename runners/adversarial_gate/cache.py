@@ -7,6 +7,7 @@ from datetime import UTC, datetime
 from core.cache.canonicalize import prompt_hash
 from core.cache.store import CacheStore, read_cache, write_cache
 from core.exceptions import CacheMissError
+from core.model.adapter_common import build_classification_prompt
 from core.model.seam import ModelSeam
 from core.types import AdversarialSeedCase, CacheEntry, CacheKey, ClassifierResult
 from runners.adversarial_gate.types import GATE_RUNNER_ID
@@ -19,13 +20,19 @@ def make_gate_cache_key(
     case_id: str,
     sample_index: int,
 ) -> CacheKey:
+    """Address one cached classification by the prompt the model was sent.
+
+    The old key digested `{"text": text}`, which the `case_id` line never touched — so a
+    prompt change would have replayed the committed responses silently. Digesting the
+    rendered prompt makes any such change a miss by construction.
+    """
     if sample_index not in range(5):
         raise ValueError(f"sample_index must be 0..4, got {sample_index}")
     return CacheKey(
         model_id=model_id,
         runner_id=GATE_RUNNER_ID,
         case_id=case_id,
-        prompt_hash=prompt_hash({"text": text}),
+        prompt_hash=prompt_hash(build_classification_prompt(text=text)),
         sample_index=sample_index,
     )
 
@@ -68,6 +75,7 @@ def classify_with_cache(
             .replace(microsecond=0)
             .isoformat()
             .replace("+00:00", "Z"),
+            usage=seam.take_token_usage(),
         )
         store.put(entry)
         return result

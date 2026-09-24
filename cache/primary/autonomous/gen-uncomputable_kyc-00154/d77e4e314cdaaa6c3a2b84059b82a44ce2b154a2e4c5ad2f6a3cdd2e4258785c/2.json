@@ -1,0 +1,33 @@
+{
+  "case_id": "gen-uncomputable_kyc-00154",
+  "model_id": "primary",
+  "prompt_hash": "d77e4e314cdaaa6c3a2b84059b82a44ce2b154a2e4c5ad2f6a3cdd2e4258785c",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-f46e7676c818",
+        "verdict": "escalate"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-17T03:47:51Z",
+  "runner_id": "autonomous",
+  "sample_index": 2,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "case-9a108d3d97ab"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "loc-f46e7676c818"
+        ],
+        "subject_id": "case-9a108d3d97ab"
+      },
+      "sequence": 0,
+      "tool_name": "get_location_records"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-ordinary_kyc_open_retain-00199",
+  "model_id": "primary",
+  "prompt_hash": "8d62cfc858a2471bd5ee22e3e0bb7a6eede476ddaf2bc322cc9ce43309e9822e",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-cdb8b4af6198",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-17T03:47:41Z",
+  "runner_id": "t2",
+  "sample_index": 1,
+  "tool_calls": []
+}

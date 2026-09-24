@@ -1,0 +1,33 @@
+{
+  "case_id": "gen-re_engagement_erase_payment-00050",
+  "model_id": "primary",
+  "prompt_hash": "fee8a7348429519cd46c830cb7f0abc4bc01a0d6d87ed3b88d2b286fed89bb97",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-93efa4971c5c",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-17T03:47:51Z",
+  "runner_id": "autonomous",
+  "sample_index": 0,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "case-fb28e35cc6c7"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "loc-93efa4971c5c"
+        ],
+        "subject_id": "case-fb28e35cc6c7"
+      },
+      "sequence": 0,
+      "tool_name": "get_location_records"
+    }
+  ]
+}

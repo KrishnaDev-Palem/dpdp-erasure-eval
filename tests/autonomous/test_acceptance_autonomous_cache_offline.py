@@ -11,10 +11,11 @@ from core.cache.store import CacheStore
 from core.context import build_t1
 from core.exceptions import CacheMissError
 from core.model import FakeModelSeam
+from core.model.adapter_common import build_adjudication_prompt
+from core.pseudonymize import opaque_case_id, opaque_location_id
 from core.tools import build_retrieval_tool_registry
 from runners.autonomous.cache import resolve_autonomous_entry
 from runners.autonomous.types import AUTONOMOUS_RUNNER_ID
-from tests.core.conftest import subject_with_tag
 
 
 def test_offline_replay_via_autonomous_runner_id(
@@ -22,13 +23,13 @@ def test_offline_replay_via_autonomous_runner_id(
     export_bundle,
     autonomous_config,
 ) -> None:
-    subject = subject_with_tag(export_bundle.subjects, "mixed_fanout")
+    subject = export_bundle.subjects[0]
     context = build_t1(subject.request, subject)
     registry = build_retrieval_tool_registry(export_bundle)
     store = CacheStore(root=autonomous_config.cache_root, cache_mode="offline")
     session = resolve_autonomous_entry(
         context=context,
-        subject_id=subject.subject_id,
+        subject=subject,
         sample_index=0,
         model_id=autonomous_config.model_id,
         store=store,
@@ -39,8 +40,8 @@ def test_offline_replay_via_autonomous_runner_id(
     assert fake_seam.adjudicate_calls == []
 
 
-def test_cache_prompt_identity_from_t1_context_only(export_bundle) -> None:
-    subject = subject_with_tag(export_bundle.subjects, "mixed_fanout")
+def test_cache_prompt_identity_from_rendered_t1_prompt(export_bundle) -> None:
+    subject = export_bundle.subjects[0]
     context = build_t1(subject.request, subject)
     key = make_cache_key(
         context=context,
@@ -49,9 +50,13 @@ def test_cache_prompt_identity_from_t1_context_only(export_bundle) -> None:
         case_id=subject.subject_id,
         sample_index=0,
     )
-    assert key.prompt_hash == prompt_hash(context)
+    assert key.prompt_hash == prompt_hash(
+        build_adjudication_prompt(context=context, case_id=subject.subject_id)
+    )
     assert context.tier == "t1"
-    assert context.locations == []
+    assert context.locations == [
+        {"location_id": opaque_location_id(location.location_id)} for location in subject.locations
+    ]
 
 
 @pytest.mark.cache_miss
@@ -60,7 +65,7 @@ def test_offline_cache_miss_names_identifiers(
     export_bundle,
     tmp_path: Path,
 ) -> None:
-    subject = subject_with_tag(export_bundle.subjects, "mixed_fanout")
+    subject = export_bundle.subjects[0]
     context = build_t1(subject.request, subject)
     registry = build_retrieval_tool_registry(export_bundle)
     empty_cache = tmp_path / "cache"
@@ -69,7 +74,7 @@ def test_offline_cache_miss_names_identifiers(
     with pytest.raises(CacheMissError) as exc_info:
         resolve_autonomous_entry(
             context=context,
-            subject_id=subject.subject_id,
+            subject=subject,
             sample_index=0,
             model_id="primary",
             store=store,
@@ -95,9 +100,10 @@ def test_resolve_autonomous_entry_refresh_miss_writes_tool_calls(
     from core.model.anthropic_adapter import AnthropicModelSeam, LiveAdapterConfig
 
     monkeypatch.setenv("CACHE_MODE", "refresh")
-    subject = subject_with_tag(export_bundle.subjects, "mixed_fanout")
+    subject = export_bundle.subjects[0]
     verdict_json = ", ".join(
-        f'{{"location_id": "{location.location_id}", "verdict": "{location.expected.verdict}"}}'
+        f'{{"location_id": "{opaque_location_id(location.location_id)}", '
+        f'"verdict": "{location.expected.verdict}"}}'
         for location in subject.locations
     )
     context = build_t1(subject.request, subject)
@@ -109,7 +115,7 @@ def test_resolve_autonomous_entry_refresh_miss_writes_tool_calls(
         type="tool_use",
         id="tool-1",
         name="get_location_records",
-        input={"subject_id": subject.subject_id},
+        input={"subject_id": opaque_case_id(subject.subject_id)},
     )
     text_block = SimpleNamespace(
         type="text",
@@ -131,7 +137,7 @@ def test_resolve_autonomous_entry_refresh_miss_writes_tool_calls(
     )
     session = resolve_autonomous_entry(
         context=context,
-        subject_id=subject.subject_id,
+        subject=subject,
         sample_index=0,
         model_id="claude-sonnet-5",
         store=store,
@@ -158,20 +164,23 @@ def test_refresh_path_available(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setenv("CACHE_MODE", "refresh")
-    subject = subject_with_tag(export_bundle.subjects, "mixed_fanout")
+    subject = export_bundle.subjects[0]
     context = build_t1(subject.request, subject)
     registry = build_retrieval_tool_registry(export_bundle)
     cache_root = tmp_path / "cache"
     store = CacheStore(root=cache_root, cache_mode="refresh")
     seam = FakeModelSeam(
-        pairing_location_ids=[location.location_id for location in subject.locations],
+        pairing_location_ids=[
+            opaque_location_id(location.location_id) for location in subject.locations
+        ],
         adjudication_verdicts={
-            location.location_id: location.expected.verdict for location in subject.locations
+            opaque_location_id(location.location_id): location.expected.verdict
+            for location in subject.locations
         },
     )
     session = resolve_autonomous_entry(
         context=context,
-        subject_id=subject.subject_id,
+        subject=subject,
         sample_index=0,
         model_id="primary",
         store=store,

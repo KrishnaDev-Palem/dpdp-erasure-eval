@@ -78,7 +78,7 @@ def make_sweep_config(
         runner_id=tier,
         model_id=model_id or os.environ.get("MODEL_ID", "primary"),
         cache_mode=cache_mode or os.environ.get("CACHE_MODE", "offline"),
-        sample_indices=[0, 1, 2, 3, 4],
+        sample_indices=[0, 1, 2],
         export_dir=export_dir,
         cache_root=cache_root,
     )

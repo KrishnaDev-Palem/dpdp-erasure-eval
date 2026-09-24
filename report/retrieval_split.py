@@ -7,6 +7,7 @@ from typing import Any
 
 from core.cache.store import CacheStore, make_cache_key
 from core.context.tiers import build_t1
+from core.exceptions import CacheMissError
 from core.export.loader import load_export
 from core.types import (
     VERDICT_LANES,
@@ -24,6 +25,12 @@ from report.retrieval_split_types import (
 )
 from runners.autonomous.types import AUTONOMOUS_RUNNER_ID
 from runners.pairing import pair_subject_verdicts
+from runners.translation import (
+    location_id_inverse,
+    to_real_location_ids,
+    translate_raw_verdicts,
+)
+from runners.types import ALLOWED_ADJUDICATION_SAMPLE_INDICES, THREE_SAMPLE_INDICES
 
 
 class TraceSchemaInsufficientError(ValueError):
@@ -134,6 +141,38 @@ def _rollup_from_pairs(
     )
 
 
+def _probe_sample_indices(
+    *,
+    store: CacheStore,
+    bundle: Any,
+    model_id: str,
+) -> list[int]:
+    """Walk the samples that exist on disk: three or five."""
+    subject = next((item for item in bundle.subjects if item.locations), None)
+    if subject is None:
+        return list(THREE_SAMPLE_INDICES)
+    context = build_t1(subject.request, subject)
+
+    def _has_sample(index: int) -> bool:
+        key = make_cache_key(
+            context=context,
+            model_id=model_id,
+            runner_id=AUTONOMOUS_RUNNER_ID,
+            case_id=subject.subject_id,
+            sample_index=index,
+        )
+        try:
+            store.get(key)
+        except CacheMissError:
+            return False
+        return True
+
+    five = list(range(5))
+    if all(_has_sample(index) for index in five):
+        return five
+    return list(THREE_SAMPLE_INDICES)
+
+
 def build_retrieval_split_report(
     *,
     export_dir: Path | None = None,
@@ -141,26 +180,39 @@ def build_retrieval_split_report(
     model_id: str,
     cache_mode: str = "offline",
     sample_index: int = 0,
+    sample_indices: list[int] | None = None,
 ) -> RetrievalSplitReport:
     """Build retrieval-vs-reasoning split from committed autonomous cache traces."""
-    if sample_index not in range(5):
-        raise ValueError(f"sample_index must be 0..4, got {sample_index}")
-
     export_path = export_dir or Path("export")
     cache_path = cache_root or Path("cache")
     bundle = load_export(export_path)
     manifest = bundle.verify_provenance()
     store = CacheStore(root=cache_path, cache_mode=cache_mode)
 
+    if sample_indices is None:
+        resolved_indices = _probe_sample_indices(
+            store=store,
+            bundle=bundle,
+            model_id=model_id,
+        )
+    else:
+        resolved_indices = list(sample_indices)
+        if tuple(resolved_indices) not in ALLOWED_ADJUDICATION_SAMPLE_INDICES:
+            raise ValueError("sample_indices must be [0, 1, 2] or [0, 1, 2, 3, 4]")
+    if sample_index not in resolved_indices:
+        raise ValueError(f"sample_index must be one of {resolved_indices}, got {sample_index}")
+
     sample_rollups: list[RetrievalSplitSampleRollup] = []
-    for current_sample_index in range(5):
+    for current_sample_index in resolved_indices:
         classified_pairs: list[tuple[ModelVerdict, ExpectedLabel, list[ToolCallTrace]]] = []
         for subject in bundle.subjects:
             context = build_t1(subject.request, subject)
-            context_location_ids = [location["location_id"] for location in context.locations]
-            export_location_ids = [location.location_id for location in subject.locations]
-            pairing_location_ids = (
-                context_location_ids if context_location_ids else export_location_ids
+            # The split itself keys on `floor_ids` and is unaffected by substitution, but
+            # it is a third `pair_subject_verdicts` caller and pairs on the same two
+            # opaque inputs as the sweeps. Same resolution, same dead fallback removed.
+            inverse = location_id_inverse(subject)
+            pairing_location_ids = to_real_location_ids(
+                (location["location_id"] for location in context.locations), inverse
             )
             if not pairing_location_ids:
                 continue
@@ -173,7 +225,7 @@ def build_retrieval_split_report(
                 sample_index=current_sample_index,
             )
             entry = store.get(key)
-            raw_verdicts = _parse_raw_verdicts(entry.raw_response)
+            raw_verdicts = translate_raw_verdicts(_parse_raw_verdicts(entry.raw_response), inverse)
             tool_calls = _parse_tool_calls(entry.tool_calls)
             pairs = pair_subject_verdicts(
                 subject_id=subject.subject_id,

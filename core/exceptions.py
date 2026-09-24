@@ -19,3 +19,7 @@ class ModelResponseError(Exception):
 
 class ConfigurationError(Exception):
     """Raised when factory or credential resolution fails before network I/O."""
+
+
+class PseudonymizationError(Exception):
+    """Raised when an identifier substitution map is not one-to-one."""

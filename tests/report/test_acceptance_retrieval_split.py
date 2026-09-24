@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import shutil
+from pathlib import Path
+
 import pytest
 
 from core.types import ExpectedLabel, ToolCallTrace
@@ -17,6 +20,8 @@ from tests.report.conftest import (
     make_partial_retention_floors_trace,
     make_retention_floors_trace,
 )
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
 def test_no_rule_fetch_classified_as_retrieval_failure() -> None:
@@ -124,9 +129,29 @@ def test_live_autonomous_cache_retrieval_split_report(
     assert report.total_incorrect == (
         report.retrieval_failure.numerator + report.reasoning_failure.numerator
     )
-    assert len(report.sample_rollups) == 5
+    assert len(report.sample_rollups) == 3
+    assert [item.sample_index for item in report.sample_rollups] == [0, 1, 2]
     lane_incorrect = sum(row.incorrect_count for row in report.per_lane)
     assert lane_incorrect == report.total_incorrect
+
+
+def test_three_sample_cache_yields_three_rollups(export_dir, tmp_path: Path) -> None:
+    cache = tmp_path / "cache"
+    source = REPO_ROOT / "cache" / "claude-sonnet-5" / "autonomous"
+    dest = cache / "claude-sonnet-5" / "autonomous"
+    shutil.copytree(source, dest)
+    for sample_file in dest.rglob("[34].json"):
+        sample_file.unlink()
+
+    report = build_retrieval_split_report(
+        export_dir=export_dir,
+        cache_root=cache,
+        model_id="claude-sonnet-5",
+        cache_mode="offline",
+        sample_index=0,
+    )
+    assert len(report.sample_rollups) == 3
+    assert [item.sample_index for item in report.sample_rollups] == [0, 1, 2]
 
 
 def test_retrieval_split_human_stdout_includes_required_sections(

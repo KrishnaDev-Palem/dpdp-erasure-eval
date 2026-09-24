@@ -63,12 +63,12 @@ def test_autonomous_config_rejects_other_sample_lists(
         )
 
 
-def test_autonomous_from_env_default_is_five_samples(
+def test_autonomous_from_env_default_is_three_samples(
     export_dir: Path,
     cache_dir: Path,
 ) -> None:
     config = AutonomousSweepConfig.from_env(export_dir=export_dir, cache_root=cache_dir)
-    assert config.sample_indices == [0, 1, 2, 3, 4]
+    assert config.sample_indices == [0, 1, 2]
 
 
 def test_three_sample_autonomous_sweep(fake_seam, autonomous_config) -> None:

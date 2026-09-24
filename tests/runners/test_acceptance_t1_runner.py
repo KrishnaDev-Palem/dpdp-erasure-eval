@@ -11,6 +11,30 @@ from core.types import VERDICT_LANES, ExpectedLabel, ModelVerdict
 from runners.t1 import run_t1_sweep
 
 
+def test_t1_sweep_binds_no_export_dir_onto_seam(
+    export_dir: Path,
+    cache_dir: Path,
+) -> None:
+    """The seam has no reason to know where the export lives.
+
+    It was bound so the live adapter could fill `Required location_ids` from the export at
+    prompt-render time. The T1 bundle carries those ids now, so nothing binds and the
+    prompt path has no route to the export at all.
+    """
+    bound: list[Path] = []
+
+    class _RecordingSeam(FakeModelSeam):
+        def bind_export_dir(self, path: Path) -> None:
+            bound.append(path)
+
+    run_t1_sweep(
+        seam=_RecordingSeam(),
+        export_dir=export_dir,
+        cache_root=cache_dir,
+    )
+    assert bound == []
+
+
 def test_t1_full_sweep_all_subjects(
     fake_seam: FakeModelSeam,
     export_dir: Path,
@@ -20,7 +44,7 @@ def test_t1_full_sweep_all_subjects(
     result = run_t1_sweep(seam=fake_seam, export_dir=export_dir, cache_root=cache_dir)
     assert result.tier == "t1"
     assert result.runner_id == "t1"
-    assert len(result.samples) == 5
+    assert len(result.samples) == 3
     for sample in result.samples:
         assert sample.total_subjects == len(export.subjects)
         assert sample.scoring.total_cases > 0
@@ -123,6 +147,7 @@ def _cached_verdicts_for_subject(
     from core.context import build_t1
     from core.exceptions import CacheMissError
     from core.export import load_export
+    from runners.translation import location_id_inverse, translate_raw_verdicts
 
     export = load_export()
     subject = next(item for item in export.subjects if item.subject_id == subject_id)
@@ -138,4 +163,9 @@ def _cached_verdicts_for_subject(
         entry = read_cache(key, cache_dir)
     except CacheMissError:
         return []
-    return entry.raw_response.get("verdicts", [])
+    # A cache entry records what the model returned, so its ids are opaque. The caller
+    # pairs them against export locations by real id, which is the same translation
+    # `runners/spine.py` applies on every cache read.
+    return translate_raw_verdicts(
+        entry.raw_response.get("verdicts", []), location_id_inverse(subject)
+    )

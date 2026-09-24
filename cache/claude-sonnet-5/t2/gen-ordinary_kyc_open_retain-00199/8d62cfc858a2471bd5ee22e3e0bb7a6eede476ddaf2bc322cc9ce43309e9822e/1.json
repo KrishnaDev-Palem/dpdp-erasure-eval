@@ -1,0 +1,23 @@
+{
+  "case_id": "gen-ordinary_kyc_open_retain-00199",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "8d62cfc858a2471bd5ee22e3e0bb7a6eede476ddaf2bc322cc9ce43309e9822e",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-cdb8b4af6198",
+        "verdict": "escalate"
+      }
+    ]
+  },
+  "recorded_at": "2026-09-23T18:26:42Z",
+  "runner_id": "t2",
+  "sample_index": 1,
+  "tool_calls": [],
+  "usage": {
+    "call_count": 1,
+    "input_tokens": 475,
+    "output_tokens": 43
+  }
+}

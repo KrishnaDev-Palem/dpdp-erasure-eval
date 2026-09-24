@@ -30,30 +30,37 @@ def _subject_with_tag(bundle, tag: str):
 
 def test_load_export_parses_subjects(export_dir: Path) -> None:
     bundle = load_export(export_dir)
-    assert 10 <= len(bundle.subjects) <= 16
+    assert len(bundle.subjects) == 350
 
 
-def test_labeled_location_count_in_range(export_dir: Path) -> None:
+def test_labeled_location_count_matches_subjects(export_dir: Path) -> None:
     bundle = load_export(export_dir)
     location_count = sum(len(subject.locations) for subject in bundle.subjects)
-    assert 30 <= location_count <= 50
+    assert location_count == 350
+    assert all(len(subject.locations) == 1 for subject in bundle.subjects)
+    assert all(":" in subject.locations[0].location_id for subject in bundle.subjects)
+    assert all(
+        location.strata is not None and location.cell_id
+        for subject in bundle.subjects
+        for location in subject.locations
+    )
 
 
-def test_required_fixture_tags_present(export_dir: Path) -> None:
-    bundle = load_export(export_dir)
+def test_required_fixture_tags_present(archive_export_dir: Path) -> None:
+    bundle = load_export(archive_export_dir)
     tags_present = {tag for subject in bundle.subjects for tag in subject.tags}
     assert REQUIRED_TAGS.issubset(tags_present)
 
 
-def test_mixed_fanout_spans_three_lanes(export_dir: Path) -> None:
-    bundle = load_export(export_dir)
+def test_mixed_fanout_spans_three_lanes(archive_export_dir: Path) -> None:
+    bundle = load_export(archive_export_dir)
     subject = _subject_with_tag(bundle, "mixed_fanout")
     verdicts = {location.expected.verdict for location in subject.locations}
     assert verdicts >= {"erase", "retain", "escalate"}
 
 
-def test_expected_blocks_available(export_dir: Path) -> None:
-    bundle = load_export(export_dir)
+def test_expected_blocks_available(archive_export_dir: Path) -> None:
+    bundle = load_export(archive_export_dir)
     subject = _subject_with_tag(bundle, "mixed_fanout")
     assert subject.locations
     for location in subject.locations:

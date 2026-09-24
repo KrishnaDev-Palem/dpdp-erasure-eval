@@ -21,6 +21,7 @@ VarianceMetric = Literal["over_erasure", "over_retention", "mis_escalation"]
 
 SAMPLE_INDICES: list[int] = [0, 1, 2, 3, 4]
 THREE_SAMPLE_INDICES: list[int] = [0, 1, 2]
+DEFAULT_ADJUDICATION_SAMPLE_INDICES: list[int] = list(THREE_SAMPLE_INDICES)
 ALLOWED_ADJUDICATION_SAMPLE_INDICES: frozenset[tuple[int, ...]] = frozenset(
     {
         tuple(THREE_SAMPLE_INDICES),
@@ -51,7 +52,9 @@ class SweepConfig(BaseModel):
     runner_id: str
     model_id: str
     cache_mode: str
-    sample_indices: list[int] = Field(default_factory=lambda: list(SAMPLE_INDICES))
+    sample_indices: list[int] = Field(
+        default_factory=lambda: list(DEFAULT_ADJUDICATION_SAMPLE_INDICES)
+    )
     export_dir: Path | None = None
     cache_root: Path | None = None
 
@@ -78,7 +81,7 @@ class SweepConfig(BaseModel):
             runner_id=tier,
             model_id=config.model_id,
             cache_mode=config.cache_mode,
-            sample_indices=list(SAMPLE_INDICES),
+            sample_indices=list(DEFAULT_ADJUDICATION_SAMPLE_INDICES),
             export_dir=export_dir,
             cache_root=cache_root,
         )

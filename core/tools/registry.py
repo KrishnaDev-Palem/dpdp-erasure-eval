@@ -6,7 +6,7 @@ from typing import Any, Protocol
 
 from core.export.loader import ExportBundle
 from core.tools.governance_map import get_governance_map
-from core.tools.location_records import get_location_records
+from core.tools.location_records import build_opaque_subject_index, get_location_records
 from core.tools.retention_floors import get_retention_floors
 
 RETRIEVAL_TOOL_NAMES: frozenset[str] = frozenset(
@@ -24,10 +24,16 @@ class ToolRegistry(Protocol):
 
 
 class RetrievalToolRegistry:
-    """Concrete registry scoped to one verified export bundle."""
+    """Concrete registry scoped to one verified export bundle.
+
+    Subject ids reach the model opaque, so the registry holds the only route back. The
+    tool argument key is still `subject_id`; only its value changed, and the index that
+    resolves it is built once here rather than on every call.
+    """
 
     def __init__(self, bundle: ExportBundle) -> None:
         self._bundle = bundle
+        self._opaque_subject_index = build_opaque_subject_index(bundle)
 
     @property
     def tool_names(self) -> frozenset[str]:
@@ -40,7 +46,11 @@ class RetrievalToolRegistry:
             subject_id = arguments.get("subject_id")
             if not isinstance(subject_id, str) or not subject_id:
                 raise ValueError("get_location_records requires subject_id")
-            return get_location_records(bundle=self._bundle, subject_id=subject_id)
+            return get_location_records(
+                bundle=self._bundle,
+                subject_id=subject_id,
+                opaque_subject_index=self._opaque_subject_index,
+            )
         if tool_name == "get_retention_floors":
             return get_retention_floors(bundle=self._bundle)
         return get_governance_map(bundle=self._bundle)

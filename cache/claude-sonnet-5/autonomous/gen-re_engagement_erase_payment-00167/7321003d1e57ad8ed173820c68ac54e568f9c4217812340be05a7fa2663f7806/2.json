@@ -1,0 +1,72 @@
+{
+  "case_id": "gen-re_engagement_erase_payment-00167",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "7321003d1e57ad8ed173820c68ac54e568f9c4217812340be05a7fa2663f7806",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-93daa9ae4f74",
+        "verdict": "escalate"
+      }
+    ]
+  },
+  "recorded_at": "2026-09-23T21:37:55Z",
+  "runner_id": "autonomous",
+  "sample_index": 2,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "case-81684188310b"
+      },
+      "result_summary": {
+        "categories": [
+          "customer",
+          "kyc_document",
+          "marketing_consent",
+          "payment_transaction",
+          "securities_transaction"
+        ],
+        "entry_count": 5
+      },
+      "sequence": 0,
+      "tool_name": "get_governance_map"
+    },
+    {
+      "arguments": {
+        "subject_id": "case-81684188310b"
+      },
+      "result_summary": {
+        "floor_count": 5,
+        "floor_ids": [
+          "companies_act",
+          "gst",
+          "income_tax",
+          "pmla_kyc",
+          "sebi"
+        ]
+      },
+      "sequence": 1,
+      "tool_name": "get_retention_floors"
+    },
+    {
+      "arguments": {
+        "subject_id": "case-81684188310b"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "loc-93daa9ae4f74"
+        ],
+        "subject_id": "case-81684188310b"
+      },
+      "sequence": 2,
+      "tool_name": "get_location_records"
+    }
+  ],
+  "usage": {
+    "call_count": 2,
+    "input_tokens": 2646,
+    "output_tokens": 341
+  }
+}

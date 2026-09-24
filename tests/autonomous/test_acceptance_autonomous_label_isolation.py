@@ -1,4 +1,18 @@
-"""Acceptance tests for ground-truth isolation in autonomous evaluation."""
+"""Acceptance tests for ground-truth isolation in autonomous evaluation.
+
+This file is the record of how channel A got through review, so it is updated rather than
+replaced. Every assertion below was true and none of them caught the leak: they serialize
+the `ContextBundle` and check that `expected` is absent from it, but `build_adjudication_prompt`
+runs downstream of the context and re-added export data the context never carried — the
+`case_id` line, and at T1 a `Required location_ids` line read straight out of the export.
+
+Every `ContextBundle` assertion stays, with its prompt-level equivalent beside it. Read
+together they show which artifact the invariant actually attaches to. Spec section 4 puts it
+on the rendered prompt for exactly this reason.
+
+The sweep over all 350 subjects and all four settings lives in
+`tests/core/test_acceptance_prompt_isolation.py`.
+"""
 
 from __future__ import annotations
 
@@ -11,6 +25,8 @@ from core.cache import make_cache_key, prompt_hash
 from core.context import build_t1, build_t2
 from core.export import load_agent_cases
 from core.export.loader import ExportBundle
+from core.model.adapter_common import build_adjudication_prompt
+from core.pseudonymize import opaque_case_id, opaque_location_id
 from core.tools import build_retrieval_tool_registry
 from runners.autonomous.cache import resolve_autonomous_entry
 from runners.autonomous.types import AUTONOMOUS_RUNNER_ID
@@ -25,20 +41,53 @@ def _assert_no_expected(payload) -> None:
     assert "expected" not in serialized
 
 
+def _collect_keys(node, found: set[str]) -> None:
+    if isinstance(node, dict):
+        for key, value in node.items():
+            found.add(key)
+            _collect_keys(value, found)
+    elif isinstance(node, list):
+        for item in node:
+            _collect_keys(item, found)
+
+
+def _assert_prompt_isolated(subject, context) -> None:
+    """The prompt-level twin of `_assert_no_expected`, on the artifact that actually leaked.
+
+    Not a substring check for `expected`: the eval-only fields are keys, and a location note
+    reading "the customer expected deletion" would make that check red on innocent prose.
+    The payload is parsed and walked instead. The design-cell name is the opposite case and
+    stays a substring check, because it travels inside identifier strings rather than as a
+    key — which is the whole reason a field list could not reach it.
+    """
+    prompt = build_adjudication_prompt(context=context, case_id=subject.subject_id)
+    keys: set[str] = set()
+    _collect_keys(json.loads(prompt.split("Context:\n", 1)[1]), keys)
+    assert not keys & set(_EVAL_ONLY)
+    assert subject.subject_id not in prompt
+    assert opaque_case_id(subject.subject_id) in prompt
+    for location in subject.locations:
+        assert location.location_id not in prompt
+        assert opaque_location_id(location.location_id) in prompt
+        if location.cell_id:
+            assert location.cell_id not in prompt
+
+
 def _mixed_fanout_subject(export_bundle):
     return subject_with_tag(export_bundle.subjects, "mixed_fanout")
 
 
 @pytest.mark.context_isolation
-def test_t1_initial_context_has_no_expected(export_bundle) -> None:
-    subject = _mixed_fanout_subject(export_bundle)
+def test_t1_initial_context_has_no_expected(archive_export_bundle) -> None:
+    subject = _mixed_fanout_subject(archive_export_bundle)
     context = build_t1(subject.request, subject)
     _assert_no_expected(context.model_dump(mode="json"))
+    _assert_prompt_isolated(subject, context)
 
 
 @pytest.mark.context_isolation
-def test_autonomous_cache_key_context_has_no_expected(export_bundle) -> None:
-    subject = _mixed_fanout_subject(export_bundle)
+def test_autonomous_cache_key_context_has_no_expected(archive_export_bundle) -> None:
+    subject = _mixed_fanout_subject(archive_export_bundle)
     context = build_t1(subject.request, subject)
     key = make_cache_key(
         context=context,
@@ -48,7 +97,10 @@ def test_autonomous_cache_key_context_has_no_expected(export_bundle) -> None:
         sample_index=0,
     )
     _assert_no_expected(context.model_dump(mode="json"))
-    assert key.prompt_hash == prompt_hash(context)
+    _assert_prompt_isolated(subject, context)
+    assert key.prompt_hash == prompt_hash(
+        build_adjudication_prompt(context=context, case_id=subject.subject_id)
+    )
 
 
 @pytest.mark.context_isolation
@@ -60,13 +112,13 @@ def test_offline_cache_payload_has_no_expected(
 ) -> None:
     from core.cache.store import CacheStore
 
-    subject = _mixed_fanout_subject(export_bundle)
+    subject = export_bundle.subjects[0]
     context = build_t1(subject.request, subject)
     registry = build_retrieval_tool_registry(export_bundle)
     store = CacheStore(root=autonomous_config.cache_root, cache_mode=autonomous_config.cache_mode)
     session = resolve_autonomous_entry(
         context=context,
-        subject_id=subject.subject_id,
+        subject=subject,
         sample_index=0,
         model_id=autonomous_config.model_id,
         store=store,
@@ -74,16 +126,19 @@ def test_offline_cache_payload_has_no_expected(
         tool_registry=registry,
     )
     _assert_no_expected(session.model_dump(mode="json"))
+    # The session comes back with real ids — translation is on the way out, by design — so
+    # the prompt is the artifact to assert on, not the result.
+    _assert_prompt_isolated(subject, context)
     assert fake_seam.adjudicate_calls == []
 
 
 @pytest.mark.tool_isolation
-def test_location_records_has_no_expected(export_bundle) -> None:
-    registry = build_retrieval_tool_registry(export_bundle)
-    subject = _mixed_fanout_subject(export_bundle)
+def test_location_records_has_no_expected(archive_export_bundle) -> None:
+    registry = build_retrieval_tool_registry(archive_export_bundle)
+    subject = _mixed_fanout_subject(archive_export_bundle)
     result = registry.invoke(
         "get_location_records",
-        {"subject_id": subject.subject_id},
+        {"subject_id": opaque_case_id(subject.subject_id)},
     )
     _assert_no_expected(result)
     assert result["locations"]
@@ -124,7 +179,10 @@ def test_autonomous_initial_context_strips_eval_only_fields() -> None:
     dumped = str(serialized)
     for field in _EVAL_ONLY:
         assert f"'{field}'" not in dumped and f'"{field}"' not in dumped
-    assert context.locations == []
+    assert context.locations == [
+        {"location_id": opaque_location_id(location.location_id)} for location in subject.locations
+    ]
+    _assert_prompt_isolated(subject, context)
 
 
 @pytest.mark.tool_isolation
@@ -133,8 +191,10 @@ def test_location_records_strip_eval_only_keep_oracle_facts(export_bundle) -> No
     registry = build_retrieval_tool_registry(bundle)
     kyc_id = "gen-ordinary_kyc_open_retain-00000"
     inactivity_id = "gen-ordinary_inactivity_erase_payment-00000"
-    kyc = registry.invoke("get_location_records", {"subject_id": kyc_id})
-    inactivity = registry.invoke("get_location_records", {"subject_id": inactivity_id})
+    kyc = registry.invoke("get_location_records", {"subject_id": opaque_case_id(kyc_id)})
+    inactivity = registry.invoke(
+        "get_location_records", {"subject_id": opaque_case_id(inactivity_id)}
+    )
     for payload in (kyc, inactivity):
         dumped = str(payload)
         for field in _EVAL_ONLY:

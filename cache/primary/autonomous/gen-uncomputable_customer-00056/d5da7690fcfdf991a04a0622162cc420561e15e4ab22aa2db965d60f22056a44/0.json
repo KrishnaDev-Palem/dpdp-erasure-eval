@@ -1,0 +1,33 @@
+{
+  "case_id": "gen-uncomputable_customer-00056",
+  "model_id": "primary",
+  "prompt_hash": "d5da7690fcfdf991a04a0622162cc420561e15e4ab22aa2db965d60f22056a44",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-7b9221efdab1",
+        "verdict": "escalate"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-17T03:47:51Z",
+  "runner_id": "autonomous",
+  "sample_index": 0,
+  "tool_calls": [
+    {
+      "arguments": {
+        "subject_id": "case-ff2a92c96049"
+      },
+      "result_summary": {
+        "location_count": 1,
+        "location_ids": [
+          "loc-7b9221efdab1"
+        ],
+        "subject_id": "case-ff2a92c96049"
+      },
+      "sequence": 0,
+      "tool_name": "get_location_records"
+    }
+  ]
+}

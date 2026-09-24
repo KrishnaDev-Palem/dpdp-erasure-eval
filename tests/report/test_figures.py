@@ -9,6 +9,7 @@ from unittest.mock import patch
 import pytest
 
 from core.types import Rate
+from report.figures.charts import unstable_agreement_buckets
 from report.figures.generate import generate_figures
 from report.wilson import wilson_interval
 from tests.report.conftest import WILSON_TOLERANCE, hand_calculate_wilson_interval
@@ -152,12 +153,30 @@ def test_cli_missing_all_results_exits_nonzero(
 def test_over_erasure_rates_match_scoring_primitives() -> None:
     inputs = make_complete_figure_inputs()
     assert inputs.adjudication is not None
-    for tier in ("t1", "t2", "t3"):
-        report_rate = inputs.adjudication.tier_reports[tier].primary_metrics.over_erasure.rate
-        scoring = inputs.adjudication.tier_reports[tier]
+    for setting in ("t1", "t2", "t3", "autonomous"):
+        report_rate = inputs.adjudication.tier_reports[setting].primary_metrics.over_erasure.rate
+        scoring = inputs.adjudication.tier_reports[setting]
         assert report_rate.numerator == scoring.primary_metrics.over_erasure.rate.numerator
         assert report_rate.denominator == scoring.primary_metrics.over_erasure.rate.denominator
         assert report_rate.value == scoring.primary_metrics.over_erasure.rate.value
+
+
+def test_unstable_agreement_buckets_drop_unanimous() -> None:
+    assert unstable_agreement_buckets(["3/3 unanimous", "2/3", "split"]) == ["2/3", "split"]
+    assert unstable_agreement_buckets(["5/5 unanimous", "4/5", "3/5", "split"]) == [
+        "4/5",
+        "3/5",
+        "split",
+    ]
+
+
+def test_generate_does_not_write_autonomous_confusion_heatmap(tmp_path: Path) -> None:
+    inputs = make_complete_figure_inputs()
+    generate_figures(inputs, tmp_path)
+    assert not (tmp_path / "confusion_autonomous.png").exists()
+    assert inputs.adjudication is not None
+    assert "autonomous" in inputs.adjudication.tier_reports
+    assert "autonomous" in inputs.adjudication.variance_by_tier
 
 
 def test_confusion_heatmap_counts_sum_to_total_cases(tmp_path: Path) -> None:
@@ -205,6 +224,22 @@ def test_figure_module_imports_no_runners() -> None:
                     assert not alias.name.startswith("runners"), f"{path.name} imports {alias.name}"
             if isinstance(node, ast.ImportFrom) and node.module:
                 assert not node.module.startswith("runners"), f"{path.name} imports {node.module}"
+
+
+def test_three_sample_agreement_buckets(export_dir, cache_dir) -> None:
+    from report.figures.variance import compute_verdict_agreement_by_tier
+
+    distributions = compute_verdict_agreement_by_tier(
+        export_dir=export_dir,
+        cache_root=cache_dir,
+        model_id="primary",
+        sample_indices=[0, 1, 2],
+    )
+    expected = {"3/3 unanimous", "2/3", "split"}
+    assert set(distributions) == {"t1", "t2", "t3", "autonomous"}
+    for distribution in distributions.values():
+        assert set(distribution.bucket_counts) == expected
+        assert sum(distribution.bucket_counts.values()) == distribution.total_cases
 
 
 def test_offline_loader_does_not_invoke_model_seam(

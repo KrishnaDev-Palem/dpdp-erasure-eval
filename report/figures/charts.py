@@ -34,9 +34,11 @@ from report.figures.style import (
     savefig_metadata,
 )
 from report.figures.types import (
-    CONTEXT_TIERS,
+    ADJUDICATION_SETTINGS,
     FAMILY_DISPLAY,
+    FIVE_SAMPLE_AGREEMENT_BUCKETS,
     LANE_DISPLAY,
+    THREE_SAMPLE_AGREEMENT_BUCKETS,
     TIER_DISPLAY,
     VERDICT_LANES_ORDERED,
     AdjudicationFigureData,
@@ -78,7 +80,7 @@ def render_over_erasure_by_tier(
     dpi: int,
     fmt: str,
 ) -> None:
-    tiers = [tier for tier in CONTEXT_TIERS if tier in data.tier_reports]
+    tiers = [tier for tier in ADJUDICATION_SETTINGS if tier in data.tier_reports]
     rates: list[RateWithCI] = [
         data.tier_reports[tier].primary_metrics.over_erasure for tier in tiers
     ]
@@ -116,8 +118,8 @@ def render_over_erasure_by_tier(
     ax.set_xticks(x)
     ax.set_xticklabels(labels)
     ax.set_ylabel("over-erasure rate")
-    ax.set_xlabel("context tier")
-    ax.set_title("Over-erasure rate by context tier (Wilson 95% CI)")
+    ax.set_xlabel("setting")
+    ax.set_title("Over-erasure rate by setting (Wilson 95% CI)")
     ax.set_ylim(0.0, limit)
     ax.set_yticks(rate_axis_ticks(limit))
     ax.yaxis.set_major_formatter(PercentFormatter(xmax=1.0, decimals=0))
@@ -295,6 +297,71 @@ def render_adversarial_detection_by_family(
     _save_figure(path, dpi=dpi, fmt=fmt)
 
 
+UNANIMOUS_BUCKETS = frozenset({"3/3 unanimous", "5/5 unanimous"})
+AGREEMENT_BUCKET_COLORS = {
+    "5/5 unanimous": "#4C72B0",
+    "3/3 unanimous": "#4C72B0",
+    "4/5": "#55A868",
+    "2/3": "#55A868",
+    "3/5": "#C44E52",
+    "split": "#C44E52",
+}
+
+
+def _agreement_bucket_labels(
+    variance_by_tier: dict[str, VerdictAgreementDistribution],
+) -> list[str]:
+    first = next(iter(variance_by_tier.values()), None)
+    if first is None:
+        return list(THREE_SAMPLE_AGREEMENT_BUCKETS)
+    keys = first.bucket_counts
+    if "5/5 unanimous" in keys:
+        return list(FIVE_SAMPLE_AGREEMENT_BUCKETS)
+    return list(THREE_SAMPLE_AGREEMENT_BUCKETS)
+
+
+def unstable_agreement_buckets(buckets: list[str]) -> list[str]:
+    """Agreement buckets other than the unanimous majority share."""
+    return [bucket for bucket in buckets if bucket not in UNANIMOUS_BUCKETS]
+
+
+def _share_matrix(
+    variance_by_tier: dict[str, VerdictAgreementDistribution],
+    settings: list[str],
+    buckets: list[str],
+) -> np.ndarray:
+    rows = []
+    for setting in settings:
+        distribution = variance_by_tier[setting]
+        total = distribution.total_cases or 1
+        rows.append([distribution.bucket_counts.get(bucket, 0) / total for bucket in buckets])
+    if not buckets:
+        return np.zeros((len(settings), 0))
+    return np.array(rows)
+
+
+def _plot_grouped_agreement_bars(
+    ax,
+    x: np.ndarray,
+    data: np.ndarray,
+    buckets: list[str],
+    *,
+    width: float,
+) -> None:
+    midpoint = (len(buckets) - 1) / 2 if buckets else 0.0
+    for bucket_idx, bucket in enumerate(buckets):
+        offsets = x + (bucket_idx - midpoint) * width
+        ax.bar(
+            offsets,
+            data[:, bucket_idx],
+            width=width,
+            label=bucket,
+            color=AGREEMENT_BUCKET_COLORS.get(bucket, COLOR_BAR),
+            edgecolor="white",
+            linewidth=0.5,
+        )
+
+
 def render_verdict_variance_by_tier(
     variance_by_tier: dict[str, VerdictAgreementDistribution],
     path: Path,
@@ -302,49 +369,52 @@ def render_verdict_variance_by_tier(
     dpi: int,
     fmt: str,
 ) -> None:
-    tiers = [tier for tier in CONTEXT_TIERS if tier in variance_by_tier]
-    buckets = ["5/5 unanimous", "4/5", "3/5", "split"]
-    bucket_matrix = []
-    for tier in tiers:
-        distribution = variance_by_tier[tier]
-        total = distribution.total_cases or 1
-        bucket_matrix.append([distribution.bucket_counts[bucket] / total for bucket in buckets])
-
-    data = np.array(bucket_matrix)
+    """Two-panel variance: unanimous on top (0–100%), 2/3 and split below (zoomed)."""
+    tiers = [tier for tier in ADJUDICATION_SETTINGS if tier in variance_by_tier]
+    buckets = _agreement_bucket_labels(variance_by_tier)
+    sample_count = 5 if buckets == list(FIVE_SAMPLE_AGREEMENT_BUCKETS) else 3
+    unanimous_label = "5/5 unanimous" if sample_count == 5 else "3/3 unanimous"
+    plotted = unstable_agreement_buckets(buckets)
+    unanimous = _share_matrix(variance_by_tier, tiers, [unanimous_label])
+    unstable = _share_matrix(variance_by_tier, tiers, plotted)
     x = np.arange(len(tiers))
-    width = 0.18
-    colors = ["#4C72B0", "#55A868", "#C44E52", "#8172B2"]
+    unstable_width = 0.32 if len(plotted) <= 2 else 0.22
 
-    fig, ax = plt.subplots(figsize=VARIANCE_SIZE)
-    for bucket_idx, bucket in enumerate(buckets):
-        offsets = x + (bucket_idx - 1.5) * width
-        ax.bar(
-            offsets,
-            data[:, bucket_idx],
-            width=width,
-            label=bucket,
-            color=colors[bucket_idx],
-            edgecolor="white",
-            linewidth=0.5,
-        )
+    fig, (ax_top, ax_bottom) = plt.subplots(
+        2,
+        1,
+        sharex=True,
+        figsize=VARIANCE_SIZE,
+        gridspec_kw={"height_ratios": [1, 1], "hspace": 0.22},
+    )
+    _plot_grouped_agreement_bars(ax_top, x, unanimous, [unanimous_label], width=0.55)
+    ax_top.set_ylabel("share of cases")
+    ax_top.set_title(unanimous_label)
+    ax_top.set_ylim(0.0, 1.0)
+    ax_top.set_yticks(rate_axis_ticks(1.0, step=0.20))
+    ax_top.yaxis.set_major_formatter(PercentFormatter(xmax=1.0, decimals=0))
 
-    ax.set_xticks(x)
-    ax.set_xticklabels([TIER_DISPLAY[tier] for tier in tiers])
-    ax.set_ylabel("share of cases")
-    ax.set_xlabel("context tier")
-    ax.set_title("Verdict variance by context tier (N=5 samples per case)")
-    limit = rate_axis_upper_limit(float(data.max()) if data.size else 0.0)
-    ax.set_ylim(0.0, limit)
-    ax.set_yticks(rate_axis_ticks(limit, step=0.20))
-    ax.yaxis.set_major_formatter(PercentFormatter(xmax=1.0, decimals=0))
-    ax.legend(title="sample agreement", loc="upper right", frameon=True, framealpha=1.0)
+    _plot_grouped_agreement_bars(ax_bottom, x, unstable, plotted, width=unstable_width)
+    ax_bottom.set_xticks(x)
+    ax_bottom.set_xticklabels([TIER_DISPLAY[tier] for tier in tiers])
+    ax_bottom.set_ylabel("share of cases")
+    ax_bottom.set_xlabel("setting")
+    ax_bottom.set_title(" / ".join(plotted) if plotted else "unstable")
+    limit = rate_axis_upper_limit(float(unstable.max()) if unstable.size else 0.0)
+    ax_bottom.set_ylim(0.0, limit)
+    ax_bottom.set_yticks(rate_axis_ticks(limit, step=0.05))
+    ax_bottom.yaxis.set_major_formatter(PercentFormatter(xmax=1.0, decimals=0))
+    if plotted:
+        ax_bottom.legend(title="sample agreement", loc="upper right", frameon=True, framealpha=1.0)
+
+    fig.suptitle(f"Verdict variance by setting (N={sample_count} samples per case)")
+    fig.subplots_adjust(bottom=0.14, top=0.90)
     fig.text(
         0.01,
         0.01,
-        "Note: the deterministic core's variance is zero by construction.",
+        "The deterministic core's variance is zero by construction.",
         fontsize=FONT_SIZE_CAPTION,
         ha="left",
         va="bottom",
     )
-
     _save_figure(path, dpi=dpi, fmt=fmt)

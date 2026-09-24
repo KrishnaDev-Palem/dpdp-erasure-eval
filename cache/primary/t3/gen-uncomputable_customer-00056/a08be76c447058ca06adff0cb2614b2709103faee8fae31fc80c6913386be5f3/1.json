@@ -1,0 +1,18 @@
+{
+  "case_id": "gen-uncomputable_customer-00056",
+  "model_id": "primary",
+  "prompt_hash": "a08be76c447058ca06adff0cb2614b2709103faee8fae31fc80c6913386be5f3",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-7b9221efdab1",
+        "verdict": "escalate"
+      }
+    ]
+  },
+  "recorded_at": "2026-08-17T03:47:46Z",
+  "runner_id": "t3",
+  "sample_index": 1,
+  "tool_calls": []
+}

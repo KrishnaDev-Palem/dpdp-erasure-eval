@@ -125,12 +125,21 @@ def test_human_report_prints_grouped_tables_when_strata_present() -> None:
     assert human.index("Per-stratum rates") > human.index("Per-cell rates")
 
 
-def test_v1_export_omits_grouped_tables(
+def test_v1_archive_export_omits_grouped_tables(
     fake_seam: FakeModelSeam,
-    export_dir,
-    cache_dir,
+    archive_export_dir,
+    tmp_path,
 ) -> None:
-    result = run_t1_sweep(seam=fake_seam, export_dir=export_dir, cache_root=cache_dir)
+    from scripts.seed_runner_cache import seed_tier
+
+    cache_root = tmp_path / "cache"
+    seed_tier("t1", export_dir=archive_export_dir, cache_root=cache_root)
+    result = run_t1_sweep(
+        seam=fake_seam,
+        export_dir=archive_export_dir,
+        cache_root=cache_root,
+        sample_indices=[0, 1, 2],
+    )
     report = build_tier_adjudication_report(result)
     assert report.by_cell == []
     assert report.by_stratum == []
@@ -138,4 +147,4 @@ def test_v1_export_omits_grouped_tables(
     assert "Per-cell rates" not in human
     assert "Per-stratum rates" not in human
     assert report.primary_metrics.over_erasure.rate == result.samples[0].scoring.over_erasure_rate
-    assert len(report.sample_rollups) == 5
+    assert len(report.sample_rollups) == 3

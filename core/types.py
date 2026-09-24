@@ -168,6 +168,25 @@ class CacheKey(BaseModel):
     sample_index: int
 
 
+class TokenUsage(BaseModel):
+    """Provider-reported token counts for the calls behind one cache entry.
+
+    Counts only. There is no pricing here and there must not be any: the dollar table
+    lives in `briefs/live-rerun-opaque-ids.md`, and the operator totals these counts off
+    the cache files after the re-run.
+
+    `call_count` is not decoration. One autonomous entry can be up to ten provider calls,
+    so input and output alone cannot be read per session; without it the autonomous total
+    is unexplainable. It states how many calls the two sums came from.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    input_tokens: int
+    output_tokens: int
+    call_count: int
+
+
 class CacheEntry(BaseModel):
     model_config = ConfigDict(frozen=True)
 
@@ -175,6 +194,9 @@ class CacheEntry(BaseModel):
     raw_response: dict[str, Any]
     recorded_at: str
     tool_calls: list[Any] = Field(default_factory=list)
+    # Absent on every entry written before this feature and on every fake-seam entry.
+    # Offline replay must never require it; see `read_cache`.
+    usage: TokenUsage | None = None
 
 
 class ExportManifest(BaseModel):
