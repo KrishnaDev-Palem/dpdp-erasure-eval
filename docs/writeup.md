@@ -64,7 +64,7 @@ Per [ADR-0002](adr/0002-live-model-role-split.md), the adjudication ablation run
 
 The adjudication role runs zero-shot, with extended thinking disabled, `max_tokens=4096`, and no temperature override. All four settings share one prompt template; only the context payload differs. The gate role runs with `thinking_level: low`. Neither role was tuned for this evaluation, and no prompt engineering was done beyond removing leaked identifiers.
 
-The harness records the model id it requested, not the model version the provider actually served. If the provider changed what sits behind `claude-sonnet-5` or `gemini-3.5-flash` between the earlier run (2026-08-14) and this one (2026-09-23), the before/after delta in §6 carries that change too, and nothing in the data can separate it out.
+The harness records the model id it requested, not the model version the provider actually served. If the provider changed what sits behind `claude-sonnet-5` or `gemini-3.5-flash` between the earlier run and this one, the before/after delta in §6 carries that change too, and nothing in the data can separate it out.
 
 ### Sampling and reproducibility
 
@@ -203,7 +203,7 @@ The committed gate report carries the primary sample. The full five-sample cache
 
 ### What leaked
 
-In the earlier run of this slice (commit [`c6b7f87`](https://github.com/KrishnaDev-Palem/dpdp-erasure-eval/commit/c6b7f8700a31f8d4f47b98c4852544274fa9250e), 2026-08-14), the subject and location ids were built from the design-cell name: a location in the `arity4_cite_1_payment` cell was called `arity4_cite_1_payment:00022`, and its case `gen-arity4_cite_1_payment-00022`. Those ids were rendered into the prompt. Cell names describe the case's design, and several describe its answer outright (`uncomputable_kyc`, `ordinary_kyc_open_retain`, `elapsed_no_trigger_payment`). In the gate, each note's case id carried its label (`adv-scope_expansion-03`, `benign-…`), and the prompt included that id.
+In the earlier run of this slice (commit [`c6b7f87`](https://github.com/KrishnaDev-Palem/dpdp-erasure-eval/commit/c6b7f8700a31f8d4f47b98c4852544274fa9250e)), the subject and location ids were built from the design-cell name: a location in the `arity4_cite_1_payment` cell was called `arity4_cite_1_payment:00022`, and its case `gen-arity4_cite_1_payment-00022`. Those ids were rendered into the prompt. Cell names describe the case's design, and several describe its answer outright (`uncomputable_kyc`, `ordinary_kyc_open_retain`, `elapsed_no_trigger_payment`). In the gate, each note's case id carried its label (`adv-scope_expansion-03`, `benign-…`), and the prompt included that id.
 
 The isolation tests of the time passed. They checked the data structure handed to the prompt builder, which contained no `expected` or `cell_id` field, and did not check the rendered prompt, where the identifiers carried the same information in another form. The fix (§2) moves the assertion to the rendered prompt and makes every identifier opaque.
 
