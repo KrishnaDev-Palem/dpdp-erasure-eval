@@ -45,3 +45,14 @@ def test_control_prompt_is_the_default_prompt_with_locations_emptied() -> None:
             {**default_payload, "locations": []}, indent=2
         )
         assert subject.subject_id not in rendered
+
+
+def test_committed_results_replay_offline_from_the_control_cache() -> None:
+    control = _control_module()
+    committed = json.loads(
+        (REPO_ROOT / "results" / "control-t1-empty-locations.json").read_text(encoding="utf-8")
+    )
+    replayed = json.loads(json.dumps(control.run(cache_mode="offline"), sort_keys=True))
+    assert replayed == committed
+    assert [row["scored_location_pairs"] for row in committed["tries"]] == [350, 350, 350]
+    assert committed["usage"]["calls"] == 1050

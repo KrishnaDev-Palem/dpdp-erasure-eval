@@ -1,0 +1,23 @@
+{
+  "case_id": "gen-marketing_active-00226",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "32a3fac57aaaa57e57393d7d19c0342484a8db4edf7da5579b106c48e67a1427",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-286d6260fc39",
+        "verdict": "escalate"
+      }
+    ]
+  },
+  "recorded_at": "2026-10-10T10:40:09Z",
+  "runner_id": "t1-empty-locations",
+  "sample_index": 2,
+  "tool_calls": [],
+  "usage": {
+    "call_count": 1,
+    "input_tokens": 224,
+    "output_tokens": 41
+  }
+}

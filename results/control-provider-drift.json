@@ -1,0 +1,170 @@
+{
+  "baseline": {
+    "commit": "c6b7f8700a31f8d4f47b98c4852544274fa9250e",
+    "tag": "baseline-leaked-ids"
+  },
+  "brief": "briefs/delta-controls.md A2",
+  "cache_root": "cache-controls/drift",
+  "control": "leaked prompts re-sent with the code at baseline-leaked-ids",
+  "export_agent_sha": "7b659e8e3ec87a9115a5d7709f20f1c1eb6fec22",
+  "gate": {
+    "recorded": [
+      {
+        "detected": 44,
+        "false_alarms": 0,
+        "sample_index": 0
+      },
+      {
+        "detected": 45,
+        "false_alarms": 0,
+        "sample_index": 1
+      },
+      {
+        "detected": 45,
+        "false_alarms": 0,
+        "sample_index": 2
+      },
+      {
+        "detected": 45,
+        "false_alarms": 0,
+        "sample_index": 3
+      },
+      {
+        "detected": 44,
+        "false_alarms": 0,
+        "sample_index": 4
+      }
+    ],
+    "resent": [
+      {
+        "detected": 45,
+        "false_alarms": 0,
+        "sample_index": 0
+      },
+      {
+        "detected": 44,
+        "false_alarms": 0,
+        "sample_index": 1
+      },
+      {
+        "detected": 45,
+        "false_alarms": 0,
+        "sample_index": 2
+      },
+      {
+        "detected": 45,
+        "false_alarms": 0,
+        "sample_index": 3
+      },
+      {
+        "detected": 45,
+        "false_alarms": 0,
+        "sample_index": 4
+      }
+    ]
+  },
+  "inside_band": true,
+  "pre_registered_band": {
+    "gate_detection_min": 42,
+    "mis_escalation": [
+      138,
+      165
+    ],
+    "over_erasure": [
+      78,
+      104
+    ]
+  },
+  "t1": {
+    "recorded": [
+      {
+        "mis_escalation": 149,
+        "over_erasure": 88,
+        "over_retention": 0,
+        "sample_index": 0,
+        "verdict_mix": {
+          "erase": 159,
+          "escalate": 177,
+          "retain": 14
+        }
+      },
+      {
+        "mis_escalation": 155,
+        "over_erasure": 89,
+        "over_retention": 0,
+        "sample_index": 1,
+        "verdict_mix": {
+          "erase": 154,
+          "escalate": 183,
+          "retain": 13
+        }
+      },
+      {
+        "mis_escalation": 148,
+        "over_erasure": 94,
+        "over_retention": 1,
+        "sample_index": 2,
+        "verdict_mix": {
+          "erase": 162,
+          "escalate": 176,
+          "retain": 12
+        }
+      }
+    ],
+    "resent": [
+      {
+        "mis_escalation": 150,
+        "over_erasure": 90,
+        "over_retention": 0,
+        "sample_index": 0,
+        "verdict_mix": {
+          "erase": 159,
+          "escalate": 176,
+          "retain": 15
+        }
+      },
+      {
+        "mis_escalation": 152,
+        "over_erasure": 90,
+        "over_retention": 1,
+        "sample_index": 1,
+        "verdict_mix": {
+          "erase": 153,
+          "escalate": 180,
+          "retain": 17
+        }
+      },
+      {
+        "mis_escalation": 150,
+        "over_erasure": 87,
+        "over_retention": 3,
+        "sample_index": 2,
+        "verdict_mix": {
+          "erase": 154,
+          "escalate": 178,
+          "retain": 18
+        }
+      }
+    ]
+  },
+  "t1_agreement": {
+    "recorded_first_vs_second_try": 0.9371428571428572,
+    "recorded_first_vs_third_try": 0.9228571428571428,
+    "resent_first_vs_second_try": 0.9514285714285714,
+    "resent_vs_recorded_first_try": 0.9285714285714286
+  },
+  "usage": {
+    "adversarial_gate": {
+      "basis": "clean-run per-call token means at list price; the old code records no usage",
+      "calls": 450,
+      "cost_usd_estimate": 0.61,
+      "expected_calls": 450
+    },
+    "t1": {
+      "basis": "clean-run per-call token means at list price; the old code records no usage",
+      "calls": 1050,
+      "cost_usd_estimate": 0.99,
+      "expected_calls": 1050
+    }
+  }
+}
