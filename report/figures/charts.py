@@ -405,7 +405,14 @@ def render_verdict_variance_by_tier(
     ax_bottom.set_yticks(rate_axis_ticks(limit, step=0.05))
     ax_bottom.yaxis.set_major_formatter(PercentFormatter(xmax=1.0, decimals=0))
     if plotted:
-        ax_bottom.legend(title="sample agreement", loc="upper right", frameon=True, framealpha=1.0)
+        # Upper left, one row: the tallest unstable bar is on the right (autonomous 2/3).
+        ax_bottom.legend(
+            title="sample agreement",
+            loc="upper left",
+            ncol=len(plotted),
+            frameon=True,
+            framealpha=1.0,
+        )
 
     fig.suptitle(f"Verdict variance by setting (N={sample_count} samples per case)")
     fig.subplots_adjust(bottom=0.14, top=0.90)
