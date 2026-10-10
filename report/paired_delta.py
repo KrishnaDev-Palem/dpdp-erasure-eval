@@ -236,7 +236,8 @@ def build_report_from_inputs(repo_root: Path, table: Mapping[str, Any]) -> dict[
     """Build the report from the committed baseline table and the clean run's committed cache."""
     from core.export.loader import load_export
 
-    subjects = load_export(repo_root / "export").subjects
+    bundle = load_export(repo_root / "export")
+    subjects = bundle.subjects
     cache = repo_root / "cache"
     before_flags = {
         setting: adjudication_case_flags(
@@ -260,9 +261,10 @@ def build_report_from_inputs(repo_root: Path, table: Mapping[str, Any]) -> dict[
         first_try_raw_responses(cache, model_id=GATE_MODEL, runner_id="adversarial_gate"),
         attack_ids,
     )
-    return build_paired_delta(
+    report = build_paired_delta(
         before_flags=before_flags,
         after_flags=after_flags,
         gate_before=gate_before,
         gate_after=gate_after,
     )
+    return {"export_agent_sha": bundle.verify_provenance().agent_commit_sha, **report}

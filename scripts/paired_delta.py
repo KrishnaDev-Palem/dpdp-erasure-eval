@@ -85,6 +85,7 @@ def main() -> int:
     }
     baseline_gate = json.loads(_git("show", f"{BASELINE_TAG}:results/gate-live.json"))
     table = {
+        "export_agent_sha": bundle.verify_provenance().agent_commit_sha,
         "provenance": {
             "tag": BASELINE_TAG,
             "commit": commit,
