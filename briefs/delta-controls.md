@@ -139,4 +139,38 @@ Actuals are recorded below after the run.
 
 ## Results
 
-To be filled after the run.
+Recorded after the run. Readings are applied as pre-registered above.
+
+**A1 (offline).** As expected. Significant after Holm: T1 over-erasure (16 vs 152 discordant), T1
+mis-escalation (124 vs 49), T3 mis-escalation (26 vs 62), autonomous over-erasure (30 vs 5) and autonomous
+mis-escalation (14 vs 65); all adjusted p < 0.001. Not significant: T2 over-erasure (adjusted p 0.43), T2
+mis-escalation (0.29), T3 over-erasure (0.43). Gate: 5 caught → missed, 0 the other way, exact p = 0.0625.
+`results/paired-delta.json`.
+
+**A2 (live).** No evidence of drift; every value is inside the band. T1 re-sent per try: over-erasure 90,
+90, 87 (recorded 88, 89, 94); mis-escalation 150, 152, 150 (recorded 149, 155, 148); first-try mix 159
+erase, 176 escalate, 15 retain (recorded 159, 177, 14). Per-case agreement with the recorded first try
+92.9%, against 92.3% to 93.7% between two recorded tries. Gate re-sent: 45, 44, 45, 45, 45 of 45, no
+false alarms. Prompt hashes equal the committed ones at `baseline-leaked-ids`. The gate sweep stopped once
+(after 113 entries) on a response with no JSON object and was resumed against the same cache, as
+`briefs/live-rerun-opaque-ids.md` prescribes. `results/control-provider-drift.json`.
+
+**A3 (live).** Outside the band, in the opposite direction from the clean run. With `"locations": []`,
+per try: over-erasure 1, 1, 0; mis-escalation 321, 323, 322; first-try mix 1 erase, 349 escalate, 0
+retain (clean run with the entry: 296 erase, 54 escalate). All 28 uncomputable cases are escalated
+(clean run: 4 escalated, 24 erased), and `gen-uncomputable_kyc-00023` is escalated on all three tries.
+So most of the T1 shift between the leaked baseline and the clean run comes from the location entry, not
+from the ids. Like for like (empty list in both), removing the cell names moves T1 from 177 escalate / 159
+erase / 14 retain to 349 escalate / 1 erase. Two diagnostic calls with the raw text kept reproduced the
+effect on one case (erase with the entry, escalate without); the model returns JSON only.
+`results/control-t1-empty-locations.json`.
+
+Correction to "Hedges this replaces": the last row is not writeup text; the writeup never mentioned the
+location entry.
+
+**Actual cost.** A3 $1.08 (1,050 calls; 234,990 input and 61,199 output tokens, exact). A2 about $1.60
+(1,050 + 450 calls, estimated from the clean run's per-call token means; the old code records no usage),
+plus one failed gate call and two diagnostic calls, under $0.01. Total about $2.69 against a $5 ceiling.
+
+**Open.** How the writeup (§3, §6, §7, README) states the T1 result given A3 is decided in the next
+session; nothing about T1 has been rewritten yet.
