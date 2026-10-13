@@ -1,0 +1,23 @@
+{
+  "case_id": "gen-boundary_elapsed_1d_customer-00065",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "039d39e2b399e5f241662819b8ac5f494e536220bcd5d086744a9ac6fb819aac",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-a2e7712fa7f4",
+        "verdict": "escalate"
+      }
+    ]
+  },
+  "recorded_at": "2026-10-10T10:20:55Z",
+  "runner_id": "t1-empty-locations",
+  "sample_index": 0,
+  "tool_calls": [],
+  "usage": {
+    "call_count": 1,
+    "input_tokens": 225,
+    "output_tokens": 49
+  }
+}

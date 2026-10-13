@@ -1,0 +1,23 @@
+{
+  "case_id": "gen-marketing_withdrawn-00275",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "ac0dd590fe2d7c7fa29fa60d7c10b6ebf8813a6f15f52fda7d6b6e44c2699c3c",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-6ddd8390ddcf",
+        "verdict": "escalate"
+      }
+    ]
+  },
+  "recorded_at": "2026-10-10T10:23:53Z",
+  "runner_id": "t1-empty-locations",
+  "sample_index": 0,
+  "tool_calls": [],
+  "usage": {
+    "call_count": 1,
+    "input_tokens": 227,
+    "output_tokens": 188
+  }
+}

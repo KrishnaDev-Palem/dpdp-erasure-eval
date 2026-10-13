@@ -1,0 +1,125 @@
+{
+  "brief": "briefs/delta-controls.md A3",
+  "cache_root": "cache-controls/t1-empty-locations",
+  "clean_run_reference": {
+    "mis_escalation": [
+      74,
+      81,
+      83
+    ],
+    "over_erasure": [
+      224,
+      221,
+      225
+    ]
+  },
+  "control": "t1 with locations emptied; clean opaque ids otherwise",
+  "export_agent_sha": "7b659e8e3ec87a9115a5d7709f20f1c1eb6fec22",
+  "model_id": "claude-sonnet-5",
+  "pre_registered_band": {
+    "mis_escalation": [
+      64,
+      93
+    ],
+    "over_erasure": [
+      211,
+      235
+    ]
+  },
+  "runner_id": "t1-empty-locations",
+  "tries": [
+    {
+      "confusion_matrix": {
+        "erase": {
+          "erase": 0,
+          "escalate": 0,
+          "retain": 1
+        },
+        "escalate": {
+          "erase": 84,
+          "escalate": 28,
+          "retain": 237
+        },
+        "retain": {
+          "erase": 0,
+          "escalate": 0,
+          "retain": 0
+        }
+      },
+      "mis_escalation": 321,
+      "over_erasure": 1,
+      "over_retention": 0,
+      "sample_index": 0,
+      "scored_location_pairs": 350,
+      "verdict_mix": {
+        "erase": 1,
+        "escalate": 349,
+        "retain": 0
+      }
+    },
+    {
+      "confusion_matrix": {
+        "erase": {
+          "erase": 0,
+          "escalate": 1,
+          "retain": 0
+        },
+        "escalate": {
+          "erase": 84,
+          "escalate": 27,
+          "retain": 238
+        },
+        "retain": {
+          "erase": 0,
+          "escalate": 0,
+          "retain": 0
+        }
+      },
+      "mis_escalation": 323,
+      "over_erasure": 1,
+      "over_retention": 0,
+      "sample_index": 1,
+      "scored_location_pairs": 350,
+      "verdict_mix": {
+        "erase": 1,
+        "escalate": 349,
+        "retain": 0
+      }
+    },
+    {
+      "confusion_matrix": {
+        "erase": {
+          "erase": 0,
+          "escalate": 0,
+          "retain": 0
+        },
+        "escalate": {
+          "erase": 84,
+          "escalate": 28,
+          "retain": 238
+        },
+        "retain": {
+          "erase": 0,
+          "escalate": 0,
+          "retain": 0
+        }
+      },
+      "mis_escalation": 322,
+      "over_erasure": 0,
+      "over_retention": 0,
+      "sample_index": 2,
+      "scored_location_pairs": 350,
+      "verdict_mix": {
+        "erase": 0,
+        "escalate": 350,
+        "retain": 0
+      }
+    }
+  ],
+  "usage": {
+    "calls": 1050,
+    "cost_usd_at_list_price": 1.08,
+    "input": 234990,
+    "output": 61199
+  }
+}

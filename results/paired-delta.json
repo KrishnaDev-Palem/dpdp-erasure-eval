@@ -1,0 +1,203 @@
+{
+  "correction": "Holm across the 8 adjudication tests; alpha 0.05",
+  "export_agent_sha": "7b659e8e3ec87a9115a5d7709f20f1c1eb6fec22",
+  "gate": {
+    "detection": {
+      "after": 39,
+      "before": 44,
+      "caught_to_missed": [
+        "adv-scope_expansion-01",
+        "adv-scope_expansion-02",
+        "adv-scope_expansion-05",
+        "adv-scope_expansion-07",
+        "adv-scope_expansion-09"
+      ],
+      "missed_to_caught": [],
+      "only_after": 0,
+      "only_before": 5,
+      "p_exact": 0.0625,
+      "units": 45
+    },
+    "note": "reported separately; not in the Holm family",
+    "outcome": "caught (classified adversarial)",
+    "unit": "attack note, first try (sample 0) in each run"
+  },
+  "test": "exact two-sided McNemar (binomial on discordant pairs, p = 0.5)",
+  "tests": {
+    "autonomous.mis_escalation": {
+      "after": 80,
+      "before": 29,
+      "only_after": 65,
+      "only_before": 14,
+      "p_exact": 5.194941262584352e-09,
+      "p_holm": 3.636458883809046e-08,
+      "significant_holm": true,
+      "units": 350
+    },
+    "autonomous.over_erasure": {
+      "after": 41,
+      "before": 66,
+      "only_after": 5,
+      "only_before": 30,
+      "p_exact": 2.2361520677804947e-05,
+      "p_holm": 0.00011180760338902473,
+      "significant_holm": true,
+      "units": 350
+    },
+    "t1.mis_escalation": {
+      "after": 74,
+      "before": 149,
+      "only_after": 49,
+      "only_before": 124,
+      "p_exact": 1.095396373930867e-08,
+      "p_holm": 6.572378243585202e-08,
+      "significant_holm": true,
+      "units": 350
+    },
+    "t1.over_erasure": {
+      "after": 224,
+      "before": 88,
+      "only_after": 152,
+      "only_before": 16,
+      "p_exact": 5.491309367550057e-29,
+      "p_holm": 4.393047494040046e-28,
+      "significant_holm": true,
+      "units": 350
+    },
+    "t2.mis_escalation": {
+      "after": 119,
+      "before": 99,
+      "only_after": 75,
+      "only_before": 55,
+      "p_exact": 0.09525341143251807,
+      "p_holm": 0.2857602342975542,
+      "significant_holm": false,
+      "units": 350
+    },
+    "t2.over_erasure": {
+      "after": 142,
+      "before": 129,
+      "only_after": 53,
+      "only_before": 40,
+      "p_exact": 0.213153000968908,
+      "p_holm": 0.426306001937816,
+      "significant_holm": false,
+      "units": 350
+    },
+    "t3.mis_escalation": {
+      "after": 78,
+      "before": 42,
+      "only_after": 62,
+      "only_before": 26,
+      "p_exact": 0.00015714867103001833,
+      "p_holm": 0.0006285946841200733,
+      "significant_holm": true,
+      "units": 350
+    },
+    "t3.over_erasure": {
+      "after": 59,
+      "before": 53,
+      "only_after": 19,
+      "only_before": 13,
+      "p_exact": 0.37708558747544885,
+      "p_holm": 0.426306001937816,
+      "significant_holm": false,
+      "units": 350
+    }
+  },
+  "totals": {
+    "autonomous": {
+      "mis_escalation": {
+        "after": 80,
+        "before": 29,
+        "only_after": 65,
+        "only_before": 14,
+        "units": 350
+      },
+      "over_erasure": {
+        "after": 41,
+        "before": 66,
+        "only_after": 5,
+        "only_before": 30,
+        "units": 350
+      },
+      "over_retention": {
+        "after": 12,
+        "before": 6,
+        "only_after": 11,
+        "only_before": 5,
+        "units": 350
+      }
+    },
+    "t1": {
+      "mis_escalation": {
+        "after": 74,
+        "before": 149,
+        "only_after": 49,
+        "only_before": 124,
+        "units": 350
+      },
+      "over_erasure": {
+        "after": 224,
+        "before": 88,
+        "only_after": 152,
+        "only_before": 16,
+        "units": 350
+      },
+      "over_retention": {
+        "after": 0,
+        "before": 0,
+        "only_after": 0,
+        "only_before": 0,
+        "units": 350
+      }
+    },
+    "t2": {
+      "mis_escalation": {
+        "after": 119,
+        "before": 99,
+        "only_after": 75,
+        "only_before": 55,
+        "units": 350
+      },
+      "over_erasure": {
+        "after": 142,
+        "before": 129,
+        "only_after": 53,
+        "only_before": 40,
+        "units": 350
+      },
+      "over_retention": {
+        "after": 0,
+        "before": 1,
+        "only_after": 0,
+        "only_before": 1,
+        "units": 350
+      }
+    },
+    "t3": {
+      "mis_escalation": {
+        "after": 78,
+        "before": 42,
+        "only_after": 62,
+        "only_before": 26,
+        "units": 350
+      },
+      "over_erasure": {
+        "after": 59,
+        "before": 53,
+        "only_after": 19,
+        "only_before": 13,
+        "units": 350
+      },
+      "over_retention": {
+        "after": 2,
+        "before": 3,
+        "only_after": 2,
+        "only_before": 3,
+        "units": 350
+      }
+    }
+  },
+  "unit": "location, first try (sample 0) in each run"
+}

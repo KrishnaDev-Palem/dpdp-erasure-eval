@@ -1,0 +1,23 @@
+{
+  "case_id": "gen-arity4_cite_2_securities-00170",
+  "model_id": "claude-sonnet-5",
+  "prompt_hash": "f4c3610b8c90d22fecac1b50c162bb2ff0cccb353e254e0df9a7b043028186ae",
+  "raw_response": {
+    "verdicts": [
+      {
+        "detail": null,
+        "location_id": "loc-86797edc3373",
+        "verdict": "escalate"
+      }
+    ]
+  },
+  "recorded_at": "2026-10-10T10:19:58Z",
+  "runner_id": "t1-empty-locations",
+  "sample_index": 0,
+  "tool_calls": [],
+  "usage": {
+    "call_count": 1,
+    "input_tokens": 224,
+    "output_tokens": 45
+  }
+}
