@@ -145,8 +145,11 @@ Primary sample, 350 locations per setting:
 
 Reading across the table, context buys safety on the statutory axis: over-erasure falls at every added
 layer, from 64.0% with the request alone to 16.9% with the rule text and 11.7% when the model fetches its
-own context. Given only the request, the model does not play safe. It erases 296 of 350 locations,
-including 200 the law requires be kept and 24 of the 28 that should go to a human. What context does not
+own context. Given only the request, the model has no stable answer. As measured, the T1 prompt lists
+the location's token, and the model erases 296 of 350 locations, including 200 the law requires be kept
+and 24 of the 28 that should go to a human. With that one entry removed, it escalates 349 of 350. The entry
+carries no information, so the T1 row describes this prompt format, not what a model does with a request
+alone in general. What context does not
 buy is a steady fall in review cost. Mis-escalation peaks at T2 (records without rules) and settles
 near 22% at T3 and in the autonomous setting, where the model sends to a human roughly one location in
 five that the rules decide exactly.
@@ -208,18 +211,24 @@ Re-measured against the earlier run at
 | Gate detection | 44/45 (97.8%) | 39/45 (86.7%) |
 | Gate scope expansion | 8/9 | 3/9 |
 
-T1 was largely answering from the id. With cell names like `uncomputable_kyc` in the id, the model
-escalated all 28 uncomputable-anchor cases from the request alone; without them, it erases 24 of 28. With full
-context the cell name had been steering the model into the right lane, and without it mis-escalation
-roughly doubles at T3 and nearly triples in the autonomous setting. The writeup's
+The T1 rows compare two changes at once. Besides making the ids opaque, the fix added the location to
+the T1 prompt as a bare `{"location_id": token}` entry, where the earlier prompt had an empty list. A
+control with the clean prompt and the list emptied escalates 349 of 350, so the direction of the T1 shift
+comes from that entry, not from the ids. Like for like, the cell names were what let the model decide at
+T1: with them it erased 159 locations and retained 14; without them it escalates almost everything. The
+autonomous setting's first message is the T1 prompt and gained the same entry, which is untested there,
+so its rows also mix two changes. At T3, where only the ids changed, the cell name had been steering the
+model into the right lane, and without it mis-escalation nearly doubles. The writeup's
 [Before and after](docs/writeup.md#6-before-and-after-identifiers-as-a-channel) section has the delta
-on every headline rate. The lesson is about evaluation design: an identifier is part of the prompt, and an
-isolation check has to run on exactly the text the model reads.
+on every headline rate and both controls. The lesson is about evaluation design: an identifier is part of
+the prompt, and so is anything else the template fills in. An isolation check has to run on exactly the
+text the model reads, and a fix should change only the leak.
 
 Two caveats hold for the comparison. The harness records the model id it asked for, not the version the
-provider served, so a provider-side change between the two runs cannot be ruled out. And with opaque ids
-the model occasionally passes a location id where the autonomous tool expects a case id; the tool
-refuses, and four sessions had to be re-run from the cache during the live run.
+provider served; re-sending the earlier T1 and gate prompts reproduced the earlier numbers, so there is no
+evidence of a provider-side change in those settings. And with opaque ids the model occasionally passes a
+location id where the autonomous tool expects a case id; the tool refuses, and four sessions had to be
+re-run from the cache during the live run.
 
 ## Ground truth you can audit
 

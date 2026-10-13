@@ -129,12 +129,12 @@ Actuals are recorded below after the run.
 
 ## Acceptance
 
-- [ ] Brief committed before any live call
-- [ ] A1: self-check passes at both tags; `results/paired-delta.json` committed; test green
-- [ ] A2: 1,050 T1 and 450 gate entries under `cache-controls/drift/`, written by the code at `baseline-leaked-ids`; reading applied as pre-registered
-- [ ] A3: 1,050 entries under `cache-controls/t1-empty-locations/`; offline replay reproduces the results JSON; reading applied as pre-registered
-- [ ] Committed `cache/`, `export/` and the published results unchanged
-- [ ] Writeup §2, §6 and §8 updated; actual cost recorded here
+- [x] Brief committed before any live call
+- [x] A1: self-check passes at both tags; `results/paired-delta.json` committed; test green
+- [x] A2: 1,050 T1 and 450 gate entries under `cache-controls/drift/`, written by the code at `baseline-leaked-ids`; reading applied as pre-registered
+- [x] A3: 1,050 entries under `cache-controls/t1-empty-locations/`; offline replay reproduces the results JSON; reading applied as pre-registered
+- [x] Committed `cache/`, `export/` and the published results unchanged
+- [x] Writeup §2, §6 and §8 updated; actual cost recorded here
 - [ ] CI green on the PR and on `main`; tag `eval-v2.1.0` on the merge commit
 
 ## Results
@@ -172,5 +172,13 @@ location entry.
 (1,050 + 450 calls, estimated from the clean run's per-call token means; the old code records no usage),
 plus one failed gate call and two diagnostic calls, under $0.01. Total about $2.69 against a $5 ceiling.
 
-**Open.** How the writeup (§3, §6, §7, README) states the T1 result given A3 is decided in the next
-session; nothing about T1 has been rewritten yet.
+**How the writeup reports it.** The writeup's §6 gains a Controls subsection with both results and the
+three T1 prompts side by side (leaked ids and an empty list; opaque ids and an empty list; opaque ids and
+the location listed). §2 describes the entry; §3, the rest of §6, §7, §8 and the README now read the T1
+row as a measurement of this prompt format, and no longer attribute the T1 shift to the ids.
+
+**Found while writing it up: the autonomous setting has the same entry.** The autonomous setting's first
+message is the T1 prompt (`build_adjudication_prompt` on a `build_t1` context, at both tags), so it
+gained the same entry. A3 does not cover it, and no further live call was made. The writeup states the
+autonomous before/after as combining two changes, with the identifiers' share not measured (§6, §8).
+T2 and T3 listed the full location records in both runs, so their deltas compare the ids alone.
