@@ -14,6 +14,7 @@ ENV_VARS = (
     "CACHE_MODE",
     "ANTHROPIC_API_KEY",
     "GEMINI_API_KEY",
+    "TYPESAFE_API_KEY",
     "MODEL_API_KEY",
 )
 
