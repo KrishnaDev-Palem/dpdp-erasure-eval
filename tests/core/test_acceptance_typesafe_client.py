@@ -218,6 +218,13 @@ def test_another_model_in_the_response_stops_with_a_version_error() -> None:
         _parse(_answer_body({"clean": 0.9, "adversarial": 0.1}, model="jev-1.14.0"))
 
 
+def test_the_version_error_carries_the_response_body() -> None:
+    body = _answer_body({"clean": 0.9, "adversarial": 0.1}, model="jev-1.14.0")
+    with pytest.raises(ModelVersionError) as excinfo:
+        _parse(body)
+    assert body[:300] in str(excinfo.value)
+
+
 @pytest.mark.parametrize(
     "probabilities",
     [

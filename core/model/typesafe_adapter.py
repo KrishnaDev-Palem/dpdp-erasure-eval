@@ -187,7 +187,11 @@ def parse_choice_answer(
 
     answered_model = data.get("model")
     if answered_model != model:
-        raise ModelVersionError(f"TypeSafe answered with model {answered_model!r}, not {model!r}")
+        # The body goes into the message because no entry is written: the error is the only
+        # record of what came back. A response body never carries the API key.
+        raise ModelVersionError(
+            f"TypeSafe answered with model {answered_model!r}, not {model!r}: {provider_body[:300]}"
+        )
 
     answers = data.get("answers")
     if not isinstance(answers, dict) or set(answers) != {question_key}:
