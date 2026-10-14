@@ -197,6 +197,10 @@ class CacheEntry(BaseModel):
     # Absent on every entry written before this feature and on every fake-seam entry.
     # Offline replay must never require it; see `read_cache`.
     usage: TokenUsage | None = None
+    # Wall-clock milliseconds of the HTTP call, measured in the client. Only the TypeSafe
+    # client records it; every other entry omits it, and it is never compared across
+    # providers. Same omit-when-absent rule as `usage`.
+    latency_ms: int | None = None
 
 
 class ExportManifest(BaseModel):
