@@ -393,3 +393,11 @@ def test_an_oracle_scores_zero_and_always_erase_scores_every_non_erase_case() ->
     metrics = runner.adjudication_report(sweep, bundle)["primary_metrics"]
     not_erase = sum(s.locations[0].expected.verdict != "erase" for s in bundle.subjects)
     assert metrics["over_erasure"]["rate"]["numerator"] == not_erase
+
+
+def test_the_committed_body_check_passes_on_every_body_the_runner_sends() -> None:
+    path = REPO_ROOT / "scripts" / "check_decision_model_bodies.py"
+    spec = importlib.util.spec_from_file_location("check_decision_model_bodies", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    assert module.check() == {"t2": 1050, "t3": 1050, "gate": 180}
