@@ -311,14 +311,18 @@ def run_sweep(
 
 
 def usage_summary(entries: Iterable[CacheEntry]) -> dict[str, Any]:
-    calls = input_tokens = output_tokens = 0
+    """One call per entry; token counts as TypeSafe reported them, where it did."""
+    calls = input_tokens = output_tokens = without_usage = 0
     for entry in entries:
-        if entry.usage is not None:
-            calls += entry.usage.call_count
+        calls += 1
+        if entry.usage is None:
+            without_usage += 1
+        else:
             input_tokens += entry.usage.input_tokens
             output_tokens += entry.usage.output_tokens
     return {
         "calls": calls,
+        "calls_without_usage": without_usage,
         "input_tokens": input_tokens,
         "output_tokens": output_tokens,
         "cost_usd_at_list_price": round(input_tokens * PRICE_IN_PER_MILLION / 1e6, 4),
