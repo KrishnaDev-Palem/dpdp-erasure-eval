@@ -29,6 +29,28 @@ def test_gemini_key_from_gemini_api_key(model_env: pytest.MonkeyPatch) -> None:
     assert policy.used_legacy_fallback is False
 
 
+def test_typesafe_key_from_typesafe_api_key(model_env: pytest.MonkeyPatch) -> None:
+    model_env.setenv("TYPESAFE_API_KEY", "ts-key")
+    policy = resolve_provider_api_key(provider="typesafe")
+    assert policy.api_key == "ts-key"
+    assert policy.source_env_var == "TYPESAFE_API_KEY"
+    assert policy.used_legacy_fallback is False
+
+
+def test_typesafe_never_falls_back_to_model_api_key(model_env: pytest.MonkeyPatch) -> None:
+    """Another provider's key in the legacy variable must never be sent to TypeSafe."""
+    model_env.setenv("MODEL_API_KEY", "someone-elses-key")
+    with pytest.raises(ConfigurationError, match="TYPESAFE_API_KEY") as excinfo:
+        resolve_provider_api_key(provider="typesafe")
+    assert "someone-elses-key" not in str(excinfo.value)
+
+
+def test_typesafe_key_wins_and_the_legacy_value_is_ignored(model_env: pytest.MonkeyPatch) -> None:
+    model_env.setenv("TYPESAFE_API_KEY", "ts-key")
+    model_env.setenv("MODEL_API_KEY", "legacy")
+    assert resolve_provider_api_key(provider="typesafe").api_key == "ts-key"
+
+
 def test_legacy_model_api_key_fallback_emits_deprecation_warning(
     model_env: pytest.MonkeyPatch,
 ) -> None:
@@ -63,7 +85,13 @@ def test_missing_credential_raises_configuration_error_naming_required_vars(
 
 def test_env_example_documents_provider_keys_and_cache_mode(repo_root: Path) -> None:
     env_example = (repo_root / ".env.example").read_text(encoding="utf-8")
-    for var in ("ANTHROPIC_API_KEY", "GEMINI_API_KEY", "MODEL_ID", "CACHE_MODE"):
+    for var in (
+        "ANTHROPIC_API_KEY",
+        "GEMINI_API_KEY",
+        "TYPESAFE_API_KEY",
+        "MODEL_ID",
+        "CACHE_MODE",
+    ):
         assert var in env_example
     assert "MODEL_API_KEY" not in env_example
     for line in env_example.splitlines():
@@ -73,7 +101,7 @@ def test_env_example_documents_provider_keys_and_cache_mode(repo_root: Path) -> 
 
 
 def test_offline_pytest_never_requires_provider_keys(model_env: pytest.MonkeyPatch) -> None:
-    for var in ("ANTHROPIC_API_KEY", "GEMINI_API_KEY", "MODEL_API_KEY"):
+    for var in ("ANTHROPIC_API_KEY", "GEMINI_API_KEY", "TYPESAFE_API_KEY", "MODEL_API_KEY"):
         model_env.delenv(var, raising=False)
     from core.model import create_model_seam
 

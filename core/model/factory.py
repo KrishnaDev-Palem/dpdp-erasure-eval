@@ -34,6 +34,14 @@ def create_model_seam(*, config: ModelConfig | None = None) -> ModelSeam:
             f"Supported live roles: {', '.join(sorted(LIVE_ROLE_IDS))}"
         )
 
+    if descriptor.provider == "typesafe":
+        # Raised before credential resolution: this role never builds a seam, so the
+        # factory has no reason to read its key.
+        raise ConfigurationError(
+            f"MODEL_ID {resolved.model_id!r} is a decision model and does not run through "
+            "the model seam. Use scripts/decision_model_run.py."
+        )
+
     credential = resolve_provider_api_key(provider=descriptor.provider)
 
     if descriptor.provider == "anthropic":

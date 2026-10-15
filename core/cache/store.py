@@ -72,6 +72,7 @@ def read_cache(key: CacheKey, root: Path | None = None) -> CacheEntry:
         # `.get`, not `[...]`: the committed live-role and primary entries predate token
         # capture and must keep replaying untouched.
         usage=data.get("usage"),
+        latency_ms=data.get("latency_ms"),
     )
 
 
@@ -96,6 +97,10 @@ def write_cache(entry: CacheEntry, root: Path | None = None) -> Path:
     # one thing: a live adapter produced this entry and the provider reported counts.
     if entry.usage is not None:
         payload["usage"] = entry.usage.model_dump(mode="json")
+    # Omitted when absent for the same reason, so every entry without it rewrites
+    # byte-identically.
+    if entry.latency_ms is not None:
+        payload["latency_ms"] = entry.latency_ms
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return path
 

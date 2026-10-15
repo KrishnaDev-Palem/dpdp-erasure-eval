@@ -10,11 +10,24 @@ from core.exceptions import ConfigurationError
 from core.model import FakeModelSeam, create_model_seam, get_role_descriptor, list_role_descriptors
 from core.model.anthropic_adapter import AnthropicModelSeam
 from core.model.gemini_adapter import GeminiModelSeam
+from core.model.roles import LIVE_ROLE_IDS
 
 
-def test_role_registry_lists_primary_claude_and_gemini_roles() -> None:
+def test_role_registry_lists_primary_claude_gemini_and_jev_roles() -> None:
     role_ids = {descriptor.role_id for descriptor in list_role_descriptors()}
-    assert role_ids == {"primary", "claude-sonnet-5", "gemini-3.5-flash"}
+    assert role_ids == {"primary", "claude-sonnet-5", "gemini-3.5-flash", "jev-1.13.0"}
+
+
+def test_jev_role_is_pinned_and_reads_only_the_typesafe_key() -> None:
+    jev = get_role_descriptor("jev-1.13.0")
+    assert jev.provider == "typesafe"
+    assert jev.provider_model_id == "jev-1.13.0"
+    assert jev.credential_env_vars == ("TYPESAFE_API_KEY",)
+
+
+def test_jev_role_is_not_offered_as_a_seam_role() -> None:
+    assert "jev-1.13.0" not in LIVE_ROLE_IDS
+    assert {"claude-sonnet-5", "gemini-3.5-flash"} == LIVE_ROLE_IDS
 
 
 def test_live_roles_have_pinned_provider_model_ids() -> None:
@@ -107,6 +120,24 @@ def test_refresh_missing_credential_raises_before_network(
     model_env.setenv("CACHE_MODE", "refresh")
     model_env.setenv("MODEL_ID", model_id)
     with pytest.raises(ConfigurationError, match=expected_var):
+        create_model_seam()
+
+
+def test_refresh_jev_role_raises_naming_the_decision_model_runner(
+    model_env: pytest.MonkeyPatch,
+) -> None:
+    model_env.setenv("CACHE_MODE", "refresh")
+    model_env.setenv("MODEL_ID", "jev-1.13.0")
+    model_env.setenv("TYPESAFE_API_KEY", "ts-test")
+    with pytest.raises(ConfigurationError, match="scripts/decision_model_run.py"):
+        create_model_seam()
+
+
+def test_refresh_jev_role_raises_before_reading_any_key(model_env: pytest.MonkeyPatch) -> None:
+    """No key set at all: the error is still the runner pointer, not a missing credential."""
+    model_env.setenv("CACHE_MODE", "refresh")
+    model_env.setenv("MODEL_ID", "jev-1.13.0")
+    with pytest.raises(ConfigurationError, match="decision model"):
         create_model_seam()
 
 

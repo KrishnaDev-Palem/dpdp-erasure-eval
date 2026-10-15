@@ -7,7 +7,7 @@ from typing import Literal
 
 from core.exceptions import ConfigurationError
 
-ProviderKind = Literal["anthropic", "google", "test"]
+ProviderKind = Literal["anthropic", "google", "typesafe", "test"]
 
 
 @dataclass(frozen=True)
@@ -37,10 +37,22 @@ _ROLE_REGISTRY: dict[str, ModelRoleDescriptor] = {
         provider_model_id="gemini-3.5-flash",
         credential_env_vars=("GEMINI_API_KEY",),
     ),
+    # A decision model, not a text model: it does not implement `ModelSeam` and runs only
+    # through `scripts/decision_model_run.py`. See `briefs/decision-model-run.md`.
+    "jev-1.13.0": ModelRoleDescriptor(
+        role_id="jev-1.13.0",
+        provider="typesafe",
+        provider_model_id="jev-1.13.0",
+        credential_env_vars=("TYPESAFE_API_KEY",),
+    ),
 }
 
+# Roles the model seam can serve live. The TypeSafe role is registered but is not one of
+# them, so no error message offers it as a value for MODEL_ID.
 LIVE_ROLE_IDS: frozenset[str] = frozenset(
-    role_id for role_id, descriptor in _ROLE_REGISTRY.items() if descriptor.provider != "test"
+    role_id
+    for role_id, descriptor in _ROLE_REGISTRY.items()
+    if descriptor.provider not in {"test", "typesafe"}
 )
 
 
