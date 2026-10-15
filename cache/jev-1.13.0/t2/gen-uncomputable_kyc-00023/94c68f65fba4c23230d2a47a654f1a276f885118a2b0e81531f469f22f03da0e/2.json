@@ -1,0 +1,24 @@
+{
+  "case_id": "gen-uncomputable_kyc-00023",
+  "latency_ms": 271,
+  "model_id": "jev-1.13.0",
+  "prompt_hash": "94c68f65fba4c23230d2a47a654f1a276f885118a2b0e81531f469f22f03da0e",
+  "raw_response": {
+    "provider_body": "{\"model\":\"jev-1.13.0\",\"answers\":{\"loc-674544a59006\":{\"type\":\"choice\",\"choice\":\"erase\",\"confidence\":0.46,\"probabilities\":{\"erase\":0.64,\"retain\":0.17,\"escalate\":0.19}}},\"usage\":{\"input_tokens\":651,\"output_tokens\":53}}",
+    "verdicts": [
+      {
+        "location_id": "loc-674544a59006",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-10-15T08:40:08Z",
+  "runner_id": "t2",
+  "sample_index": 2,
+  "tool_calls": [],
+  "usage": {
+    "call_count": 1,
+    "input_tokens": 651,
+    "output_tokens": 53
+  }
+}

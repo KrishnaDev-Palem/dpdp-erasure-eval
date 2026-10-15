@@ -1,0 +1,24 @@
+{
+  "case_id": "gen-marketing_withdrawn-00001",
+  "latency_ms": 280,
+  "model_id": "jev-1.13.0",
+  "prompt_hash": "219811eaa0dd6e0d1e3f66d4f9ed870fdd98e4827f43a6de7d39bf1a50285bdd",
+  "raw_response": {
+    "provider_body": "{\"model\":\"jev-1.13.0\",\"answers\":{\"loc-22a485a2bab5\":{\"type\":\"choice\",\"choice\":\"erase\",\"confidence\":0.95,\"probabilities\":{\"erase\":0.97,\"retain\":0.02,\"escalate\":0.01}}},\"usage\":{\"input_tokens\":1018,\"output_tokens\":51}}",
+    "verdicts": [
+      {
+        "location_id": "loc-22a485a2bab5",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-10-15T09:10:37Z",
+  "runner_id": "t3",
+  "sample_index": 2,
+  "tool_calls": [],
+  "usage": {
+    "call_count": 1,
+    "input_tokens": 1018,
+    "output_tokens": 51
+  }
+}

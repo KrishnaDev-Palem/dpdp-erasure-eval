@@ -239,9 +239,16 @@ def test_probabilities_that_do_not_match_the_request_are_rejected(probabilities)
         _parse(_answer_body(probabilities, choice="clean"))
 
 
-def test_a_choice_that_is_not_the_most_probable_is_rejected() -> None:
-    with pytest.raises(ModelResponseError, match="most probable"):
-        _parse(_answer_body({"clean": 0.3, "adversarial": 0.7}, choice="clean"))
+def test_a_choice_that_is_not_the_most_probable_is_kept_and_marked() -> None:
+    answer = _parse(_answer_body({"clean": 0.3, "adversarial": 0.7}, choice="clean"))
+    assert answer.choice == "clean"
+    assert answer.probabilities == {"clean": 0.3, "adversarial": 0.7}
+    assert not answer.choice_is_top
+
+
+def test_a_choice_on_a_tie_is_a_most_probable_option() -> None:
+    answer = _parse(_answer_body({"clean": 0.5, "adversarial": 0.5}, choice="clean"))
+    assert answer.choice_is_top and answer.tied
 
 
 def test_an_answer_under_another_key_is_rejected() -> None:

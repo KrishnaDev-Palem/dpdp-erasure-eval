@@ -1,0 +1,24 @@
+{
+  "case_id": "gen-ordinary_open_customer_retain-00210",
+  "latency_ms": 249,
+  "model_id": "jev-1.13.0",
+  "prompt_hash": "d1d10c6abe53e59fb442f5b71ee328d93cbbb035f1e5337305a8269a32c82bfb",
+  "raw_response": {
+    "provider_body": "{\"model\":\"jev-1.13.0\",\"answers\":{\"loc-80259cc4b3f2\":{\"type\":\"choice\",\"choice\":\"erase\",\"confidence\":0.74,\"probabilities\":{\"escalate\":0.13,\"erase\":0.83,\"retain\":0.04}}},\"usage\":{\"input_tokens\":530,\"output_tokens\":52}}",
+    "verdicts": [
+      {
+        "location_id": "loc-80259cc4b3f2",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-10-15T09:05:53Z",
+  "runner_id": "t2-rot2",
+  "sample_index": 2,
+  "tool_calls": [],
+  "usage": {
+    "call_count": 1,
+    "input_tokens": 530,
+    "output_tokens": 52
+  }
+}

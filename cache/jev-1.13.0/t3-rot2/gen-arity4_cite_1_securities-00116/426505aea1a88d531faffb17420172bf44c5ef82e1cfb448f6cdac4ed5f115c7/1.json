@@ -1,0 +1,24 @@
+{
+  "case_id": "gen-arity4_cite_1_securities-00116",
+  "latency_ms": 266,
+  "model_id": "jev-1.13.0",
+  "prompt_hash": "426505aea1a88d531faffb17420172bf44c5ef82e1cfb448f6cdac4ed5f115c7",
+  "raw_response": {
+    "provider_body": "{\"model\":\"jev-1.13.0\",\"answers\":{\"loc-34c8d0652b54\":{\"type\":\"choice\",\"choice\":\"retain\",\"confidence\":0.83,\"probabilities\":{\"escalate\":0.07,\"erase\":0.04,\"retain\":0.89}}},\"usage\":{\"input_tokens\":1021,\"output_tokens\":53}}",
+    "verdicts": [
+      {
+        "location_id": "loc-34c8d0652b54",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-10-15T09:18:08Z",
+  "runner_id": "t3-rot2",
+  "sample_index": 1,
+  "tool_calls": [],
+  "usage": {
+    "call_count": 1,
+    "input_tokens": 1021,
+    "output_tokens": 53
+  }
+}

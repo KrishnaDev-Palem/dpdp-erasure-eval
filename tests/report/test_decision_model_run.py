@@ -71,9 +71,11 @@ class FakeTypeSafe:
         *,
         model: str = MODEL,
         override: Callable[[Any, str, list[str]], dict[str, float] | None] | None = None,
+        choose: Callable[[dict[str, float]], str] | None = None,
     ) -> None:
         self.model = model
         self.override = override
+        self.choose = choose
         self.requests: list[httpx.Request] = []
 
     def __call__(self, request: httpx.Request) -> httpx.Response:
@@ -86,6 +88,8 @@ class FakeTypeSafe:
         )
         top = max(probabilities.values())
         choice = next(option for option in options if probabilities[option] == top)
+        if self.choose is not None:
+            choice = self.choose(probabilities)
         return httpx.Response(
             200,
             text=json.dumps(
@@ -249,6 +253,29 @@ def test_a_tie_is_flagged_by_the_threshold_whatever_the_api_choice(tmp_path) -> 
     assert any("ties: 2" in line for line in runner.probe_summary(sweep))
 
 
+def test_a_choice_that_is_not_the_top_option_is_stored_as_the_verdict(tmp_path) -> None:
+    probabilities = {"erase": 0.39, "retain": 0.23, "escalate": 0.38}
+    handler = FakeTypeSafe(
+        override=lambda state, key, options: probabilities,
+        choose=lambda _: "escalate",
+    )
+    case = load_export(REPO_ROOT / "export").subjects[0].subject_id
+    narrowed = {"samples": [0], "case_ids": [case]}
+    sweep, _ = runner.run(
+        "t2", cache_mode="refresh", cache_root=tmp_path, client=fake_client(handler), **narrowed
+    )
+    assert len(handler.requests) == 3
+    for runner_id in ("t2", "t2-rot1", "t2-rot2"):
+        answer = sweep.answers[runner_id][0][case]
+        assert answer.choice == "escalate" and not answer.choice_is_top
+    entry = next(e for e in sweep.entries if e.key.runner_id == "t2")
+    assert entry.raw_response["verdicts"][0]["verdict"] == "escalate"
+    assert sum("CHOICE NOT TOP" in line for line in runner.probe_summary(sweep)) == 3
+
+    replay, _ = runner.run("t2", cache_mode="offline", cache_root=tmp_path, **narrowed)
+    assert replay.answers == sweep.answers
+
+
 def test_a_narrowed_run_writes_no_results_and_reports_rounding_and_order(tmp_path) -> None:
     sweep, reports = runner.run(
         "gate",
@@ -267,6 +294,10 @@ def test_a_narrowed_run_writes_no_results_and_reports_rounding_and_order(tmp_pat
     # The fake answers in hundredths, so no probability may show more than two places.
     assert set(json.loads(decimals.split(": ", 1)[1])) <= {1, 2}
     assert "across orders, same sample: 2 identical probability sets, 0 differing" in summary
+    assert "response models: ['jev-1.13.0']" in summary
+    calls = [line for line in summary if line.startswith("call ")]
+    assert len(calls) == 4
+    assert all("input_tokens=60 latency_ms=" in line for line in calls)
 
 
 def test_a_tampered_entry_fails_replay(tmp_path) -> None:
@@ -401,3 +432,141 @@ def test_the_committed_body_check_passes_on_every_body_the_runner_sends() -> Non
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     assert module.check() == {"t2": 1050, "t3": 1050, "gate": 180}
+
+
+# --- Branch (b): T2, T3 and the readings, end to end over the fake -------------------------
+
+ADJUDICATION_FILES = (
+    "t2-live.json",
+    "t3-live.json",
+    "adjudication-comparison.json",
+    "calibration.json",
+    "stability.json",
+)
+
+
+@pytest.fixture(scope="module")
+def adjudication_run(gate_run):
+    """Both tiers into the gate run's cache, then the readings: the full branch (b) set."""
+    root, _, _, _ = gate_run
+    handler = FakeTypeSafe()
+    client = fake_client(handler)
+    tier_reports = {}
+    for tier in ("t2", "t3"):
+        _, reports = runner.run(
+            tier,
+            cache_mode="refresh",
+            cache_root=root / "cache",
+            results_dir=root / "results",
+            client=client,
+        )
+        tier_reports.update(reports)
+    sweeps, readings = runner.run_readings(
+        cache_root=root / "cache",
+        results_dir=root / "results",
+        sonnet_cache_root=REPO_ROOT / "cache",
+    )
+    return root, handler, sweeps, {**tier_reports, **readings}
+
+
+def test_both_tiers_make_6300_calls_into_three_order_trees_each(adjudication_run) -> None:
+    root, handler, sweeps, _ = adjudication_run
+    assert len(handler.requests) == 6300
+    for tier in ("t2", "t3"):
+        assert len(sweeps[tier].entries) == 3150
+        trees = sorted(
+            p.name for p in (root / "cache" / MODEL).iterdir() if p.name.startswith(tier)
+        )
+        assert trees == [tier, f"{tier}-rot1", f"{tier}-rot2"]
+        for tree in trees:
+            case_dirs = [p for p in (root / "cache" / MODEL / tree).iterdir() if p.is_dir()]
+            assert len(case_dirs) == 350
+            for case_dir in case_dirs:
+                (hash_dir,) = [p for p in case_dir.iterdir() if p.is_dir()]
+                assert sorted(p.name for p in hash_dir.iterdir()) == ["0.json", "1.json", "2.json"]
+    for entry in sweeps["t3"].entries:
+        assert entry.latency_ms is not None
+        assert json.loads(entry.raw_response["provider_body"])["model"] == MODEL
+
+
+def test_readings_write_the_three_files_the_brief_names(adjudication_run) -> None:
+    root, _, _, reports = adjudication_run
+    for name in ADJUDICATION_FILES:
+        assert (root / "results" / name).is_file(), name
+    assert reports["adjudication-comparison.json"]["brief"].endswith("Q2, Q5")
+    assert set(reports["adjudication-comparison.json"]["readings"]) == {"H2a", "H2b", "H2c"}
+    assert "fires" in reports["adjudication-comparison.json"]["split_run_trigger"]
+    assert reports["calibration.json"]["runner_id"] == "t3"
+    assert set(reports["stability.json"]) >= {"gate", "t2", "t3"}
+
+
+def test_readings_replay_the_same_first_try_the_tier_files_score(adjudication_run) -> None:
+    _, _, _, reports = adjudication_run
+    comparison = reports["adjudication-comparison.json"]
+    for tier in ("t2", "t3"):
+        live = reports[f"{tier}-live.json"]["primary_metrics"]
+        primary = comparison["wrong_verdicts"][tier][MODEL]["primary"]["all_cases"]
+        for kind in ("over_erasure", "over_retention", "mis_escalation"):
+            assert primary[kind]["rate"] == live[kind]["rate"], (tier, kind)
+        stability = reports["stability.json"][tier]["orders"]["first_try_rates_by_order"][tier]
+        assert stability["over_erasure"]["rate"] == live["over_erasure"]["rate"]
+
+
+def test_stability_covers_the_gate_s_two_orders_and_five_samples(
+    gate_run, adjudication_run
+) -> None:
+    _, _, _, gate_reports = gate_run
+    _, _, _, reports = adjudication_run
+    gate = reports["stability.json"]["gate"]
+    assert set(gate["repeats"]) == {"adversarial_gate", "adversarial_gate-rot1"}
+    assert gate["repeats"]["adversarial_gate-rot1"]["samples"] == [0, 1, 2, 3, 4]
+    rates = gate["orders"]["first_try_rates_by_order"]
+    published = gate_reports["gate-live.json"]
+    assert (
+        rates["adversarial_gate"]["detection"]["rate"]["numerator"]
+        == (published["detection"]["rate"]["numerator"])
+    )
+    assert set(rates["adversarial_gate-rot1"]) == {"detection", "false_alarm"}
+    assert gate["version"]["entries"] == 900
+
+
+def test_a_fake_that_ignores_the_order_reads_as_uninformative_and_pinned(adjudication_run) -> None:
+    _, _, _, reports = adjudication_run
+    stability = reports["stability.json"]
+    assert stability["every_answer_is_pinned"] is True
+    for task, entries in (("gate", 900), ("t2", 3150), ("t3", 3150)):
+        block = stability[task]
+        assert block["orders"]["uninformative"] is True, task
+        assert block["version"]["entries_with_latency_ms"] == entries
+        assert all(r["changed"] == 0 for r in block["repeats"].values())
+
+
+def test_usage_counts_every_adjudication_call(adjudication_run) -> None:
+    _, _, _, reports = adjudication_run
+    usage = reports["adjudication-comparison.json"]["usage"]
+    assert usage["t2"]["calls"] == usage["t3"]["calls"] == 3150
+    assert usage["t2_and_t3"]["calls"] == 6300
+    assert usage["t2_and_t3"]["input_tokens"] == 6300 * 60
+
+
+def test_offline_replay_reproduces_every_branch_b_file_byte_for_byte(adjudication_run) -> None:
+    root, _, _, _ = adjudication_run
+    replay_dir = root / "replay-b"
+    for tier in ("t2", "t3"):
+        runner.run(tier, cache_mode="offline", cache_root=root / "cache", results_dir=replay_dir)
+    runner.run_readings(
+        cache_root=root / "cache", results_dir=replay_dir, sonnet_cache_root=REPO_ROOT / "cache"
+    )
+    for name in ADJUDICATION_FILES:
+        assert (replay_dir / name).read_bytes() == (root / "results" / name).read_bytes(), name
+
+
+def test_readings_on_an_empty_cache_is_a_miss_not_a_call(tmp_path: Path) -> None:
+    with pytest.raises(CacheMissError):
+        runner.run_readings(cache_root=tmp_path, results_dir=tmp_path / "results")
+    assert not (tmp_path / "results").exists()
+
+
+def test_readings_refuse_a_narrowed_run() -> None:
+    with pytest.raises(SystemExit, match="readings covers every case"):
+        runner.main(["readings", "--samples", "0"])

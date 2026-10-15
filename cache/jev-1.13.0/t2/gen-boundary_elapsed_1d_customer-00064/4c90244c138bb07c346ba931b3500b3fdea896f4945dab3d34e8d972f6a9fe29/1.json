@@ -1,0 +1,24 @@
+{
+  "case_id": "gen-boundary_elapsed_1d_customer-00064",
+  "latency_ms": 287,
+  "model_id": "jev-1.13.0",
+  "prompt_hash": "4c90244c138bb07c346ba931b3500b3fdea896f4945dab3d34e8d972f6a9fe29",
+  "raw_response": {
+    "provider_body": "{\"model\":\"jev-1.13.0\",\"answers\":{\"loc-dad1ca6a672e\":{\"type\":\"choice\",\"choice\":\"erase\",\"confidence\":0.38,\"probabilities\":{\"erase\":0.59,\"retain\":0.2,\"escalate\":0.21}}},\"usage\":{\"input_tokens\":560,\"output_tokens\":50}}",
+    "verdicts": [
+      {
+        "location_id": "loc-dad1ca6a672e",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-10-15T08:37:20Z",
+  "runner_id": "t2",
+  "sample_index": 1,
+  "tool_calls": [],
+  "usage": {
+    "call_count": 1,
+    "input_tokens": 560,
+    "output_tokens": 50
+  }
+}

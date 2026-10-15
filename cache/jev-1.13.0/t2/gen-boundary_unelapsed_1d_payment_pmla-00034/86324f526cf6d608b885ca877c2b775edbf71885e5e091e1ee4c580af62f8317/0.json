@@ -1,0 +1,24 @@
+{
+  "case_id": "gen-boundary_unelapsed_1d_payment_pmla-00034",
+  "latency_ms": 276,
+  "model_id": "jev-1.13.0",
+  "prompt_hash": "86324f526cf6d608b885ca877c2b775edbf71885e5e091e1ee4c580af62f8317",
+  "raw_response": {
+    "provider_body": "{\"model\":\"jev-1.13.0\",\"answers\":{\"loc-01465cb2c8ee\":{\"type\":\"choice\",\"choice\":\"erase\",\"confidence\":0.3,\"probabilities\":{\"erase\":0.53,\"retain\":0.28,\"escalate\":0.19}}},\"usage\":{\"input_tokens\":556,\"output_tokens\":51}}",
+    "verdicts": [
+      {
+        "location_id": "loc-01465cb2c8ee",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-10-15T08:35:56Z",
+  "runner_id": "t2",
+  "sample_index": 0,
+  "tool_calls": [],
+  "usage": {
+    "call_count": 1,
+    "input_tokens": 556,
+    "output_tokens": 51
+  }
+}

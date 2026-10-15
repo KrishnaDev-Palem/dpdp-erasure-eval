@@ -1,0 +1,24 @@
+{
+  "case_id": "gen-ordinary_kyc_open_retain-00214",
+  "latency_ms": 281,
+  "model_id": "jev-1.13.0",
+  "prompt_hash": "5dde9130135af0f6b92d669f212c58fc630953ed91f12acced6410d342596369",
+  "raw_response": {
+    "provider_body": "{\"model\":\"jev-1.13.0\",\"answers\":{\"loc-07a24483c2a5\":{\"type\":\"choice\",\"choice\":\"retain\",\"confidence\":0.56,\"probabilities\":{\"erase\":0.13,\"retain\":0.71,\"escalate\":0.16}}},\"usage\":{\"input_tokens\":1096,\"output_tokens\":53}}",
+    "verdicts": [
+      {
+        "location_id": "loc-07a24483c2a5",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-10-15T09:09:20Z",
+  "runner_id": "t3",
+  "sample_index": 1,
+  "tool_calls": [],
+  "usage": {
+    "call_count": 1,
+    "input_tokens": 1096,
+    "output_tokens": 53
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "case_id": "gen-marketing_active-00124",
+  "latency_ms": 261,
+  "model_id": "jev-1.13.0",
+  "prompt_hash": "d495da90d20a9852a1405403c49db84f0b8c2d63c4596dfb9a0c3fed0488ea02",
+  "raw_response": {
+    "provider_body": "{\"model\":\"jev-1.13.0\",\"answers\":{\"loc-16c63075a95a\":{\"type\":\"choice\",\"choice\":\"erase\",\"confidence\":0.74,\"probabilities\":{\"erase\":0.83,\"retain\":0.09,\"escalate\":0.08}}},\"usage\":{\"input_tokens\":559,\"output_tokens\":53}}",
+    "verdicts": [
+      {
+        "location_id": "loc-16c63075a95a",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-10-15T08:36:15Z",
+  "runner_id": "t2",
+  "sample_index": 0,
+  "tool_calls": [],
+  "usage": {
+    "call_count": 1,
+    "input_tokens": 559,
+    "output_tokens": 53
+  }
+}
