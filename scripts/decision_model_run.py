@@ -21,11 +21,17 @@ the API's own `choice`, so the flag rule and the stored outcome agree on a 0.50 
     CACHE_MODE=refresh uv run python scripts/decision_model_run.py gate --case <id> --samples 0
     CACHE_MODE=refresh uv run python scripts/decision_model_run.py gate     # live, 900 calls
     CACHE_MODE=offline uv run python scripts/decision_model_run.py gate     # replay, no key
+    CACHE_MODE=refresh uv run python scripts/decision_model_run.py t2       # then t3
+    uv run python scripts/decision_model_run.py readings   # Q2-Q5 from the cache, no call
 
 Refresh reads TYPESAFE_API_KEY from the environment and nothing else. A full run writes
 `results/jev/`; a run narrowed with `--case` or `--samples` writes no results and prints what
 the brief's "Option orders" section asks to check: rounding, ties, and whether the option
 order reached the model.
+
+`readings` never calls: it replays the gate, T2 and T3 from the cache, reads Sonnet's first
+try from the committed `cache/claude-sonnet-5/`, and writes `adjudication-comparison.json`
+(Q2, Q5), `calibration.json` (Q3) and `stability.json` (Q4).
 """
 
 from __future__ import annotations
@@ -61,18 +67,29 @@ from core.model.typesafe_adapter import (  # noqa: E402
 from core.scoring.adjudication import score_adjudication, score_adjudication_grouped  # noqa: E402
 from core.scoring.adversarial import score_adversarial  # noqa: E402
 from core.types import (  # noqa: E402
+    AdjudicationSubject,
     AdversarialSeedCase,
     CacheEntry,
     CacheKey,
     ClassifierResult,
     LabeledLocation,
 )
+from report.adjudication_comparison import (  # noqa: E402
+    build_adjudication_comparison,
+    sonnet_first_try_verdicts,
+)
 from report.adjudication_tables import build_tier_adjudication_report  # noqa: E402
 from report.adversarial_tables import build_gate_report  # noqa: E402
+from report.calibration import build_calibration  # noqa: E402
 from report.gate_comparison import (  # noqa: E402
     FLAG_THRESHOLD,
     build_gate_comparison,
     read_first_try_flags,
+)
+from report.stability import (  # noqa: E402
+    adjudication_stability,
+    build_stability,
+    gate_stability,
 )
 from runners.adversarial_gate.slice_loader import load_extended_slice  # noqa: E402
 from runners.pairing import pair_subject_verdicts  # noqa: E402
@@ -94,6 +111,8 @@ SLICE_PATH = REPO_ROOT / "fixtures" / "adversarial_slice" / "cases.yaml"
 PRICE_IN_PER_MILLION = 0.042
 
 TASKS = ("gate", "t2", "t3")
+READINGS = "readings"
+TIERS = ("t2", "t3")
 GATE_RUNNER_ID = "adversarial_gate"
 GATE_ORDERS: dict[str, tuple[str, ...]] = {
     GATE_RUNNER_ID: ("clean", "adversarial"),
@@ -105,6 +124,8 @@ ADJUDICATION_ORDER_SUFFIXES: dict[str, tuple[str, ...]] = {
     "-rot1": ("retain", "escalate", "erase"),
     "-rot2": ("escalate", "erase", "retain"),
 }
+# How `report/adjudication_comparison.py` names each order across the two tiers.
+ORDER_LABELS: dict[str, str] = {"": "primary", "-rot1": "rot1", "-rot2": "rot2"}
 GATE_SAMPLES = (0, 1, 2, 3, 4)
 ADJUDICATION_SAMPLES = (0, 1, 2)
 FIRST_TRY = 0
@@ -444,14 +465,127 @@ def write_results(reports: dict[str, dict[str, Any]], results_dir: Path) -> list
     return written
 
 
+def readings_reports(
+    sweeps: dict[str, Sweep],
+    *,
+    subjects: Sequence[AdjudicationSubject],
+    cases: Sequence[AdversarialSeedCase],
+    export_agent_sha: str,
+    sonnet_cache_root: Path,
+) -> dict[str, dict[str, Any]]:
+    """Q2 to Q5 from the three sweeps: the comparison with Sonnet, calibration, stability."""
+    jev_first_try = {
+        label: {
+            tier: {
+                case: answer.choice
+                for case, answer in sweeps[tier].answers[f"{tier}{suffix}"][FIRST_TRY].items()
+            }
+            for tier in TIERS
+        }
+        for suffix, label in ORDER_LABELS.items()
+    }
+    comparison = build_adjudication_comparison(
+        subjects=subjects,
+        jev_first_try=jev_first_try,
+        sonnet_first_try={
+            tier: sonnet_first_try_verdicts(sonnet_cache_root, subjects, tier=tier)
+            for tier in TIERS
+        },
+        option_orders={
+            label: ADJUDICATION_ORDER_SUFFIXES[suffix] for suffix, label in ORDER_LABELS.items()
+        },
+        export_agent_sha=export_agent_sha,
+        usage={
+            **{tier: usage_summary(sweeps[tier].entries) for tier in TIERS},
+            "t2_and_t3": usage_summary(entry for tier in TIERS for entry in sweeps[tier].entries),
+        },
+    )
+    calibration = build_calibration(
+        subjects=subjects,
+        answers=sweeps["t3"].answers["t3"][FIRST_TRY],
+        runner_id="t3",
+        export_agent_sha=export_agent_sha,
+    )
+    blocks = {
+        "gate": gate_stability(
+            sweeps["gate"].answers,
+            sweeps["gate"].entries,
+            cases=cases,
+            primary=GATE_RUNNER_ID,
+            orders=GATE_ORDERS,
+        ),
+        **{
+            tier: adjudication_stability(
+                sweeps[tier].answers,
+                sweeps[tier].entries,
+                subjects=subjects,
+                primary=tier,
+                orders=adjudication_orders(tier),
+            )
+            for tier in TIERS
+        },
+    }
+    return {
+        "adjudication-comparison.json": comparison,
+        "calibration.json": calibration,
+        "stability.json": build_stability(blocks=blocks, export_agent_sha=export_agent_sha),
+    }
+
+
+def run_readings(
+    *,
+    cache_root: Path = CACHE_ROOT,
+    results_dir: Path = RESULTS_DIR,
+    sonnet_cache_root: Path = CACHE_ROOT,
+) -> tuple[dict[str, Sweep], dict[str, dict[str, Any]]]:
+    """Replay every Jev sweep offline and write the Q2 to Q5 files. Never calls."""
+    bundle = load_export(EXPORT_DIR)
+    cases = load_gate_cases()
+    sweeps = {
+        task: run_sweep(
+            task,
+            gate_requests(cases) if task == "gate" else adjudication_requests(task, bundle),
+            samples=samples_for(task),
+            cache_root=cache_root,
+            cache_mode="offline",
+            client=None,
+        )
+        for task in TASKS
+    }
+    reports = readings_reports(
+        sweeps,
+        subjects=bundle.subjects,
+        cases=cases,
+        export_agent_sha=bundle.verify_provenance().agent_commit_sha,
+        sonnet_cache_root=sonnet_cache_root,
+    )
+    write_results(reports, results_dir)
+    return sweeps, reports
+
+
 def _decimals(value: float) -> int:
     text = repr(value)
     return len(text.split(".", 1)[1]) if "." in text and "e" not in text else 0
 
 
 def probe_summary(sweep: Sweep) -> list[str]:
-    """What the first live responses must answer: rounding, ties, and order sensitivity."""
+    """What the first live responses must answer: model, rounding, ties, order, cost and time."""
     lines: list[str] = []
+    for entry in sweep.entries:
+        tokens = "?" if entry.usage is None else entry.usage.input_tokens
+        lines.append(
+            f"call {entry.key.runner_id:<24} s{entry.key.sample_index} {entry.key.case_id:<36} "
+            f"input_tokens={tokens} latency_ms={entry.latency_ms}"
+        )
+    models = sorted(
+        {
+            answer.model
+            for by_sample in sweep.answers.values()
+            for by_case in by_sample.values()
+            for answer in by_case.values()
+        }
+    )
+    lines.append(f"response models: {models}")
     decimals: set[int] = set()
     for runner_id, by_sample in sweep.answers.items():
         for sample_index, by_case in sorted(by_sample.items()):
@@ -551,7 +685,7 @@ def run(
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n", 1)[0])
-    parser.add_argument("task", choices=(*TASKS, "models"))
+    parser.add_argument("task", choices=(*TASKS, READINGS, "models"))
     parser.add_argument(
         "--cache-mode",
         choices=("offline", "refresh"),
@@ -568,6 +702,13 @@ def main(argv: list[str] | None = None) -> int:
             response = client.list_models()
         print(f"GET /v1/models: HTTP 200 in {response.latency_ms} ms")
         print(response.text)
+        return 0
+
+    if args.task == READINGS:
+        if args.case_ids or args.samples:
+            raise SystemExit("readings covers every case and sample; drop --case / --samples")
+        sweeps, reports = run_readings()
+        print(f"wrote {', '.join(f'results/jev/{name}' for name in reports)} (no call)")
         return 0
 
     samples = [int(item) for item in args.samples.split(",")] if args.samples else None
