@@ -9,6 +9,8 @@
   case's probabilities are identical in all orders, order invariance and the server re-sorting
   the options cannot be told apart, and the control is reported as uninformative.
 - **Ties.** Per run, the cases whose top probability is shared by two options.
+- **Choice not top.** Per run, the cases whose API choice has less probability than another
+  option. The choice stays the verdict; each case lists the most probable option(s) beside it.
 - **Version.** Every answer names `jev-1.13.0`, and every entry carries `latency_ms`.
 
 The gate's top option is its stored outcome: `adversarial` when P(adversarial) >= 0.5. It
@@ -44,6 +46,11 @@ def adjudication_top_option(answer: Answer) -> str:
 def _tied(answer: Answer) -> bool:
     top = max(answer.probabilities.values())
     return sum(1 for value in answer.probabilities.values() if value == top) > 1
+
+
+def _most_probable(answer: Answer) -> list[str]:
+    top = max(answer.probabilities.values())
+    return [option for option, value in answer.probabilities.items() if value == top]
 
 
 def repeat_changes(
@@ -123,6 +130,31 @@ def order_sensitivity(
     }
 
 
+def choice_not_top(answers: Answers) -> dict[str, dict[str, Any]]:
+    """Per run and sample, the cases whose API choice is not a most probable option."""
+    return {
+        runner_id: {
+            str(sample): {
+                "count": len(
+                    rows := [
+                        {
+                            "case": case,
+                            "choice": answer.choice,
+                            "most_probable": _most_probable(answer),
+                            "probabilities": dict(answer.probabilities),
+                        }
+                        for case, answer in sorted(by_case.items())
+                        if answer.choice not in _most_probable(answer)
+                    ]
+                ),
+                "cases": rows,
+            }
+            for sample, by_case in sorted(by_sample.items())
+        }
+        for runner_id, by_sample in answers.items()
+    }
+
+
 def version_check(answers: Answers, entries: Iterable[CacheEntry]) -> dict[str, Any]:
     models = Counter(
         answer.model
@@ -161,6 +193,7 @@ def _block(
             "headline": order_sensitivity(rates_by_order, primary=primary, metric=metric),
         },
         "ties": ties(answers),
+        "choice_not_top": choice_not_top(answers),
         "version": version_check(answers, entries),
     }
 
@@ -240,6 +273,10 @@ def build_stability(
             "adjudication) falls outside the primary order's Wilson 95% CI"
         ),
         "uninformative_rule": "every case's probabilities identical in every order",
+        "choice_not_top_rule": (
+            "the API's choice has less probability than another option; the choice is kept "
+            "as the verdict"
+        ),
         "every_answer_is_pinned": all(
             block["version"]["every_answer_is_pinned"] for block in blocks.values()
         ),

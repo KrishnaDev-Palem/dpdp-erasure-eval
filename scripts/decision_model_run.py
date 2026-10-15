@@ -596,6 +596,7 @@ def probe_summary(sweep: Sweep) -> list[str]:
                     f"{runner_id:<24} s{sample_index} {case_id:<36} {probs}  "
                     f"choice={answer.choice} confidence={answer.confidence!r}"
                     + ("  TIE" if answer.tied else "")
+                    + ("" if answer.choice_is_top else "  CHOICE NOT TOP")
                 )
     lines.append(f"decimal places seen in probabilities: {sorted(decimals)}")
     ties = sum(

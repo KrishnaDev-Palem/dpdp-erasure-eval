@@ -94,6 +94,41 @@ def test_ties_are_counted_per_run_and_sample() -> None:
     }
 
 
+def test_a_choice_that_is_not_the_most_probable_is_listed_and_stays_the_verdict(subjects) -> None:
+    off = {"erase": 0.39, "retain": 0.23, "escalate": 0.38}
+    tied = {"erase": 0.4, "retain": 0.4, "escalate": 0.2}
+    answers = {
+        "t3": {
+            0: {"a": verdict_answer("escalate", off), "b": verdict_answer("retain", tied)},
+            1: {"a": verdict_answer("erase", off), "b": verdict_answer("retain")},
+        }
+    }
+    assert q4.choice_not_top(answers) == {
+        "t3": {
+            "0": {
+                "count": 1,
+                "cases": [
+                    {
+                        "case": "a",
+                        "choice": "escalate",
+                        "most_probable": ["erase"],
+                        "probabilities": off,
+                    }
+                ],
+            },
+            "1": {"count": 0, "cases": []},
+        }
+    }
+    assert q4.adjudication_top_option(answers["t3"][0]["a"]) == "escalate"
+
+    case = subjects[0].subject_id
+    first_try = {"t3": {0: {case: verdict_answer("escalate", off)}}}
+    block = q4.adjudication_stability(
+        first_try, [entry()], subjects=subjects[:1], primary="t3", orders={"t3": T3_ORDERS["t3"]}
+    )
+    assert block["choice_not_top"]["t3"]["0"]["count"] == 1
+
+
 def test_another_model_or_a_missing_latency_is_visible_in_the_version_block() -> None:
     answers = {"t3": {0: {"a": gate_answer(0.2), "b": gate_answer(0.2, model="jev-1.14.0")}}}
     version = q4.version_check(answers, [entry(), entry(None)])

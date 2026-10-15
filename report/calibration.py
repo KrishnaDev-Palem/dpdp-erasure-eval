@@ -25,6 +25,8 @@ reported, because the slice is weighted by design.
 Brier score and the reliability table are over all 350 cases, since nothing is tuned on them.
 The multi-class Brier score sums (p - y)^2 over the three options (0 to 2); the top-option score
 is (p_max - correct)^2 (0 to 1) and matches the reliability table, which buckets p_max.
+"Correct" and "acted on with `erase`" read the API's choice, the scored verdict, even in the
+rare answer whose choice is not the top option (counted in `stability.json`).
 """
 
 from __future__ import annotations

@@ -169,6 +169,11 @@ class ChoiceAnswer:
         top = self.top_probability
         return sum(1 for value in self.probabilities.values() if value == top) > 1
 
+    @property
+    def choice_is_top(self) -> bool:
+        """False when the API's choice has less probability than another option."""
+        return self.probabilities[self.choice] == self.top_probability
+
 
 def parse_choice_answer(
     provider_body: str,
@@ -177,7 +182,12 @@ def parse_choice_answer(
     options: Sequence[str],
     model: str,
 ) -> ChoiceAnswer:
-    """Read one `choice` answer out of a response body, checking it against the request."""
+    """Read one `choice` answer out of a response body, checking it against the request.
+
+    A choice that is not a most probable option is kept, not rejected: `jev-1.13.0` returned
+    one in the T2 run, and stopping on it would drop that answer and re-draw its sample. The
+    choice stays the verdict; `ChoiceAnswer.choice_is_top` marks it for counting.
+    """
     try:
         data = json.loads(provider_body)
     except json.JSONDecodeError as exc:
@@ -215,8 +225,6 @@ def parse_choice_answer(
     choice = answer.get("choice")
     if choice not in probabilities:
         raise ModelResponseError(f"choice {choice!r} is not an offered option")
-    if probabilities[choice] != max(probabilities.values()):
-        raise ModelResponseError(f"choice {choice!r} is not a most probable option")
 
     confidence = answer.get("confidence")
     return ChoiceAnswer(

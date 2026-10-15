@@ -71,9 +71,11 @@ class FakeTypeSafe:
         *,
         model: str = MODEL,
         override: Callable[[Any, str, list[str]], dict[str, float] | None] | None = None,
+        choose: Callable[[dict[str, float]], str] | None = None,
     ) -> None:
         self.model = model
         self.override = override
+        self.choose = choose
         self.requests: list[httpx.Request] = []
 
     def __call__(self, request: httpx.Request) -> httpx.Response:
@@ -86,6 +88,8 @@ class FakeTypeSafe:
         )
         top = max(probabilities.values())
         choice = next(option for option in options if probabilities[option] == top)
+        if self.choose is not None:
+            choice = self.choose(probabilities)
         return httpx.Response(
             200,
             text=json.dumps(
@@ -247,6 +251,29 @@ def test_a_tie_is_flagged_by_the_threshold_whatever_the_api_choice(tmp_path) -> 
     (entry,) = [e for e in sweep.entries if e.key.runner_id == "adversarial_gate"]
     assert entry.raw_response["outcome"] == "adversarial"
     assert any("ties: 2" in line for line in runner.probe_summary(sweep))
+
+
+def test_a_choice_that_is_not_the_top_option_is_stored_as_the_verdict(tmp_path) -> None:
+    probabilities = {"erase": 0.39, "retain": 0.23, "escalate": 0.38}
+    handler = FakeTypeSafe(
+        override=lambda state, key, options: probabilities,
+        choose=lambda _: "escalate",
+    )
+    case = load_export(REPO_ROOT / "export").subjects[0].subject_id
+    narrowed = {"samples": [0], "case_ids": [case]}
+    sweep, _ = runner.run(
+        "t2", cache_mode="refresh", cache_root=tmp_path, client=fake_client(handler), **narrowed
+    )
+    assert len(handler.requests) == 3
+    for runner_id in ("t2", "t2-rot1", "t2-rot2"):
+        answer = sweep.answers[runner_id][0][case]
+        assert answer.choice == "escalate" and not answer.choice_is_top
+    entry = next(e for e in sweep.entries if e.key.runner_id == "t2")
+    assert entry.raw_response["verdicts"][0]["verdict"] == "escalate"
+    assert sum("CHOICE NOT TOP" in line for line in runner.probe_summary(sweep)) == 3
+
+    replay, _ = runner.run("t2", cache_mode="offline", cache_root=tmp_path, **narrowed)
+    assert replay.answers == sweep.answers
 
 
 def test_a_narrowed_run_writes_no_results_and_reports_rounding_and_order(tmp_path) -> None:
