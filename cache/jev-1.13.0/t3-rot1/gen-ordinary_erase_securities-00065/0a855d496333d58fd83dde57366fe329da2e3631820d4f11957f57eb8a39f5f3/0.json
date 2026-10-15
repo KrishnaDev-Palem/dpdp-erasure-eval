@@ -1,0 +1,24 @@
+{
+  "case_id": "gen-ordinary_erase_securities-00065",
+  "latency_ms": 274,
+  "model_id": "jev-1.13.0",
+  "prompt_hash": "0a855d496333d58fd83dde57366fe329da2e3631820d4f11957f57eb8a39f5f3",
+  "raw_response": {
+    "provider_body": "{\"model\":\"jev-1.13.0\",\"answers\":{\"loc-0d65f7a7e074\":{\"type\":\"choice\",\"choice\":\"retain\",\"confidence\":0.79,\"probabilities\":{\"retain\":0.86,\"escalate\":0.05,\"erase\":0.09}}},\"usage\":{\"input_tokens\":1017,\"output_tokens\":53}}",
+    "verdicts": [
+      {
+        "location_id": "loc-0d65f7a7e074",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-10-15T09:12:31Z",
+  "runner_id": "t3-rot1",
+  "sample_index": 0,
+  "tool_calls": [],
+  "usage": {
+    "call_count": 1,
+    "input_tokens": 1017,
+    "output_tokens": 53
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "case_id": "gen-arity4_cite_3_payment-00085",
+  "latency_ms": 280,
+  "model_id": "jev-1.13.0",
+  "prompt_hash": "a5e171ac56470d4efb9fc4ec04b0e9f9604ef5b09a5ef387a23934059a95246a",
+  "raw_response": {
+    "provider_body": "{\"model\":\"jev-1.13.0\",\"answers\":{\"loc-42faba25bba9\":{\"type\":\"choice\",\"choice\":\"erase\",\"confidence\":0.4,\"probabilities\":{\"escalate\":0.16,\"erase\":0.6,\"retain\":0.24}}},\"usage\":{\"input_tokens\":568,\"output_tokens\":50}}",
+    "verdicts": [
+      {
+        "location_id": "loc-42faba25bba9",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-10-15T08:45:13Z",
+  "runner_id": "t2-rot2",
+  "sample_index": 0,
+  "tool_calls": [],
+  "usage": {
+    "call_count": 1,
+    "input_tokens": 568,
+    "output_tokens": 50
+  }
+}

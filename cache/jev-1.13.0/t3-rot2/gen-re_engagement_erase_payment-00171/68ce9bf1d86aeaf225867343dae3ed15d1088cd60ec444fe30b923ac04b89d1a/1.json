@@ -1,0 +1,24 @@
+{
+  "case_id": "gen-re_engagement_erase_payment-00171",
+  "latency_ms": 285,
+  "model_id": "jev-1.13.0",
+  "prompt_hash": "68ce9bf1d86aeaf225867343dae3ed15d1088cd60ec444fe30b923ac04b89d1a",
+  "raw_response": {
+    "provider_body": "{\"model\":\"jev-1.13.0\",\"answers\":{\"loc-f9a5cdb1bb25\":{\"type\":\"choice\",\"choice\":\"retain\",\"confidence\":0.79,\"probabilities\":{\"escalate\":0.09,\"erase\":0.05,\"retain\":0.86}}},\"usage\":{\"input_tokens\":1020,\"output_tokens\":50}}",
+    "verdicts": [
+      {
+        "location_id": "loc-f9a5cdb1bb25",
+        "verdict": "retain"
+      }
+    ]
+  },
+  "recorded_at": "2026-10-15T09:19:31Z",
+  "runner_id": "t3-rot2",
+  "sample_index": 1,
+  "tool_calls": [],
+  "usage": {
+    "call_count": 1,
+    "input_tokens": 1020,
+    "output_tokens": 50
+  }
+}

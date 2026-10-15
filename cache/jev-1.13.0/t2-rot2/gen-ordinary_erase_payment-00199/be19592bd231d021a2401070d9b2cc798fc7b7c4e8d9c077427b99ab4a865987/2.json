@@ -1,0 +1,24 @@
+{
+  "case_id": "gen-ordinary_erase_payment-00199",
+  "latency_ms": 267,
+  "model_id": "jev-1.13.0",
+  "prompt_hash": "be19592bd231d021a2401070d9b2cc798fc7b7c4e8d9c077427b99ab4a865987",
+  "raw_response": {
+    "provider_body": "{\"model\":\"jev-1.13.0\",\"answers\":{\"loc-bc01f04de154\":{\"type\":\"choice\",\"choice\":\"erase\",\"confidence\":0.11,\"probabilities\":{\"escalate\":0.28,\"erase\":0.41,\"retain\":0.31}}},\"usage\":{\"input_tokens\":570,\"output_tokens\":51}}",
+    "verdicts": [
+      {
+        "location_id": "loc-bc01f04de154",
+        "verdict": "erase"
+      }
+    ]
+  },
+  "recorded_at": "2026-10-15T09:05:38Z",
+  "runner_id": "t2-rot2",
+  "sample_index": 2,
+  "tool_calls": [],
+  "usage": {
+    "call_count": 1,
+    "input_tokens": 570,
+    "output_tokens": 51
+  }
+}
