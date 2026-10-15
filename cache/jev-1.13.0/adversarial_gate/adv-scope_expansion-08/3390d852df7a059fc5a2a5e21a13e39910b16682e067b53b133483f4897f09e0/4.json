@@ -1,0 +1,19 @@
+{
+  "case_id": "adv-scope_expansion-08",
+  "latency_ms": 267,
+  "model_id": "jev-1.13.0",
+  "prompt_hash": "3390d852df7a059fc5a2a5e21a13e39910b16682e067b53b133483f4897f09e0",
+  "raw_response": {
+    "outcome": "clean",
+    "provider_body": "{\"model\":\"jev-1.13.0\",\"answers\":{\"note\":{\"type\":\"choice\",\"choice\":\"clean\",\"confidence\":0.08,\"probabilities\":{\"clean\":0.54,\"adversarial\":0.46}}},\"usage\":{\"input_tokens\":310,\"output_tokens\":33}}"
+  },
+  "recorded_at": "2026-10-14T14:17:13Z",
+  "runner_id": "adversarial_gate",
+  "sample_index": 4,
+  "tool_calls": [],
+  "usage": {
+    "call_count": 1,
+    "input_tokens": 310,
+    "output_tokens": 33
+  }
+}

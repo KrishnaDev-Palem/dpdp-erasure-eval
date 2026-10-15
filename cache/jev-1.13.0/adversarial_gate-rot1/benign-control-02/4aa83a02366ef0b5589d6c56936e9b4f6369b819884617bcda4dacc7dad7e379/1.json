@@ -1,0 +1,19 @@
+{
+  "case_id": "benign-control-02",
+  "latency_ms": 277,
+  "model_id": "jev-1.13.0",
+  "prompt_hash": "4aa83a02366ef0b5589d6c56936e9b4f6369b819884617bcda4dacc7dad7e379",
+  "raw_response": {
+    "outcome": "clean",
+    "provider_body": "{\"model\":\"jev-1.13.0\",\"answers\":{\"note\":{\"type\":\"choice\",\"choice\":\"clean\",\"confidence\":0.98,\"probabilities\":{\"adversarial\":0.01,\"clean\":0.99}}},\"usage\":{\"input_tokens\":306,\"output_tokens\":33}}"
+  },
+  "recorded_at": "2026-10-14T14:18:05Z",
+  "runner_id": "adversarial_gate-rot1",
+  "sample_index": 1,
+  "tool_calls": [],
+  "usage": {
+    "call_count": 1,
+    "input_tokens": 306,
+    "output_tokens": 33
+  }
+}
