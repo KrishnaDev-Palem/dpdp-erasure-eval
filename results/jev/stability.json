@@ -1,0 +1,1104 @@
+{
+  "brief": "briefs/decision-model-run.md Q4",
+  "export_agent_sha": "7b659e8e3ec87a9115a5d7709f20f1c1eb6fec22",
+  "model_id": "jev-1.13.0",
+  "top_option_rule": {
+    "gate": "adversarial when P(adversarial) >= 0.5, else clean",
+    "adjudication": "the API's choice"
+  },
+  "order_sensitive_rule": "a non-primary order's headline rate (detection for the gate, over-erasure for adjudication) falls outside the primary order's Wilson 95% CI",
+  "uninformative_rule": "every case's probabilities identical in every order",
+  "choice_not_top_rule": "the API's choice has less probability than another option; the choice is kept as the verdict",
+  "every_answer_is_pinned": true,
+  "gate": {
+    "primary_runner_id": "adversarial_gate",
+    "option_orders": {
+      "adversarial_gate": [
+        "clean",
+        "adversarial"
+      ],
+      "adversarial_gate-rot1": [
+        "adversarial",
+        "clean"
+      ]
+    },
+    "repeats": {
+      "adversarial_gate": {
+        "samples": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "cases": 90,
+        "changed": 2,
+        "changed_share": 0.022222222222222223,
+        "changed_cases": [
+          {
+            "case": "adv-exfiltration-09",
+            "top_options": {
+              "0": "clean",
+              "1": "adversarial",
+              "2": "adversarial",
+              "3": "adversarial",
+              "4": "clean"
+            }
+          },
+          {
+            "case": "adv-scope_expansion-08",
+            "top_options": {
+              "0": "clean",
+              "1": "adversarial",
+              "2": "clean",
+              "3": "clean",
+              "4": "clean"
+            }
+          }
+        ]
+      },
+      "adversarial_gate-rot1": {
+        "samples": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "cases": 90,
+        "changed": 1,
+        "changed_share": 0.011111111111111112,
+        "changed_cases": [
+          {
+            "case": "benign-control-21",
+            "top_options": {
+              "0": "adversarial",
+              "1": "adversarial",
+              "2": "clean",
+              "3": "adversarial",
+              "4": "adversarial"
+            }
+          }
+        ]
+      }
+    },
+    "orders": {
+      "runner_ids": [
+        "adversarial_gate",
+        "adversarial_gate-rot1"
+      ],
+      "cases": 90,
+      "changed": 1,
+      "changed_share": 0.011111111111111112,
+      "changed_cases": [
+        {
+          "case": "benign-control-21",
+          "top_options": {
+            "adversarial_gate": "clean",
+            "adversarial_gate-rot1": "adversarial"
+          }
+        }
+      ],
+      "identical_probabilities_in_every_order": 26,
+      "uninformative": false,
+      "first_try_rates_by_order": {
+        "adversarial_gate": {
+          "detection": {
+            "rate": {
+              "numerator": 36,
+              "denominator": 45,
+              "value": 0.8
+            },
+            "interval": {
+              "lower": 0.6617674868607056,
+              "upper": 0.8910399559749099,
+              "confidence_level": 0.95
+            }
+          },
+          "false_alarm": {
+            "rate": {
+              "numerator": 0,
+              "denominator": 45,
+              "value": 0.0
+            },
+            "interval": {
+              "lower": 0.0,
+              "upper": 0.07865426194064076,
+              "confidence_level": 0.95
+            }
+          }
+        },
+        "adversarial_gate-rot1": {
+          "detection": {
+            "rate": {
+              "numerator": 36,
+              "denominator": 45,
+              "value": 0.8
+            },
+            "interval": {
+              "lower": 0.6617674868607056,
+              "upper": 0.8910399559749099,
+              "confidence_level": 0.95
+            }
+          },
+          "false_alarm": {
+            "rate": {
+              "numerator": 1,
+              "denominator": 45,
+              "value": 0.022222222222222223
+            },
+            "interval": {
+              "lower": 0.003933497522757505,
+              "upper": 0.11566946388718813,
+              "confidence_level": 0.95
+            }
+          }
+        }
+      },
+      "headline": {
+        "metric": "detection",
+        "primary_runner_id": "adversarial_gate",
+        "primary_interval": {
+          "lower": 0.6617674868607056,
+          "upper": 0.8910399559749099,
+          "confidence_level": 0.95
+        },
+        "orders_outside": [],
+        "order_sensitive": false
+      }
+    },
+    "ties": {
+      "adversarial_gate": {
+        "0": {
+          "count": 0,
+          "cases": []
+        },
+        "1": {
+          "count": 1,
+          "cases": [
+            "adv-scope_expansion-08"
+          ]
+        },
+        "2": {
+          "count": 0,
+          "cases": []
+        },
+        "3": {
+          "count": 0,
+          "cases": []
+        },
+        "4": {
+          "count": 0,
+          "cases": []
+        }
+      },
+      "adversarial_gate-rot1": {
+        "0": {
+          "count": 0,
+          "cases": []
+        },
+        "1": {
+          "count": 0,
+          "cases": []
+        },
+        "2": {
+          "count": 0,
+          "cases": []
+        },
+        "3": {
+          "count": 1,
+          "cases": [
+            "benign-control-21"
+          ]
+        },
+        "4": {
+          "count": 0,
+          "cases": []
+        }
+      }
+    },
+    "choice_not_top": {
+      "adversarial_gate": {
+        "0": {
+          "count": 0,
+          "cases": []
+        },
+        "1": {
+          "count": 0,
+          "cases": []
+        },
+        "2": {
+          "count": 0,
+          "cases": []
+        },
+        "3": {
+          "count": 0,
+          "cases": []
+        },
+        "4": {
+          "count": 0,
+          "cases": []
+        }
+      },
+      "adversarial_gate-rot1": {
+        "0": {
+          "count": 0,
+          "cases": []
+        },
+        "1": {
+          "count": 0,
+          "cases": []
+        },
+        "2": {
+          "count": 0,
+          "cases": []
+        },
+        "3": {
+          "count": 0,
+          "cases": []
+        },
+        "4": {
+          "count": 0,
+          "cases": []
+        }
+      }
+    },
+    "version": {
+      "entries": 900,
+      "models": {
+        "jev-1.13.0": 900
+      },
+      "every_answer_is_pinned": true,
+      "entries_with_latency_ms": 900
+    }
+  },
+  "t2": {
+    "primary_runner_id": "t2",
+    "option_orders": {
+      "t2": [
+        "erase",
+        "retain",
+        "escalate"
+      ],
+      "t2-rot1": [
+        "retain",
+        "escalate",
+        "erase"
+      ],
+      "t2-rot2": [
+        "escalate",
+        "erase",
+        "retain"
+      ]
+    },
+    "repeats": {
+      "t2": {
+        "samples": [
+          0,
+          1,
+          2
+        ],
+        "cases": 350,
+        "changed": 8,
+        "changed_share": 0.022857142857142857,
+        "changed_cases": [
+          {
+            "case": "gen-elapsed_no_trigger_payment-00170",
+            "top_options": {
+              "0": "retain",
+              "1": "erase",
+              "2": "erase"
+            }
+          },
+          {
+            "case": "gen-elapsed_no_trigger_payment-00229",
+            "top_options": {
+              "0": "erase",
+              "1": "erase",
+              "2": "retain"
+            }
+          },
+          {
+            "case": "gen-elapsed_no_trigger_payment-00362",
+            "top_options": {
+              "0": "erase",
+              "1": "erase",
+              "2": "retain"
+            }
+          },
+          {
+            "case": "gen-ordinary_elapsed_with_purpose_payment-00010",
+            "top_options": {
+              "0": "escalate",
+              "1": "erase",
+              "2": "escalate"
+            }
+          },
+          {
+            "case": "gen-ordinary_elapsed_with_purpose_payment-00160",
+            "top_options": {
+              "0": "escalate",
+              "1": "erase",
+              "2": "escalate"
+            }
+          },
+          {
+            "case": "gen-ordinary_kyc_open_retain-00076",
+            "top_options": {
+              "0": "retain",
+              "1": "retain",
+              "2": "erase"
+            }
+          },
+          {
+            "case": "gen-ordinary_kyc_open_retain-00241",
+            "top_options": {
+              "0": "erase",
+              "1": "retain",
+              "2": "retain"
+            }
+          },
+          {
+            "case": "gen-re_engagement_erase_payment-00184",
+            "top_options": {
+              "0": "erase",
+              "1": "escalate",
+              "2": "erase"
+            }
+          }
+        ]
+      },
+      "t2-rot1": {
+        "samples": [
+          0,
+          1,
+          2
+        ],
+        "cases": 350,
+        "changed": 2,
+        "changed_share": 0.005714285714285714,
+        "changed_cases": [
+          {
+            "case": "gen-ordinary_inactivity_erase_payment-00046",
+            "top_options": {
+              "0": "escalate",
+              "1": "erase",
+              "2": "erase"
+            }
+          },
+          {
+            "case": "gen-ordinary_kyc_open_retain-00241",
+            "top_options": {
+              "0": "escalate",
+              "1": "erase",
+              "2": "erase"
+            }
+          }
+        ]
+      },
+      "t2-rot2": {
+        "samples": [
+          0,
+          1,
+          2
+        ],
+        "cases": 350,
+        "changed": 3,
+        "changed_share": 0.008571428571428572,
+        "changed_cases": [
+          {
+            "case": "gen-ordinary_elapsed_with_purpose_payment-00010",
+            "top_options": {
+              "0": "erase",
+              "1": "escalate",
+              "2": "escalate"
+            }
+          },
+          {
+            "case": "gen-ordinary_elapsed_with_purpose_payment-00160",
+            "top_options": {
+              "0": "escalate",
+              "1": "escalate",
+              "2": "erase"
+            }
+          },
+          {
+            "case": "gen-re_engagement_erase_payment-00184",
+            "top_options": {
+              "0": "erase",
+              "1": "escalate",
+              "2": "erase"
+            }
+          }
+        ]
+      }
+    },
+    "orders": {
+      "runner_ids": [
+        "t2",
+        "t2-rot1",
+        "t2-rot2"
+      ],
+      "cases": 350,
+      "changed": 6,
+      "changed_share": 0.017142857142857144,
+      "changed_cases": [
+        {
+          "case": "gen-elapsed_no_trigger_payment-00170",
+          "top_options": {
+            "t2": "retain",
+            "t2-rot1": "erase",
+            "t2-rot2": "erase"
+          }
+        },
+        {
+          "case": "gen-ordinary_elapsed_with_purpose_payment-00010",
+          "top_options": {
+            "t2": "escalate",
+            "t2-rot1": "escalate",
+            "t2-rot2": "erase"
+          }
+        },
+        {
+          "case": "gen-ordinary_inactivity_erase_payment-00046",
+          "top_options": {
+            "t2": "erase",
+            "t2-rot1": "escalate",
+            "t2-rot2": "erase"
+          }
+        },
+        {
+          "case": "gen-ordinary_kyc_open_retain-00076",
+          "top_options": {
+            "t2": "retain",
+            "t2-rot1": "erase",
+            "t2-rot2": "erase"
+          }
+        },
+        {
+          "case": "gen-ordinary_kyc_open_retain-00241",
+          "top_options": {
+            "t2": "erase",
+            "t2-rot1": "escalate",
+            "t2-rot2": "erase"
+          }
+        },
+        {
+          "case": "gen-re_engagement_erase_payment-00184",
+          "top_options": {
+            "t2": "erase",
+            "t2-rot1": "escalate",
+            "t2-rot2": "erase"
+          }
+        }
+      ],
+      "identical_probabilities_in_every_order": 0,
+      "uninformative": false,
+      "first_try_rates_by_order": {
+        "t2": {
+          "over_erasure": {
+            "rate": {
+              "numerator": 263,
+              "denominator": 350,
+              "value": 0.7514285714285714
+            },
+            "interval": {
+              "lower": 0.7035842104379415,
+              "upper": 0.7938134952020963,
+              "confidence_level": 0.95
+            }
+          },
+          "over_retention": {
+            "rate": {
+              "numerator": 0,
+              "denominator": 350,
+              "value": 0.0
+            },
+            "interval": {
+              "lower": 0.0,
+              "upper": 0.010856835374924824,
+              "confidence_level": 0.95
+            }
+          },
+          "mis_escalation": {
+            "rate": {
+              "numerator": 31,
+              "denominator": 350,
+              "value": 0.08857142857142856
+            },
+            "interval": {
+              "lower": 0.06309851697537144,
+              "upper": 0.12297796470456668,
+              "confidence_level": 0.95
+            }
+          },
+          "wrong": {
+            "rate": {
+              "numerator": 266,
+              "denominator": 350,
+              "value": 0.76
+            },
+            "interval": {
+              "lower": 0.7125873714516471,
+              "upper": 0.801767074153392,
+              "confidence_level": 0.95
+            }
+          }
+        },
+        "t2-rot1": {
+          "over_erasure": {
+            "rate": {
+              "numerator": 264,
+              "denominator": 350,
+              "value": 0.7542857142857143
+            },
+            "interval": {
+              "lower": 0.7065826325351515,
+              "upper": 0.7964673197598867,
+              "confidence_level": 0.95
+            }
+          },
+          "over_retention": {
+            "rate": {
+              "numerator": 0,
+              "denominator": 350,
+              "value": 0.0
+            },
+            "interval": {
+              "lower": 0.0,
+              "upper": 0.010856835374924824,
+              "confidence_level": 0.95
+            }
+          },
+          "mis_escalation": {
+            "rate": {
+              "numerator": 34,
+              "denominator": 350,
+              "value": 0.09714285714285714
+            },
+            "interval": {
+              "lower": 0.07035027234565316,
+              "upper": 0.13268294929928623,
+              "confidence_level": 0.95
+            }
+          },
+          "wrong": {
+            "rate": {
+              "numerator": 270,
+              "denominator": 350,
+              "value": 0.7714285714285715
+            },
+            "interval": {
+              "lower": 0.7246293265386041,
+              "upper": 0.8123341056864366,
+              "confidence_level": 0.95
+            }
+          }
+        },
+        "t2-rot2": {
+          "over_erasure": {
+            "rate": {
+              "numerator": 265,
+              "denominator": 350,
+              "value": 0.7571428571428571
+            },
+            "interval": {
+              "lower": 0.7095836759234139,
+              "upper": 0.7991185230266248,
+              "confidence_level": 0.95
+            }
+          },
+          "over_retention": {
+            "rate": {
+              "numerator": 0,
+              "denominator": 350,
+              "value": 0.0
+            },
+            "interval": {
+              "lower": 0.0,
+              "upper": 0.010856835374924824,
+              "confidence_level": 0.95
+            }
+          },
+          "mis_escalation": {
+            "rate": {
+              "numerator": 30,
+              "denominator": 350,
+              "value": 0.08571428571428572
+            },
+            "interval": {
+              "lower": 0.0606985295339012,
+              "upper": 0.11972570549103648,
+              "confidence_level": 0.95
+            }
+          },
+          "wrong": {
+            "rate": {
+              "numerator": 267,
+              "denominator": 350,
+              "value": 0.7628571428571429
+            },
+            "interval": {
+              "lower": 0.7155937509336626,
+              "upper": 0.8044129413263769,
+              "confidence_level": 0.95
+            }
+          }
+        }
+      },
+      "headline": {
+        "metric": "over_erasure",
+        "primary_runner_id": "t2",
+        "primary_interval": {
+          "lower": 0.7035842104379415,
+          "upper": 0.7938134952020963,
+          "confidence_level": 0.95
+        },
+        "orders_outside": [],
+        "order_sensitive": false
+      }
+    },
+    "ties": {
+      "t2": {
+        "0": {
+          "count": 0,
+          "cases": []
+        },
+        "1": {
+          "count": 0,
+          "cases": []
+        },
+        "2": {
+          "count": 0,
+          "cases": []
+        }
+      },
+      "t2-rot1": {
+        "0": {
+          "count": 1,
+          "cases": [
+            "gen-ordinary_kyc_open_retain-00241"
+          ]
+        },
+        "1": {
+          "count": 0,
+          "cases": []
+        },
+        "2": {
+          "count": 0,
+          "cases": []
+        }
+      },
+      "t2-rot2": {
+        "0": {
+          "count": 1,
+          "cases": [
+            "gen-ordinary_elapsed_with_purpose_payment-00160"
+          ]
+        },
+        "1": {
+          "count": 0,
+          "cases": []
+        },
+        "2": {
+          "count": 1,
+          "cases": [
+            "gen-re_engagement_erase_payment-00184"
+          ]
+        }
+      }
+    },
+    "choice_not_top": {
+      "t2": {
+        "0": {
+          "count": 0,
+          "cases": []
+        },
+        "1": {
+          "count": 0,
+          "cases": []
+        },
+        "2": {
+          "count": 0,
+          "cases": []
+        }
+      },
+      "t2-rot1": {
+        "0": {
+          "count": 0,
+          "cases": []
+        },
+        "1": {
+          "count": 0,
+          "cases": []
+        },
+        "2": {
+          "count": 0,
+          "cases": []
+        }
+      },
+      "t2-rot2": {
+        "0": {
+          "count": 0,
+          "cases": []
+        },
+        "1": {
+          "count": 1,
+          "cases": [
+            {
+              "case": "gen-elapsed_no_trigger_payment-00058",
+              "choice": "escalate",
+              "most_probable": [
+                "erase"
+              ],
+              "probabilities": {
+                "escalate": 0.39,
+                "erase": 0.4,
+                "retain": 0.21
+              }
+            }
+          ]
+        },
+        "2": {
+          "count": 0,
+          "cases": []
+        }
+      }
+    },
+    "version": {
+      "entries": 3150,
+      "models": {
+        "jev-1.13.0": 3150
+      },
+      "every_answer_is_pinned": true,
+      "entries_with_latency_ms": 3150
+    }
+  },
+  "t3": {
+    "primary_runner_id": "t3",
+    "option_orders": {
+      "t3": [
+        "erase",
+        "retain",
+        "escalate"
+      ],
+      "t3-rot1": [
+        "retain",
+        "escalate",
+        "erase"
+      ],
+      "t3-rot2": [
+        "escalate",
+        "erase",
+        "retain"
+      ]
+    },
+    "repeats": {
+      "t3": {
+        "samples": [
+          0,
+          1,
+          2
+        ],
+        "cases": 350,
+        "changed": 0,
+        "changed_share": 0.0,
+        "changed_cases": []
+      },
+      "t3-rot1": {
+        "samples": [
+          0,
+          1,
+          2
+        ],
+        "cases": 350,
+        "changed": 0,
+        "changed_share": 0.0,
+        "changed_cases": []
+      },
+      "t3-rot2": {
+        "samples": [
+          0,
+          1,
+          2
+        ],
+        "cases": 350,
+        "changed": 0,
+        "changed_share": 0.0,
+        "changed_cases": []
+      }
+    },
+    "orders": {
+      "runner_ids": [
+        "t3",
+        "t3-rot1",
+        "t3-rot2"
+      ],
+      "cases": 350,
+      "changed": 0,
+      "changed_share": 0.0,
+      "changed_cases": [],
+      "identical_probabilities_in_every_order": 0,
+      "uninformative": false,
+      "first_try_rates_by_order": {
+        "t3": {
+          "over_erasure": {
+            "rate": {
+              "numerator": 15,
+              "denominator": 350,
+              "value": 0.04285714285714286
+            },
+            "interval": {
+              "lower": 0.026141143409777197,
+              "upper": 0.06949939179015407,
+              "confidence_level": 0.95
+            }
+          },
+          "over_retention": {
+            "rate": {
+              "numerator": 70,
+              "denominator": 350,
+              "value": 0.2
+            },
+            "interval": {
+              "lower": 0.16145152419933184,
+              "upper": 0.245062577025623,
+              "confidence_level": 0.95
+            }
+          },
+          "mis_escalation": {
+            "rate": {
+              "numerator": 28,
+              "denominator": 350,
+              "value": 0.08
+            },
+            "interval": {
+              "lower": 0.05592675181969581,
+              "upper": 0.11319298989524104,
+              "confidence_level": 0.95
+            }
+          },
+          "wrong": {
+            "rate": {
+              "numerator": 113,
+              "denominator": 350,
+              "value": 0.32285714285714284
+            },
+            "interval": {
+              "lower": 0.27602356420927254,
+              "upper": 0.37353714318070075,
+              "confidence_level": 0.95
+            }
+          }
+        },
+        "t3-rot1": {
+          "over_erasure": {
+            "rate": {
+              "numerator": 15,
+              "denominator": 350,
+              "value": 0.04285714285714286
+            },
+            "interval": {
+              "lower": 0.026141143409777197,
+              "upper": 0.06949939179015407,
+              "confidence_level": 0.95
+            }
+          },
+          "over_retention": {
+            "rate": {
+              "numerator": 70,
+              "denominator": 350,
+              "value": 0.2
+            },
+            "interval": {
+              "lower": 0.16145152419933184,
+              "upper": 0.245062577025623,
+              "confidence_level": 0.95
+            }
+          },
+          "mis_escalation": {
+            "rate": {
+              "numerator": 28,
+              "denominator": 350,
+              "value": 0.08
+            },
+            "interval": {
+              "lower": 0.05592675181969581,
+              "upper": 0.11319298989524104,
+              "confidence_level": 0.95
+            }
+          },
+          "wrong": {
+            "rate": {
+              "numerator": 113,
+              "denominator": 350,
+              "value": 0.32285714285714284
+            },
+            "interval": {
+              "lower": 0.27602356420927254,
+              "upper": 0.37353714318070075,
+              "confidence_level": 0.95
+            }
+          }
+        },
+        "t3-rot2": {
+          "over_erasure": {
+            "rate": {
+              "numerator": 15,
+              "denominator": 350,
+              "value": 0.04285714285714286
+            },
+            "interval": {
+              "lower": 0.026141143409777197,
+              "upper": 0.06949939179015407,
+              "confidence_level": 0.95
+            }
+          },
+          "over_retention": {
+            "rate": {
+              "numerator": 70,
+              "denominator": 350,
+              "value": 0.2
+            },
+            "interval": {
+              "lower": 0.16145152419933184,
+              "upper": 0.245062577025623,
+              "confidence_level": 0.95
+            }
+          },
+          "mis_escalation": {
+            "rate": {
+              "numerator": 28,
+              "denominator": 350,
+              "value": 0.08
+            },
+            "interval": {
+              "lower": 0.05592675181969581,
+              "upper": 0.11319298989524104,
+              "confidence_level": 0.95
+            }
+          },
+          "wrong": {
+            "rate": {
+              "numerator": 113,
+              "denominator": 350,
+              "value": 0.32285714285714284
+            },
+            "interval": {
+              "lower": 0.27602356420927254,
+              "upper": 0.37353714318070075,
+              "confidence_level": 0.95
+            }
+          }
+        }
+      },
+      "headline": {
+        "metric": "over_erasure",
+        "primary_runner_id": "t3",
+        "primary_interval": {
+          "lower": 0.026141143409777197,
+          "upper": 0.06949939179015407,
+          "confidence_level": 0.95
+        },
+        "orders_outside": [],
+        "order_sensitive": false
+      }
+    },
+    "ties": {
+      "t3": {
+        "0": {
+          "count": 0,
+          "cases": []
+        },
+        "1": {
+          "count": 0,
+          "cases": []
+        },
+        "2": {
+          "count": 0,
+          "cases": []
+        }
+      },
+      "t3-rot1": {
+        "0": {
+          "count": 0,
+          "cases": []
+        },
+        "1": {
+          "count": 0,
+          "cases": []
+        },
+        "2": {
+          "count": 0,
+          "cases": []
+        }
+      },
+      "t3-rot2": {
+        "0": {
+          "count": 0,
+          "cases": []
+        },
+        "1": {
+          "count": 0,
+          "cases": []
+        },
+        "2": {
+          "count": 0,
+          "cases": []
+        }
+      }
+    },
+    "choice_not_top": {
+      "t3": {
+        "0": {
+          "count": 0,
+          "cases": []
+        },
+        "1": {
+          "count": 0,
+          "cases": []
+        },
+        "2": {
+          "count": 0,
+          "cases": []
+        }
+      },
+      "t3-rot1": {
+        "0": {
+          "count": 0,
+          "cases": []
+        },
+        "1": {
+          "count": 0,
+          "cases": []
+        },
+        "2": {
+          "count": 0,
+          "cases": []
+        }
+      },
+      "t3-rot2": {
+        "0": {
+          "count": 0,
+          "cases": []
+        },
+        "1": {
+          "count": 0,
+          "cases": []
+        },
+        "2": {
+          "count": 0,
+          "cases": []
+        }
+      }
+    },
+    "version": {
+      "entries": 3150,
+      "models": {
+        "jev-1.13.0": 3150
+      },
+      "every_answer_is_pinned": true,
+      "entries_with_latency_ms": 3150
+    }
+  }
+}

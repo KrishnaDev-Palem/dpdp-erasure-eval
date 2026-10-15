@@ -1,0 +1,1705 @@
+{
+  "brief": "briefs/decision-model-run.md Q2, Q5",
+  "export_agent_sha": "7b659e8e3ec87a9115a5d7709f20f1c1eb6fec22",
+  "unit": "case (one location each), first try (sample 0)",
+  "wrong_verdict": "the case's verdict differs from the answer key's",
+  "date_cases": "boundary_flag other than none, or anchor_computable false",
+  "option_orders": {
+    "primary": [
+      "erase",
+      "retain",
+      "escalate"
+    ],
+    "rot1": [
+      "retain",
+      "escalate",
+      "erase"
+    ],
+    "rot2": [
+      "escalate",
+      "erase",
+      "retain"
+    ]
+  },
+  "alpha": 0.05,
+  "correction": "Holm across H2a, H2b and H2c within each option order",
+  "reading_rules": {
+    "H2a": "significant after Holm in all three orders",
+    "H2b": "significant after Holm in the primary order",
+    "H2c": "confirmed when significant after Holm with Jev more wrong in all three orders; reported as Jev making fewer wrong verdicts when significant after Holm in the primary order in that direction"
+  },
+  "readings": {
+    "H2a": "no_detectable_difference",
+    "H2b": "confirmed",
+    "H2c": "no_detectable_difference"
+  },
+  "tests_by_order": {
+    "primary": {
+      "H2a": {
+        "date_vs_other": {
+          "test": "Fisher exact, one-sided (date-case rate higher)",
+          "date_wrong": {
+            "rate": {
+              "numerator": 28,
+              "denominator": 88,
+              "value": 0.3181818181818182
+            },
+            "interval": {
+              "lower": 0.23022439863763888,
+              "upper": 0.4213496157523544,
+              "confidence_level": 0.95
+            }
+          },
+          "other_wrong": {
+            "rate": {
+              "numerator": 85,
+              "denominator": 262,
+              "value": 0.3244274809160305
+            },
+            "interval": {
+              "lower": 0.2706293701565734,
+              "upper": 0.38329988696496065,
+              "confidence_level": 0.95
+            }
+          },
+          "p_exact": 0.5919831963849835
+        },
+        "jev_vs_sonnet_on_date_cases": {
+          "test": "exact McNemar, one-sided (Jev wrong more often), paired by case",
+          "cases": 88,
+          "jev_wrong": 28,
+          "sonnet_wrong": 22,
+          "only_jev": 28,
+          "only_sonnet": 22,
+          "p_exact": 0.23994383084916393
+        },
+        "p_exact": 0.5919831963849835,
+        "p_rule": "the larger of the two, since both must hold",
+        "p_holm": 0.5919831963849835,
+        "significant_holm": false
+      },
+      "H2b": {
+        "test": "exact McNemar, one-sided (T3 over-erasure lower), paired by case",
+        "cases": 350,
+        "t2_over_erasure": 263,
+        "t3_over_erasure": 15,
+        "only_t2": 248,
+        "only_t3": 0,
+        "p_exact": 2.210859150104178e-75,
+        "p_holm": 6.632577450312533e-75,
+        "significant_holm": true
+      },
+      "H2c": {
+        "test": "exact McNemar, two-sided, paired by case",
+        "cases": 350,
+        "jev_wrong": 113,
+        "sonnet_wrong": 139,
+        "only_jev": 57,
+        "only_sonnet": 83,
+        "direction": "jev_fewer_wrong",
+        "p_exact": 0.034235661873195294,
+        "p_holm": 0.06847132374639059,
+        "significant_holm": false
+      }
+    },
+    "rot1": {
+      "H2a": {
+        "date_vs_other": {
+          "test": "Fisher exact, one-sided (date-case rate higher)",
+          "date_wrong": {
+            "rate": {
+              "numerator": 28,
+              "denominator": 88,
+              "value": 0.3181818181818182
+            },
+            "interval": {
+              "lower": 0.23022439863763888,
+              "upper": 0.4213496157523544,
+              "confidence_level": 0.95
+            }
+          },
+          "other_wrong": {
+            "rate": {
+              "numerator": 85,
+              "denominator": 262,
+              "value": 0.3244274809160305
+            },
+            "interval": {
+              "lower": 0.2706293701565734,
+              "upper": 0.38329988696496065,
+              "confidence_level": 0.95
+            }
+          },
+          "p_exact": 0.5919831963849835
+        },
+        "jev_vs_sonnet_on_date_cases": {
+          "test": "exact McNemar, one-sided (Jev wrong more often), paired by case",
+          "cases": 88,
+          "jev_wrong": 28,
+          "sonnet_wrong": 22,
+          "only_jev": 28,
+          "only_sonnet": 22,
+          "p_exact": 0.23994383084916393
+        },
+        "p_exact": 0.5919831963849835,
+        "p_rule": "the larger of the two, since both must hold",
+        "p_holm": 0.5919831963849835,
+        "significant_holm": false
+      },
+      "H2b": {
+        "test": "exact McNemar, one-sided (T3 over-erasure lower), paired by case",
+        "cases": 350,
+        "t2_over_erasure": 264,
+        "t3_over_erasure": 15,
+        "only_t2": 249,
+        "only_t3": 0,
+        "p_exact": 1.105429575052089e-75,
+        "p_holm": 3.3162887251562667e-75,
+        "significant_holm": true
+      },
+      "H2c": {
+        "test": "exact McNemar, two-sided, paired by case",
+        "cases": 350,
+        "jev_wrong": 113,
+        "sonnet_wrong": 139,
+        "only_jev": 57,
+        "only_sonnet": 83,
+        "direction": "jev_fewer_wrong",
+        "p_exact": 0.034235661873195294,
+        "p_holm": 0.06847132374639059,
+        "significant_holm": false
+      }
+    },
+    "rot2": {
+      "H2a": {
+        "date_vs_other": {
+          "test": "Fisher exact, one-sided (date-case rate higher)",
+          "date_wrong": {
+            "rate": {
+              "numerator": 28,
+              "denominator": 88,
+              "value": 0.3181818181818182
+            },
+            "interval": {
+              "lower": 0.23022439863763888,
+              "upper": 0.4213496157523544,
+              "confidence_level": 0.95
+            }
+          },
+          "other_wrong": {
+            "rate": {
+              "numerator": 85,
+              "denominator": 262,
+              "value": 0.3244274809160305
+            },
+            "interval": {
+              "lower": 0.2706293701565734,
+              "upper": 0.38329988696496065,
+              "confidence_level": 0.95
+            }
+          },
+          "p_exact": 0.5919831963849835
+        },
+        "jev_vs_sonnet_on_date_cases": {
+          "test": "exact McNemar, one-sided (Jev wrong more often), paired by case",
+          "cases": 88,
+          "jev_wrong": 28,
+          "sonnet_wrong": 22,
+          "only_jev": 28,
+          "only_sonnet": 22,
+          "p_exact": 0.23994383084916393
+        },
+        "p_exact": 0.5919831963849835,
+        "p_rule": "the larger of the two, since both must hold",
+        "p_holm": 0.5919831963849835,
+        "significant_holm": false
+      },
+      "H2b": {
+        "test": "exact McNemar, one-sided (T3 over-erasure lower), paired by case",
+        "cases": 350,
+        "t2_over_erasure": 265,
+        "t3_over_erasure": 15,
+        "only_t2": 250,
+        "only_t3": 0,
+        "p_exact": 5.527147875260445e-76,
+        "p_holm": 1.6581443625781334e-75,
+        "significant_holm": true
+      },
+      "H2c": {
+        "test": "exact McNemar, two-sided, paired by case",
+        "cases": 350,
+        "jev_wrong": 113,
+        "sonnet_wrong": 139,
+        "only_jev": 57,
+        "only_sonnet": 83,
+        "direction": "jev_fewer_wrong",
+        "p_exact": 0.034235661873195294,
+        "p_holm": 0.06847132374639059,
+        "significant_holm": false
+      }
+    }
+  },
+  "wrong_verdicts": {
+    "t2": {
+      "claude-sonnet-5": {
+        "all_cases": {
+          "over_erasure": {
+            "rate": {
+              "numerator": 142,
+              "denominator": 350,
+              "value": 0.4057142857142857
+            },
+            "interval": {
+              "lower": 0.3555642881397077,
+              "upper": 0.45791157224527795,
+              "confidence_level": 0.95
+            }
+          },
+          "over_retention": {
+            "rate": {
+              "numerator": 0,
+              "denominator": 350,
+              "value": 0.0
+            },
+            "interval": {
+              "lower": 0.0,
+              "upper": 0.010856835374924824,
+              "confidence_level": 0.95
+            }
+          },
+          "mis_escalation": {
+            "rate": {
+              "numerator": 119,
+              "denominator": 350,
+              "value": 0.34
+            },
+            "interval": {
+              "lower": 0.2923479111144477,
+              "upper": 0.3911262762055282,
+              "confidence_level": 0.95
+            }
+          },
+          "wrong": {
+            "rate": {
+              "numerator": 253,
+              "denominator": 350,
+              "value": 0.7228571428571429
+            },
+            "interval": {
+              "lower": 0.6737379955168465,
+              "upper": 0.7671372435731869,
+              "confidence_level": 0.95
+            }
+          }
+        },
+        "date_cases": {
+          "over_erasure": {
+            "rate": {
+              "numerator": 55,
+              "denominator": 88,
+              "value": 0.625
+            },
+            "interval": {
+              "lower": 0.5206205279693488,
+              "upper": 0.7189223371375308,
+              "confidence_level": 0.95
+            }
+          },
+          "over_retention": {
+            "rate": {
+              "numerator": 0,
+              "denominator": 88,
+              "value": 0.0
+            },
+            "interval": {
+              "lower": 3.469446951953614e-18,
+              "upper": 0.04182853957248131,
+              "confidence_level": 0.95
+            }
+          },
+          "mis_escalation": {
+            "rate": {
+              "numerator": 21,
+              "denominator": 88,
+              "value": 0.23863636363636365
+            },
+            "interval": {
+              "lower": 0.1617092401848666,
+              "upper": 0.3374284055007487,
+              "confidence_level": 0.95
+            }
+          },
+          "wrong": {
+            "rate": {
+              "numerator": 68,
+              "denominator": 88,
+              "value": 0.7727272727272727
+            },
+            "interval": {
+              "lower": 0.6748552842973525,
+              "upper": 0.8477836941176577,
+              "confidence_level": 0.95
+            }
+          }
+        },
+        "other_cases": {
+          "over_erasure": {
+            "rate": {
+              "numerator": 87,
+              "denominator": 262,
+              "value": 0.3320610687022901
+            },
+            "interval": {
+              "lower": 0.27782215957624107,
+              "upper": 0.3911536515834872,
+              "confidence_level": 0.95
+            }
+          },
+          "over_retention": {
+            "rate": {
+              "numerator": 0,
+              "denominator": 262,
+              "value": 0.0
+            },
+            "interval": {
+              "lower": 0.0,
+              "upper": 0.014450710498281682,
+              "confidence_level": 0.95
+            }
+          },
+          "mis_escalation": {
+            "rate": {
+              "numerator": 98,
+              "denominator": 262,
+              "value": 0.37404580152671757
+            },
+            "interval": {
+              "lower": 0.3176702440445261,
+              "upper": 0.4340616143252701,
+              "confidence_level": 0.95
+            }
+          },
+          "wrong": {
+            "rate": {
+              "numerator": 185,
+              "denominator": 262,
+              "value": 0.7061068702290076
+            },
+            "interval": {
+              "lower": 0.6482861450689841,
+              "upper": 0.7579708139622585,
+              "confidence_level": 0.95
+            }
+          }
+        },
+        "date_share_of_wrong": 0.26877470355731226
+      },
+      "jev-1.13.0": {
+        "primary": {
+          "all_cases": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 263,
+                "denominator": 350,
+                "value": 0.7514285714285714
+              },
+              "interval": {
+                "lower": 0.7035842104379415,
+                "upper": 0.7938134952020963,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 350,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.010856835374924824,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 31,
+                "denominator": 350,
+                "value": 0.08857142857142856
+              },
+              "interval": {
+                "lower": 0.06309851697537144,
+                "upper": 0.12297796470456668,
+                "confidence_level": 0.95
+              }
+            },
+            "wrong": {
+              "rate": {
+                "numerator": 266,
+                "denominator": 350,
+                "value": 0.76
+              },
+              "interval": {
+                "lower": 0.7125873714516471,
+                "upper": 0.801767074153392,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "date_cases": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 88,
+                "denominator": 88,
+                "value": 1.0
+              },
+              "interval": {
+                "lower": 0.9581714604275188,
+                "upper": 1.0,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 88,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 3.469446951953614e-18,
+                "upper": 0.04182853957248131,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 28,
+                "denominator": 88,
+                "value": 0.3181818181818182
+              },
+              "interval": {
+                "lower": 0.23022439863763888,
+                "upper": 0.4213496157523544,
+                "confidence_level": 0.95
+              }
+            },
+            "wrong": {
+              "rate": {
+                "numerator": 88,
+                "denominator": 88,
+                "value": 1.0
+              },
+              "interval": {
+                "lower": 0.9581714604275188,
+                "upper": 1.0,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "other_cases": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 175,
+                "denominator": 262,
+                "value": 0.6679389312977099
+              },
+              "interval": {
+                "lower": 0.6088463484165128,
+                "upper": 0.7221778404237589,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 262,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.014450710498281682,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 3,
+                "denominator": 262,
+                "value": 0.011450381679389313
+              },
+              "interval": {
+                "lower": 0.0039015906784648363,
+                "upper": 0.0331189508771081,
+                "confidence_level": 0.95
+              }
+            },
+            "wrong": {
+              "rate": {
+                "numerator": 178,
+                "denominator": 262,
+                "value": 0.6793893129770993
+              },
+              "interval": {
+                "lower": 0.6206332654129809,
+                "upper": 0.7329607544845822,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "date_share_of_wrong": 0.3308270676691729
+        },
+        "rot1": {
+          "all_cases": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 264,
+                "denominator": 350,
+                "value": 0.7542857142857143
+              },
+              "interval": {
+                "lower": 0.7065826325351515,
+                "upper": 0.7964673197598867,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 350,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.010856835374924824,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 34,
+                "denominator": 350,
+                "value": 0.09714285714285714
+              },
+              "interval": {
+                "lower": 0.07035027234565316,
+                "upper": 0.13268294929928623,
+                "confidence_level": 0.95
+              }
+            },
+            "wrong": {
+              "rate": {
+                "numerator": 270,
+                "denominator": 350,
+                "value": 0.7714285714285715
+              },
+              "interval": {
+                "lower": 0.7246293265386041,
+                "upper": 0.8123341056864366,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "date_cases": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 88,
+                "denominator": 88,
+                "value": 1.0
+              },
+              "interval": {
+                "lower": 0.9581714604275188,
+                "upper": 1.0,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 88,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 3.469446951953614e-18,
+                "upper": 0.04182853957248131,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 28,
+                "denominator": 88,
+                "value": 0.3181818181818182
+              },
+              "interval": {
+                "lower": 0.23022439863763888,
+                "upper": 0.4213496157523544,
+                "confidence_level": 0.95
+              }
+            },
+            "wrong": {
+              "rate": {
+                "numerator": 88,
+                "denominator": 88,
+                "value": 1.0
+              },
+              "interval": {
+                "lower": 0.9581714604275188,
+                "upper": 1.0,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "other_cases": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 176,
+                "denominator": 262,
+                "value": 0.6717557251908397
+              },
+              "interval": {
+                "lower": 0.6127711530821935,
+                "upper": 0.7257763127771752,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 262,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.014450710498281682,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 6,
+                "denominator": 262,
+                "value": 0.022900763358778626
+              },
+              "interval": {
+                "lower": 0.010536765630157537,
+                "upper": 0.049053606982706666,
+                "confidence_level": 0.95
+              }
+            },
+            "wrong": {
+              "rate": {
+                "numerator": 182,
+                "denominator": 262,
+                "value": 0.6946564885496184
+              },
+              "interval": {
+                "lower": 0.6364085917109247,
+                "upper": 0.7472785362630269,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "date_share_of_wrong": 0.32592592592592595
+        },
+        "rot2": {
+          "all_cases": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 265,
+                "denominator": 350,
+                "value": 0.7571428571428571
+              },
+              "interval": {
+                "lower": 0.7095836759234139,
+                "upper": 0.7991185230266248,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 350,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.010856835374924824,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 30,
+                "denominator": 350,
+                "value": 0.08571428571428572
+              },
+              "interval": {
+                "lower": 0.0606985295339012,
+                "upper": 0.11972570549103648,
+                "confidence_level": 0.95
+              }
+            },
+            "wrong": {
+              "rate": {
+                "numerator": 267,
+                "denominator": 350,
+                "value": 0.7628571428571429
+              },
+              "interval": {
+                "lower": 0.7155937509336626,
+                "upper": 0.8044129413263769,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "date_cases": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 88,
+                "denominator": 88,
+                "value": 1.0
+              },
+              "interval": {
+                "lower": 0.9581714604275188,
+                "upper": 1.0,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 88,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 3.469446951953614e-18,
+                "upper": 0.04182853957248131,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 28,
+                "denominator": 88,
+                "value": 0.3181818181818182
+              },
+              "interval": {
+                "lower": 0.23022439863763888,
+                "upper": 0.4213496157523544,
+                "confidence_level": 0.95
+              }
+            },
+            "wrong": {
+              "rate": {
+                "numerator": 88,
+                "denominator": 88,
+                "value": 1.0
+              },
+              "interval": {
+                "lower": 0.9581714604275188,
+                "upper": 1.0,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "other_cases": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 177,
+                "denominator": 262,
+                "value": 0.6755725190839694
+              },
+              "interval": {
+                "lower": 0.6167001130350394,
+                "upper": 0.7293706298434266,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 262,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.014450710498281682,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 2,
+                "denominator": 262,
+                "value": 0.007633587786259542
+              },
+              "interval": {
+                "lower": 0.0020958634717221838,
+                "upper": 0.027401401064753673,
+                "confidence_level": 0.95
+              }
+            },
+            "wrong": {
+              "rate": {
+                "numerator": 179,
+                "denominator": 262,
+                "value": 0.683206106870229
+              },
+              "interval": {
+                "lower": 0.6245706487452816,
+                "upper": 0.7365466481713785,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "date_share_of_wrong": 0.3295880149812734
+        }
+      }
+    },
+    "t3": {
+      "claude-sonnet-5": {
+        "all_cases": {
+          "over_erasure": {
+            "rate": {
+              "numerator": 59,
+              "denominator": 350,
+              "value": 0.16857142857142857
+            },
+            "interval": {
+              "lower": 0.1329958713221243,
+              "upper": 0.21134351669782583,
+              "confidence_level": 0.95
+            }
+          },
+          "over_retention": {
+            "rate": {
+              "numerator": 2,
+              "denominator": 350,
+              "value": 0.005714285714285714
+            },
+            "interval": {
+              "lower": 0.0015684316941284183,
+              "upper": 0.020592896990797263,
+              "confidence_level": 0.95
+            }
+          },
+          "mis_escalation": {
+            "rate": {
+              "numerator": 78,
+              "denominator": 350,
+              "value": 0.22285714285714286
+            },
+            "interval": {
+              "lower": 0.18239916818177157,
+              "upper": 0.2693329062831867,
+              "confidence_level": 0.95
+            }
+          },
+          "wrong": {
+            "rate": {
+              "numerator": 139,
+              "denominator": 350,
+              "value": 0.39714285714285713
+            },
+            "interval": {
+              "lower": 0.34726353112373853,
+              "upper": 0.44925558929624587,
+              "confidence_level": 0.95
+            }
+          }
+        },
+        "date_cases": {
+          "over_erasure": {
+            "rate": {
+              "numerator": 8,
+              "denominator": 88,
+              "value": 0.09090909090909091
+            },
+            "interval": {
+              "lower": 0.04678586169975407,
+              "upper": 0.16925567067773065,
+              "confidence_level": 0.95
+            }
+          },
+          "over_retention": {
+            "rate": {
+              "numerator": 0,
+              "denominator": 88,
+              "value": 0.0
+            },
+            "interval": {
+              "lower": 3.469446951953614e-18,
+              "upper": 0.04182853957248131,
+              "confidence_level": 0.95
+            }
+          },
+          "mis_escalation": {
+            "rate": {
+              "numerator": 14,
+              "denominator": 88,
+              "value": 0.1590909090909091
+            },
+            "interval": {
+              "lower": 0.09719813761632919,
+              "upper": 0.2495031393649081,
+              "confidence_level": 0.95
+            }
+          },
+          "wrong": {
+            "rate": {
+              "numerator": 22,
+              "denominator": 88,
+              "value": 0.25
+            },
+            "interval": {
+              "lower": 0.1712820103346811,
+              "upper": 0.3496322594515597,
+              "confidence_level": 0.95
+            }
+          }
+        },
+        "other_cases": {
+          "over_erasure": {
+            "rate": {
+              "numerator": 51,
+              "denominator": 262,
+              "value": 0.1946564885496183
+            },
+            "interval": {
+              "lower": 0.15126891830215433,
+              "upper": 0.24686892017007872,
+              "confidence_level": 0.95
+            }
+          },
+          "over_retention": {
+            "rate": {
+              "numerator": 2,
+              "denominator": 262,
+              "value": 0.007633587786259542
+            },
+            "interval": {
+              "lower": 0.0020958634717221838,
+              "upper": 0.027401401064753673,
+              "confidence_level": 0.95
+            }
+          },
+          "mis_escalation": {
+            "rate": {
+              "numerator": 64,
+              "denominator": 262,
+              "value": 0.24427480916030533
+            },
+            "interval": {
+              "lower": 0.19618871661499712,
+              "upper": 0.299751723105498,
+              "confidence_level": 0.95
+            }
+          },
+          "wrong": {
+            "rate": {
+              "numerator": 117,
+              "denominator": 262,
+              "value": 0.44656488549618323
+            },
+            "interval": {
+              "lower": 0.3875707442653088,
+              "upper": 0.507103377467332,
+              "confidence_level": 0.95
+            }
+          }
+        },
+        "date_share_of_wrong": 0.15827338129496402
+      },
+      "jev-1.13.0": {
+        "primary": {
+          "all_cases": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 15,
+                "denominator": 350,
+                "value": 0.04285714285714286
+              },
+              "interval": {
+                "lower": 0.026141143409777197,
+                "upper": 0.06949939179015407,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 70,
+                "denominator": 350,
+                "value": 0.2
+              },
+              "interval": {
+                "lower": 0.16145152419933184,
+                "upper": 0.245062577025623,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 28,
+                "denominator": 350,
+                "value": 0.08
+              },
+              "interval": {
+                "lower": 0.05592675181969581,
+                "upper": 0.11319298989524104,
+                "confidence_level": 0.95
+              }
+            },
+            "wrong": {
+              "rate": {
+                "numerator": 113,
+                "denominator": 350,
+                "value": 0.32285714285714284
+              },
+              "interval": {
+                "lower": 0.27602356420927254,
+                "upper": 0.37353714318070075,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "date_cases": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 88,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 3.469446951953614e-18,
+                "upper": 0.04182853957248131,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 88,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 3.469446951953614e-18,
+                "upper": 0.04182853957248131,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 28,
+                "denominator": 88,
+                "value": 0.3181818181818182
+              },
+              "interval": {
+                "lower": 0.23022439863763888,
+                "upper": 0.4213496157523544,
+                "confidence_level": 0.95
+              }
+            },
+            "wrong": {
+              "rate": {
+                "numerator": 28,
+                "denominator": 88,
+                "value": 0.3181818181818182
+              },
+              "interval": {
+                "lower": 0.23022439863763888,
+                "upper": 0.4213496157523544,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "other_cases": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 15,
+                "denominator": 262,
+                "value": 0.05725190839694656
+              },
+              "interval": {
+                "lower": 0.03499859423888581,
+                "upper": 0.09230127154585215,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 70,
+                "denominator": 262,
+                "value": 0.26717557251908397
+              },
+              "interval": {
+                "lower": 0.21724216556950726,
+                "upper": 0.32383793626557045,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 262,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.014450710498281682,
+                "confidence_level": 0.95
+              }
+            },
+            "wrong": {
+              "rate": {
+                "numerator": 85,
+                "denominator": 262,
+                "value": 0.3244274809160305
+              },
+              "interval": {
+                "lower": 0.2706293701565734,
+                "upper": 0.38329988696496065,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "date_share_of_wrong": 0.24778761061946902
+        },
+        "rot1": {
+          "all_cases": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 15,
+                "denominator": 350,
+                "value": 0.04285714285714286
+              },
+              "interval": {
+                "lower": 0.026141143409777197,
+                "upper": 0.06949939179015407,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 70,
+                "denominator": 350,
+                "value": 0.2
+              },
+              "interval": {
+                "lower": 0.16145152419933184,
+                "upper": 0.245062577025623,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 28,
+                "denominator": 350,
+                "value": 0.08
+              },
+              "interval": {
+                "lower": 0.05592675181969581,
+                "upper": 0.11319298989524104,
+                "confidence_level": 0.95
+              }
+            },
+            "wrong": {
+              "rate": {
+                "numerator": 113,
+                "denominator": 350,
+                "value": 0.32285714285714284
+              },
+              "interval": {
+                "lower": 0.27602356420927254,
+                "upper": 0.37353714318070075,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "date_cases": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 88,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 3.469446951953614e-18,
+                "upper": 0.04182853957248131,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 88,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 3.469446951953614e-18,
+                "upper": 0.04182853957248131,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 28,
+                "denominator": 88,
+                "value": 0.3181818181818182
+              },
+              "interval": {
+                "lower": 0.23022439863763888,
+                "upper": 0.4213496157523544,
+                "confidence_level": 0.95
+              }
+            },
+            "wrong": {
+              "rate": {
+                "numerator": 28,
+                "denominator": 88,
+                "value": 0.3181818181818182
+              },
+              "interval": {
+                "lower": 0.23022439863763888,
+                "upper": 0.4213496157523544,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "other_cases": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 15,
+                "denominator": 262,
+                "value": 0.05725190839694656
+              },
+              "interval": {
+                "lower": 0.03499859423888581,
+                "upper": 0.09230127154585215,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 70,
+                "denominator": 262,
+                "value": 0.26717557251908397
+              },
+              "interval": {
+                "lower": 0.21724216556950726,
+                "upper": 0.32383793626557045,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 262,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.014450710498281682,
+                "confidence_level": 0.95
+              }
+            },
+            "wrong": {
+              "rate": {
+                "numerator": 85,
+                "denominator": 262,
+                "value": 0.3244274809160305
+              },
+              "interval": {
+                "lower": 0.2706293701565734,
+                "upper": 0.38329988696496065,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "date_share_of_wrong": 0.24778761061946902
+        },
+        "rot2": {
+          "all_cases": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 15,
+                "denominator": 350,
+                "value": 0.04285714285714286
+              },
+              "interval": {
+                "lower": 0.026141143409777197,
+                "upper": 0.06949939179015407,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 70,
+                "denominator": 350,
+                "value": 0.2
+              },
+              "interval": {
+                "lower": 0.16145152419933184,
+                "upper": 0.245062577025623,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 28,
+                "denominator": 350,
+                "value": 0.08
+              },
+              "interval": {
+                "lower": 0.05592675181969581,
+                "upper": 0.11319298989524104,
+                "confidence_level": 0.95
+              }
+            },
+            "wrong": {
+              "rate": {
+                "numerator": 113,
+                "denominator": 350,
+                "value": 0.32285714285714284
+              },
+              "interval": {
+                "lower": 0.27602356420927254,
+                "upper": 0.37353714318070075,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "date_cases": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 88,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 3.469446951953614e-18,
+                "upper": 0.04182853957248131,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 88,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 3.469446951953614e-18,
+                "upper": 0.04182853957248131,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 28,
+                "denominator": 88,
+                "value": 0.3181818181818182
+              },
+              "interval": {
+                "lower": 0.23022439863763888,
+                "upper": 0.4213496157523544,
+                "confidence_level": 0.95
+              }
+            },
+            "wrong": {
+              "rate": {
+                "numerator": 28,
+                "denominator": 88,
+                "value": 0.3181818181818182
+              },
+              "interval": {
+                "lower": 0.23022439863763888,
+                "upper": 0.4213496157523544,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "other_cases": {
+            "over_erasure": {
+              "rate": {
+                "numerator": 15,
+                "denominator": 262,
+                "value": 0.05725190839694656
+              },
+              "interval": {
+                "lower": 0.03499859423888581,
+                "upper": 0.09230127154585215,
+                "confidence_level": 0.95
+              }
+            },
+            "over_retention": {
+              "rate": {
+                "numerator": 70,
+                "denominator": 262,
+                "value": 0.26717557251908397
+              },
+              "interval": {
+                "lower": 0.21724216556950726,
+                "upper": 0.32383793626557045,
+                "confidence_level": 0.95
+              }
+            },
+            "mis_escalation": {
+              "rate": {
+                "numerator": 0,
+                "denominator": 262,
+                "value": 0.0
+              },
+              "interval": {
+                "lower": 0.0,
+                "upper": 0.014450710498281682,
+                "confidence_level": 0.95
+              }
+            },
+            "wrong": {
+              "rate": {
+                "numerator": 85,
+                "denominator": 262,
+                "value": 0.3244274809160305
+              },
+              "interval": {
+                "lower": 0.2706293701565734,
+                "upper": 0.38329988696496065,
+                "confidence_level": 0.95
+              }
+            }
+          },
+          "date_share_of_wrong": 0.24778761061946902
+        }
+      }
+    }
+  },
+  "t3_cell_map_descriptive": [
+    {
+      "cell": "arity4_cite_1_payment",
+      "cases": 15,
+      "date_cell": false,
+      "sonnet_wrong": 1,
+      "jev_wrong": 0,
+      "reading": "neither"
+    },
+    {
+      "cell": "arity4_cite_1_securities",
+      "cases": 15,
+      "date_cell": false,
+      "sonnet_wrong": 8,
+      "jev_wrong": 0,
+      "reading": "sonnet_only_model_specific"
+    },
+    {
+      "cell": "arity4_cite_2_payment",
+      "cases": 15,
+      "date_cell": false,
+      "sonnet_wrong": 0,
+      "jev_wrong": 0,
+      "reading": "neither"
+    },
+    {
+      "cell": "arity4_cite_2_securities",
+      "cases": 15,
+      "date_cell": false,
+      "sonnet_wrong": 0,
+      "jev_wrong": 0,
+      "reading": "neither"
+    },
+    {
+      "cell": "arity4_cite_3_payment",
+      "cases": 15,
+      "date_cell": false,
+      "sonnet_wrong": 0,
+      "jev_wrong": 0,
+      "reading": "neither"
+    },
+    {
+      "cell": "arity4_cite_3_securities",
+      "cases": 15,
+      "date_cell": false,
+      "sonnet_wrong": 0,
+      "jev_wrong": 0,
+      "reading": "neither"
+    },
+    {
+      "cell": "boundary_elapsed_1d_customer",
+      "cases": 15,
+      "date_cell": true,
+      "sonnet_wrong": 15,
+      "jev_wrong": 0,
+      "reading": "sonnet_only_model_specific"
+    },
+    {
+      "cell": "boundary_elapsed_1d_payment_pmla",
+      "cases": 15,
+      "date_cell": true,
+      "sonnet_wrong": 0,
+      "jev_wrong": 0,
+      "reading": "neither"
+    },
+    {
+      "cell": "boundary_unelapsed_1d_customer",
+      "cases": 15,
+      "date_cell": true,
+      "sonnet_wrong": 7,
+      "jev_wrong": 0,
+      "reading": "neither"
+    },
+    {
+      "cell": "boundary_unelapsed_1d_payment_pmla",
+      "cases": 15,
+      "date_cell": true,
+      "sonnet_wrong": 0,
+      "jev_wrong": 0,
+      "reading": "neither"
+    },
+    {
+      "cell": "elapsed_no_trigger_customer",
+      "cases": 15,
+      "date_cell": false,
+      "sonnet_wrong": 15,
+      "jev_wrong": 0,
+      "reading": "sonnet_only_model_specific"
+    },
+    {
+      "cell": "elapsed_no_trigger_payment",
+      "cases": 15,
+      "date_cell": false,
+      "sonnet_wrong": 15,
+      "jev_wrong": 0,
+      "reading": "sonnet_only_model_specific"
+    },
+    {
+      "cell": "elapsed_no_trigger_securities",
+      "cases": 15,
+      "date_cell": false,
+      "sonnet_wrong": 15,
+      "jev_wrong": 0,
+      "reading": "sonnet_only_model_specific"
+    },
+    {
+      "cell": "marketing_active",
+      "cases": 15,
+      "date_cell": false,
+      "sonnet_wrong": 15,
+      "jev_wrong": 15,
+      "reading": "both_wrong_on_over_half_keep_in_code_candidate"
+    },
+    {
+      "cell": "marketing_withdrawn",
+      "cases": 14,
+      "date_cell": false,
+      "sonnet_wrong": 0,
+      "jev_wrong": 0,
+      "reading": "neither"
+    },
+    {
+      "cell": "ordinary_elapsed_with_purpose_payment",
+      "cases": 14,
+      "date_cell": false,
+      "sonnet_wrong": 13,
+      "jev_wrong": 14,
+      "reading": "both_wrong_on_over_half_keep_in_code_candidate"
+    },
+    {
+      "cell": "ordinary_erase_payment",
+      "cases": 14,
+      "date_cell": false,
+      "sonnet_wrong": 2,
+      "jev_wrong": 14,
+      "reading": "jev_only_model_specific"
+    },
+    {
+      "cell": "ordinary_erase_securities",
+      "cases": 14,
+      "date_cell": false,
+      "sonnet_wrong": 11,
+      "jev_wrong": 14,
+      "reading": "both_wrong_on_over_half_keep_in_code_candidate"
+    },
+    {
+      "cell": "ordinary_inactivity_erase_payment",
+      "cases": 14,
+      "date_cell": false,
+      "sonnet_wrong": 10,
+      "jev_wrong": 14,
+      "reading": "both_wrong_on_over_half_keep_in_code_candidate"
+    },
+    {
+      "cell": "ordinary_kyc_open_retain",
+      "cases": 14,
+      "date_cell": false,
+      "sonnet_wrong": 0,
+      "jev_wrong": 0,
+      "reading": "neither"
+    },
+    {
+      "cell": "ordinary_open_customer_retain",
+      "cases": 14,
+      "date_cell": false,
+      "sonnet_wrong": 7,
+      "jev_wrong": 0,
+      "reading": "neither"
+    },
+    {
+      "cell": "re_engagement_erase_payment",
+      "cases": 14,
+      "date_cell": false,
+      "sonnet_wrong": 5,
+      "jev_wrong": 14,
+      "reading": "jev_only_model_specific"
+    },
+    {
+      "cell": "uncomputable_customer",
+      "cases": 14,
+      "date_cell": true,
+      "sonnet_wrong": 0,
+      "jev_wrong": 14,
+      "reading": "jev_only_model_specific"
+    },
+    {
+      "cell": "uncomputable_kyc",
+      "cases": 14,
+      "date_cell": true,
+      "sonnet_wrong": 0,
+      "jev_wrong": 14,
+      "reading": "jev_only_model_specific"
+    }
+  ],
+  "split_run_trigger": {
+    "brief": "briefs/decision-model-run.md Q5",
+    "unit": "T3, first try, primary option order",
+    "jev_wrong": 113,
+    "date_case_wrong": 28,
+    "date_share_of_wrong": 0.24778761061946902,
+    "share_rule": "date cases hold more than half of Jev's wrong verdicts",
+    "share_rule_met": false,
+    "h2a_reading": "no_detectable_difference",
+    "h2a_rule_met": false,
+    "fires": false
+  },
+  "usage": {
+    "t2": {
+      "calls": 3150,
+      "calls_without_usage": 0,
+      "input_tokens": 1786932,
+      "output_tokens": 162114,
+      "cost_usd_at_list_price": 0.0751
+    },
+    "t3": {
+      "calls": 3150,
+      "calls_without_usage": 0,
+      "input_tokens": 3204432,
+      "output_tokens": 162054,
+      "cost_usd_at_list_price": 0.1346
+    },
+    "t2_and_t3": {
+      "calls": 6300,
+      "calls_without_usage": 0,
+      "input_tokens": 4991364,
+      "output_tokens": 324168,
+      "cost_usd_at_list_price": 0.2096
+    }
+  }
+}

@@ -1,0 +1,3971 @@
+{
+  "brief": "briefs/decision-model-run.md Q3",
+  "export_agent_sha": "7b659e8e3ec87a9115a5d7709f20f1c1eb6fec22",
+  "runner_id": "t3",
+  "unit": "case (one location each), T3, first try (sample 0), primary option order",
+  "confidence": "p_max, the top option's probability",
+  "acted_on_rule": "p_max >= threshold, whatever the top option is",
+  "over_erasure_rule": "acted on with erase and the answer key is retain or escalate, over cases acted on",
+  "split": {
+    "rule": "within each cell, cases ordered by SHA-256 of the real case id (UTF-8, hex digest); the first 30%, rounded down, form the tuning part",
+    "tuning_cases": 96,
+    "test_cases": 254,
+    "tuning_case_ids": [
+      "gen-arity4_cite_1_payment-00053",
+      "gen-arity4_cite_1_payment-00074",
+      "gen-arity4_cite_1_payment-00121",
+      "gen-arity4_cite_1_payment-00207",
+      "gen-arity4_cite_1_securities-00079",
+      "gen-arity4_cite_1_securities-00081",
+      "gen-arity4_cite_1_securities-00085",
+      "gen-arity4_cite_1_securities-00139",
+      "gen-arity4_cite_2_payment-00000",
+      "gen-arity4_cite_2_payment-00043",
+      "gen-arity4_cite_2_payment-00093",
+      "gen-arity4_cite_2_payment-00168",
+      "gen-arity4_cite_2_securities-00032",
+      "gen-arity4_cite_2_securities-00054",
+      "gen-arity4_cite_2_securities-00062",
+      "gen-arity4_cite_2_securities-00068",
+      "gen-arity4_cite_3_payment-00035",
+      "gen-arity4_cite_3_payment-00085",
+      "gen-arity4_cite_3_payment-00112",
+      "gen-arity4_cite_3_payment-00114",
+      "gen-arity4_cite_3_securities-00021",
+      "gen-arity4_cite_3_securities-00040",
+      "gen-arity4_cite_3_securities-00060",
+      "gen-arity4_cite_3_securities-00129",
+      "gen-boundary_elapsed_1d_customer-00064",
+      "gen-boundary_elapsed_1d_customer-00096",
+      "gen-boundary_elapsed_1d_customer-00152",
+      "gen-boundary_elapsed_1d_customer-00176",
+      "gen-boundary_elapsed_1d_payment_pmla-00052",
+      "gen-boundary_elapsed_1d_payment_pmla-00114",
+      "gen-boundary_elapsed_1d_payment_pmla-00178",
+      "gen-boundary_elapsed_1d_payment_pmla-00198",
+      "gen-boundary_unelapsed_1d_customer-00036",
+      "gen-boundary_unelapsed_1d_customer-00072",
+      "gen-boundary_unelapsed_1d_customer-00079",
+      "gen-boundary_unelapsed_1d_customer-00168",
+      "gen-boundary_unelapsed_1d_payment_pmla-00052",
+      "gen-boundary_unelapsed_1d_payment_pmla-00109",
+      "gen-boundary_unelapsed_1d_payment_pmla-00113",
+      "gen-boundary_unelapsed_1d_payment_pmla-00176",
+      "gen-elapsed_no_trigger_customer-00048",
+      "gen-elapsed_no_trigger_customer-00117",
+      "gen-elapsed_no_trigger_customer-00119",
+      "gen-elapsed_no_trigger_customer-00147",
+      "gen-elapsed_no_trigger_payment-00102",
+      "gen-elapsed_no_trigger_payment-00111",
+      "gen-elapsed_no_trigger_payment-00125",
+      "gen-elapsed_no_trigger_payment-00362",
+      "gen-elapsed_no_trigger_securities-00018",
+      "gen-elapsed_no_trigger_securities-00035",
+      "gen-elapsed_no_trigger_securities-00067",
+      "gen-elapsed_no_trigger_securities-00110",
+      "gen-marketing_active-00113",
+      "gen-marketing_active-00199",
+      "gen-marketing_active-00206",
+      "gen-marketing_active-00248",
+      "gen-marketing_withdrawn-00059",
+      "gen-marketing_withdrawn-00089",
+      "gen-marketing_withdrawn-00168",
+      "gen-marketing_withdrawn-00328",
+      "gen-ordinary_elapsed_with_purpose_payment-00075",
+      "gen-ordinary_elapsed_with_purpose_payment-00275",
+      "gen-ordinary_elapsed_with_purpose_payment-00323",
+      "gen-ordinary_elapsed_with_purpose_payment-00341",
+      "gen-ordinary_erase_payment-00124",
+      "gen-ordinary_erase_payment-00148",
+      "gen-ordinary_erase_payment-00199",
+      "gen-ordinary_erase_payment-00409",
+      "gen-ordinary_erase_securities-00019",
+      "gen-ordinary_erase_securities-00044",
+      "gen-ordinary_erase_securities-00089",
+      "gen-ordinary_erase_securities-00151",
+      "gen-ordinary_inactivity_erase_payment-00019",
+      "gen-ordinary_inactivity_erase_payment-00030",
+      "gen-ordinary_inactivity_erase_payment-00037",
+      "gen-ordinary_inactivity_erase_payment-00039",
+      "gen-ordinary_kyc_open_retain-00135",
+      "gen-ordinary_kyc_open_retain-00173",
+      "gen-ordinary_kyc_open_retain-00202",
+      "gen-ordinary_kyc_open_retain-00241",
+      "gen-ordinary_open_customer_retain-00035",
+      "gen-ordinary_open_customer_retain-00133",
+      "gen-ordinary_open_customer_retain-00276",
+      "gen-ordinary_open_customer_retain-00336",
+      "gen-re_engagement_erase_payment-00019",
+      "gen-re_engagement_erase_payment-00079",
+      "gen-re_engagement_erase_payment-00171",
+      "gen-re_engagement_erase_payment-00184",
+      "gen-uncomputable_customer-00000",
+      "gen-uncomputable_customer-00012",
+      "gen-uncomputable_customer-00013",
+      "gen-uncomputable_customer-00102",
+      "gen-uncomputable_kyc-00129",
+      "gen-uncomputable_kyc-00142",
+      "gen-uncomputable_kyc-00152",
+      "gen-uncomputable_kyc-00161"
+    ]
+  },
+  "threshold_rule": "lowest threshold whose tuning-part over-erasure among acted-on cases is at or below the target, with at least 10 tuning cases acted on",
+  "targets": {
+    "1%": {
+      "target": 0.01,
+      "chosen_threshold": null,
+      "test_part": null
+    },
+    "5%": {
+      "target": 0.05,
+      "chosen_threshold": 0.34,
+      "test_part": {
+        "threshold": 0.34,
+        "test_cases": 254,
+        "acted_on": 254,
+        "over_erasure_among_acted_on": {
+          "rate": {
+            "numerator": 11,
+            "denominator": 254,
+            "value": 0.04330708661417323
+          },
+          "interval": {
+            "lower": 0.024351135076300268,
+            "upper": 0.07587163735452546,
+            "confidence_level": 0.95
+          }
+        },
+        "meets_target_on_test_part": true,
+        "acts_on_every_case_in": [
+          "arity4_cite_1_payment",
+          "arity4_cite_1_securities",
+          "arity4_cite_2_payment",
+          "arity4_cite_2_securities",
+          "arity4_cite_3_payment",
+          "arity4_cite_3_securities",
+          "boundary_elapsed_1d_customer",
+          "boundary_elapsed_1d_payment_pmla",
+          "boundary_unelapsed_1d_customer",
+          "boundary_unelapsed_1d_payment_pmla",
+          "elapsed_no_trigger_customer",
+          "elapsed_no_trigger_payment",
+          "elapsed_no_trigger_securities",
+          "marketing_active",
+          "marketing_withdrawn",
+          "ordinary_elapsed_with_purpose_payment",
+          "ordinary_erase_payment",
+          "ordinary_erase_securities",
+          "ordinary_inactivity_erase_payment",
+          "ordinary_kyc_open_retain",
+          "ordinary_open_customer_retain",
+          "re_engagement_erase_payment",
+          "uncomputable_customer",
+          "uncomputable_kyc"
+        ],
+        "acts_on_some_cases_in": [],
+        "defers_on_every_case_in": [],
+        "by_cell": [
+          {
+            "cell": "arity4_cite_1_payment",
+            "cases": 11,
+            "acted_on": 11,
+            "wrong_among_acted_on": 0,
+            "over_erasures_among_acted_on": 0
+          },
+          {
+            "cell": "arity4_cite_1_securities",
+            "cases": 11,
+            "acted_on": 11,
+            "wrong_among_acted_on": 0,
+            "over_erasures_among_acted_on": 0
+          },
+          {
+            "cell": "arity4_cite_2_payment",
+            "cases": 11,
+            "acted_on": 11,
+            "wrong_among_acted_on": 0,
+            "over_erasures_among_acted_on": 0
+          },
+          {
+            "cell": "arity4_cite_2_securities",
+            "cases": 11,
+            "acted_on": 11,
+            "wrong_among_acted_on": 0,
+            "over_erasures_among_acted_on": 0
+          },
+          {
+            "cell": "arity4_cite_3_payment",
+            "cases": 11,
+            "acted_on": 11,
+            "wrong_among_acted_on": 0,
+            "over_erasures_among_acted_on": 0
+          },
+          {
+            "cell": "arity4_cite_3_securities",
+            "cases": 11,
+            "acted_on": 11,
+            "wrong_among_acted_on": 0,
+            "over_erasures_among_acted_on": 0
+          },
+          {
+            "cell": "boundary_elapsed_1d_customer",
+            "cases": 11,
+            "acted_on": 11,
+            "wrong_among_acted_on": 0,
+            "over_erasures_among_acted_on": 0
+          },
+          {
+            "cell": "boundary_elapsed_1d_payment_pmla",
+            "cases": 11,
+            "acted_on": 11,
+            "wrong_among_acted_on": 0,
+            "over_erasures_among_acted_on": 0
+          },
+          {
+            "cell": "boundary_unelapsed_1d_customer",
+            "cases": 11,
+            "acted_on": 11,
+            "wrong_among_acted_on": 0,
+            "over_erasures_among_acted_on": 0
+          },
+          {
+            "cell": "boundary_unelapsed_1d_payment_pmla",
+            "cases": 11,
+            "acted_on": 11,
+            "wrong_among_acted_on": 0,
+            "over_erasures_among_acted_on": 0
+          },
+          {
+            "cell": "elapsed_no_trigger_customer",
+            "cases": 11,
+            "acted_on": 11,
+            "wrong_among_acted_on": 0,
+            "over_erasures_among_acted_on": 0
+          },
+          {
+            "cell": "elapsed_no_trigger_payment",
+            "cases": 11,
+            "acted_on": 11,
+            "wrong_among_acted_on": 0,
+            "over_erasures_among_acted_on": 0
+          },
+          {
+            "cell": "elapsed_no_trigger_securities",
+            "cases": 11,
+            "acted_on": 11,
+            "wrong_among_acted_on": 0,
+            "over_erasures_among_acted_on": 0
+          },
+          {
+            "cell": "marketing_active",
+            "cases": 11,
+            "acted_on": 11,
+            "wrong_among_acted_on": 11,
+            "over_erasures_among_acted_on": 11
+          },
+          {
+            "cell": "marketing_withdrawn",
+            "cases": 10,
+            "acted_on": 10,
+            "wrong_among_acted_on": 0,
+            "over_erasures_among_acted_on": 0
+          },
+          {
+            "cell": "ordinary_elapsed_with_purpose_payment",
+            "cases": 10,
+            "acted_on": 10,
+            "wrong_among_acted_on": 10,
+            "over_erasures_among_acted_on": 0
+          },
+          {
+            "cell": "ordinary_erase_payment",
+            "cases": 10,
+            "acted_on": 10,
+            "wrong_among_acted_on": 10,
+            "over_erasures_among_acted_on": 0
+          },
+          {
+            "cell": "ordinary_erase_securities",
+            "cases": 10,
+            "acted_on": 10,
+            "wrong_among_acted_on": 10,
+            "over_erasures_among_acted_on": 0
+          },
+          {
+            "cell": "ordinary_inactivity_erase_payment",
+            "cases": 10,
+            "acted_on": 10,
+            "wrong_among_acted_on": 10,
+            "over_erasures_among_acted_on": 0
+          },
+          {
+            "cell": "ordinary_kyc_open_retain",
+            "cases": 10,
+            "acted_on": 10,
+            "wrong_among_acted_on": 0,
+            "over_erasures_among_acted_on": 0
+          },
+          {
+            "cell": "ordinary_open_customer_retain",
+            "cases": 10,
+            "acted_on": 10,
+            "wrong_among_acted_on": 0,
+            "over_erasures_among_acted_on": 0
+          },
+          {
+            "cell": "re_engagement_erase_payment",
+            "cases": 10,
+            "acted_on": 10,
+            "wrong_among_acted_on": 10,
+            "over_erasures_among_acted_on": 0
+          },
+          {
+            "cell": "uncomputable_customer",
+            "cases": 10,
+            "acted_on": 10,
+            "wrong_among_acted_on": 10,
+            "over_erasures_among_acted_on": 0
+          },
+          {
+            "cell": "uncomputable_kyc",
+            "cases": 10,
+            "acted_on": 10,
+            "wrong_among_acted_on": 10,
+            "over_erasures_among_acted_on": 0
+          }
+        ]
+      }
+    }
+  },
+  "coverage_curve": {
+    "test_part": [
+      {
+        "threshold": 0.34,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.35,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.36,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.37,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.38,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.39,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.4,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.41,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.42,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.43,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.44,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.45,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.46,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.47,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.48,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.49,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.5,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.51,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.52,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.53,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.54,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.55,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.56,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.57,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.58,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.59,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.6,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.61,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.62,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.63,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.64,
+        "cases": 254,
+        "acted_on": 254,
+        "acted_on_share": 1.0,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04330708661417323
+      },
+      {
+        "threshold": 0.65,
+        "cases": 254,
+        "acted_on": 253,
+        "acted_on_share": 0.9960629921259843,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.043478260869565216
+      },
+      {
+        "threshold": 0.66,
+        "cases": 254,
+        "acted_on": 252,
+        "acted_on_share": 0.9921259842519685,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04365079365079365
+      },
+      {
+        "threshold": 0.67,
+        "cases": 254,
+        "acted_on": 251,
+        "acted_on_share": 0.9881889763779528,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.043824701195219126
+      },
+      {
+        "threshold": 0.68,
+        "cases": 254,
+        "acted_on": 250,
+        "acted_on_share": 0.984251968503937,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.044
+      },
+      {
+        "threshold": 0.69,
+        "cases": 254,
+        "acted_on": 246,
+        "acted_on_share": 0.968503937007874,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.044715447154471545
+      },
+      {
+        "threshold": 0.7,
+        "cases": 254,
+        "acted_on": 243,
+        "acted_on_share": 0.9566929133858267,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04526748971193416
+      },
+      {
+        "threshold": 0.71,
+        "cases": 254,
+        "acted_on": 235,
+        "acted_on_share": 0.9251968503937008,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04680851063829787
+      },
+      {
+        "threshold": 0.72,
+        "cases": 254,
+        "acted_on": 230,
+        "acted_on_share": 0.905511811023622,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04782608695652174
+      },
+      {
+        "threshold": 0.73,
+        "cases": 254,
+        "acted_on": 225,
+        "acted_on_share": 0.8858267716535433,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.04888888888888889
+      },
+      {
+        "threshold": 0.74,
+        "cases": 254,
+        "acted_on": 221,
+        "acted_on_share": 0.8700787401574803,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.049773755656108594
+      },
+      {
+        "threshold": 0.75,
+        "cases": 254,
+        "acted_on": 214,
+        "acted_on_share": 0.84251968503937,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.0514018691588785
+      },
+      {
+        "threshold": 0.76,
+        "cases": 254,
+        "acted_on": 203,
+        "acted_on_share": 0.7992125984251969,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.054187192118226604
+      },
+      {
+        "threshold": 0.77,
+        "cases": 254,
+        "acted_on": 195,
+        "acted_on_share": 0.7677165354330708,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.05641025641025641
+      },
+      {
+        "threshold": 0.78,
+        "cases": 254,
+        "acted_on": 188,
+        "acted_on_share": 0.7401574803149606,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.05851063829787234
+      },
+      {
+        "threshold": 0.79,
+        "cases": 254,
+        "acted_on": 181,
+        "acted_on_share": 0.7125984251968503,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.06077348066298342
+      },
+      {
+        "threshold": 0.8,
+        "cases": 254,
+        "acted_on": 175,
+        "acted_on_share": 0.6889763779527559,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.06285714285714286
+      },
+      {
+        "threshold": 0.81,
+        "cases": 254,
+        "acted_on": 171,
+        "acted_on_share": 0.6732283464566929,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.06432748538011696
+      },
+      {
+        "threshold": 0.82,
+        "cases": 254,
+        "acted_on": 166,
+        "acted_on_share": 0.6535433070866141,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.06626506024096386
+      },
+      {
+        "threshold": 0.83,
+        "cases": 254,
+        "acted_on": 163,
+        "acted_on_share": 0.6417322834645669,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.06748466257668712
+      },
+      {
+        "threshold": 0.84,
+        "cases": 254,
+        "acted_on": 149,
+        "acted_on_share": 0.5866141732283464,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.0738255033557047
+      },
+      {
+        "threshold": 0.85,
+        "cases": 254,
+        "acted_on": 138,
+        "acted_on_share": 0.5433070866141733,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.07971014492753623
+      },
+      {
+        "threshold": 0.86,
+        "cases": 254,
+        "acted_on": 119,
+        "acted_on_share": 0.468503937007874,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.09243697478991597
+      },
+      {
+        "threshold": 0.87,
+        "cases": 254,
+        "acted_on": 99,
+        "acted_on_share": 0.38976377952755903,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.1111111111111111
+      },
+      {
+        "threshold": 0.88,
+        "cases": 254,
+        "acted_on": 74,
+        "acted_on_share": 0.29133858267716534,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.14864864864864866
+      },
+      {
+        "threshold": 0.89,
+        "cases": 254,
+        "acted_on": 58,
+        "acted_on_share": 0.2283464566929134,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.1896551724137931
+      },
+      {
+        "threshold": 0.9,
+        "cases": 254,
+        "acted_on": 40,
+        "acted_on_share": 0.15748031496062992,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.275
+      },
+      {
+        "threshold": 0.91,
+        "cases": 254,
+        "acted_on": 31,
+        "acted_on_share": 0.1220472440944882,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.3548387096774194
+      },
+      {
+        "threshold": 0.92,
+        "cases": 254,
+        "acted_on": 23,
+        "acted_on_share": 0.09055118110236221,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.4782608695652174
+      },
+      {
+        "threshold": 0.93,
+        "cases": 254,
+        "acted_on": 22,
+        "acted_on_share": 0.08661417322834646,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.5
+      },
+      {
+        "threshold": 0.94,
+        "cases": 254,
+        "acted_on": 21,
+        "acted_on_share": 0.08267716535433071,
+        "over_erasures": 11,
+        "over_erasure_among_acted_on": 0.5238095238095238
+      },
+      {
+        "threshold": 0.95,
+        "cases": 254,
+        "acted_on": 18,
+        "acted_on_share": 0.07086614173228346,
+        "over_erasures": 8,
+        "over_erasure_among_acted_on": 0.4444444444444444
+      },
+      {
+        "threshold": 0.96,
+        "cases": 254,
+        "acted_on": 13,
+        "acted_on_share": 0.051181102362204724,
+        "over_erasures": 3,
+        "over_erasure_among_acted_on": 0.23076923076923078
+      },
+      {
+        "threshold": 0.97,
+        "cases": 254,
+        "acted_on": 10,
+        "acted_on_share": 0.03937007874015748,
+        "over_erasures": 1,
+        "over_erasure_among_acted_on": 0.1
+      },
+      {
+        "threshold": 0.98,
+        "cases": 254,
+        "acted_on": 7,
+        "acted_on_share": 0.027559055118110236,
+        "over_erasures": 0,
+        "over_erasure_among_acted_on": 0.0
+      },
+      {
+        "threshold": 0.99,
+        "cases": 254,
+        "acted_on": 0,
+        "acted_on_share": 0.0,
+        "over_erasures": 0,
+        "over_erasure_among_acted_on": null
+      },
+      {
+        "threshold": 1.0,
+        "cases": 254,
+        "acted_on": 0,
+        "acted_on_share": 0.0,
+        "over_erasures": 0,
+        "over_erasure_among_acted_on": null
+      }
+    ],
+    "tuning_part": [
+      {
+        "threshold": 0.34,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.35,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.36,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.37,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.38,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.39,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.4,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.41,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.42,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.43,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.44,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.45,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.46,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.47,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.48,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.49,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.5,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.51,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.52,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.53,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.54,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.55,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.56,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.57,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.58,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.59,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.6,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.61,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.62,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.63,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.64,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.65,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.66,
+        "cases": 96,
+        "acted_on": 96,
+        "acted_on_share": 1.0,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.041666666666666664
+      },
+      {
+        "threshold": 0.67,
+        "cases": 96,
+        "acted_on": 95,
+        "acted_on_share": 0.9895833333333334,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.042105263157894736
+      },
+      {
+        "threshold": 0.68,
+        "cases": 96,
+        "acted_on": 94,
+        "acted_on_share": 0.9791666666666666,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.0425531914893617
+      },
+      {
+        "threshold": 0.69,
+        "cases": 96,
+        "acted_on": 94,
+        "acted_on_share": 0.9791666666666666,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.0425531914893617
+      },
+      {
+        "threshold": 0.7,
+        "cases": 96,
+        "acted_on": 92,
+        "acted_on_share": 0.9583333333333334,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.043478260869565216
+      },
+      {
+        "threshold": 0.71,
+        "cases": 96,
+        "acted_on": 90,
+        "acted_on_share": 0.9375,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.044444444444444446
+      },
+      {
+        "threshold": 0.72,
+        "cases": 96,
+        "acted_on": 90,
+        "acted_on_share": 0.9375,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.044444444444444446
+      },
+      {
+        "threshold": 0.73,
+        "cases": 96,
+        "acted_on": 85,
+        "acted_on_share": 0.8854166666666666,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.047058823529411764
+      },
+      {
+        "threshold": 0.74,
+        "cases": 96,
+        "acted_on": 81,
+        "acted_on_share": 0.84375,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.04938271604938271
+      },
+      {
+        "threshold": 0.75,
+        "cases": 96,
+        "acted_on": 78,
+        "acted_on_share": 0.8125,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.05128205128205128
+      },
+      {
+        "threshold": 0.76,
+        "cases": 96,
+        "acted_on": 75,
+        "acted_on_share": 0.78125,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.05333333333333334
+      },
+      {
+        "threshold": 0.77,
+        "cases": 96,
+        "acted_on": 72,
+        "acted_on_share": 0.75,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.05555555555555555
+      },
+      {
+        "threshold": 0.78,
+        "cases": 96,
+        "acted_on": 67,
+        "acted_on_share": 0.6979166666666666,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.05970149253731343
+      },
+      {
+        "threshold": 0.79,
+        "cases": 96,
+        "acted_on": 67,
+        "acted_on_share": 0.6979166666666666,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.05970149253731343
+      },
+      {
+        "threshold": 0.8,
+        "cases": 96,
+        "acted_on": 64,
+        "acted_on_share": 0.6666666666666666,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.0625
+      },
+      {
+        "threshold": 0.81,
+        "cases": 96,
+        "acted_on": 64,
+        "acted_on_share": 0.6666666666666666,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.0625
+      },
+      {
+        "threshold": 0.82,
+        "cases": 96,
+        "acted_on": 64,
+        "acted_on_share": 0.6666666666666666,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.0625
+      },
+      {
+        "threshold": 0.83,
+        "cases": 96,
+        "acted_on": 61,
+        "acted_on_share": 0.6354166666666666,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.06557377049180328
+      },
+      {
+        "threshold": 0.84,
+        "cases": 96,
+        "acted_on": 52,
+        "acted_on_share": 0.5416666666666666,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.07692307692307693
+      },
+      {
+        "threshold": 0.85,
+        "cases": 96,
+        "acted_on": 47,
+        "acted_on_share": 0.4895833333333333,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.0851063829787234
+      },
+      {
+        "threshold": 0.86,
+        "cases": 96,
+        "acted_on": 43,
+        "acted_on_share": 0.4479166666666667,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.09302325581395349
+      },
+      {
+        "threshold": 0.87,
+        "cases": 96,
+        "acted_on": 34,
+        "acted_on_share": 0.3541666666666667,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.11764705882352941
+      },
+      {
+        "threshold": 0.88,
+        "cases": 96,
+        "acted_on": 28,
+        "acted_on_share": 0.2916666666666667,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.14285714285714285
+      },
+      {
+        "threshold": 0.89,
+        "cases": 96,
+        "acted_on": 18,
+        "acted_on_share": 0.1875,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.2222222222222222
+      },
+      {
+        "threshold": 0.9,
+        "cases": 96,
+        "acted_on": 11,
+        "acted_on_share": 0.11458333333333333,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.36363636363636365
+      },
+      {
+        "threshold": 0.91,
+        "cases": 96,
+        "acted_on": 11,
+        "acted_on_share": 0.11458333333333333,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.36363636363636365
+      },
+      {
+        "threshold": 0.92,
+        "cases": 96,
+        "acted_on": 9,
+        "acted_on_share": 0.09375,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.4444444444444444
+      },
+      {
+        "threshold": 0.93,
+        "cases": 96,
+        "acted_on": 8,
+        "acted_on_share": 0.08333333333333333,
+        "over_erasures": 4,
+        "over_erasure_among_acted_on": 0.5
+      },
+      {
+        "threshold": 0.94,
+        "cases": 96,
+        "acted_on": 7,
+        "acted_on_share": 0.07291666666666667,
+        "over_erasures": 3,
+        "over_erasure_among_acted_on": 0.42857142857142855
+      },
+      {
+        "threshold": 0.95,
+        "cases": 96,
+        "acted_on": 7,
+        "acted_on_share": 0.07291666666666667,
+        "over_erasures": 3,
+        "over_erasure_among_acted_on": 0.42857142857142855
+      },
+      {
+        "threshold": 0.96,
+        "cases": 96,
+        "acted_on": 6,
+        "acted_on_share": 0.0625,
+        "over_erasures": 2,
+        "over_erasure_among_acted_on": 0.3333333333333333
+      },
+      {
+        "threshold": 0.97,
+        "cases": 96,
+        "acted_on": 3,
+        "acted_on_share": 0.03125,
+        "over_erasures": 0,
+        "over_erasure_among_acted_on": 0.0
+      },
+      {
+        "threshold": 0.98,
+        "cases": 96,
+        "acted_on": 0,
+        "acted_on_share": 0.0,
+        "over_erasures": 0,
+        "over_erasure_among_acted_on": null
+      },
+      {
+        "threshold": 0.99,
+        "cases": 96,
+        "acted_on": 0,
+        "acted_on_share": 0.0,
+        "over_erasures": 0,
+        "over_erasure_among_acted_on": null
+      },
+      {
+        "threshold": 1.0,
+        "cases": 96,
+        "acted_on": 0,
+        "acted_on_share": 0.0,
+        "over_erasures": 0,
+        "over_erasure_among_acted_on": null
+      }
+    ]
+  },
+  "brier": {
+    "cases": "all 350; nothing is tuned on them",
+    "overall": {
+      "cases": 350,
+      "multi_class": 0.5132651428571426,
+      "top_option": 0.2368202857142855
+    }
+  },
+  "reliability": {
+    "cases": "all 350",
+    "correct_rule": "the API's choice equals the answer key",
+    "overall": [
+      {
+        "bucket": "[0, 0.5)",
+        "cases": 0,
+        "mean_p_max": null,
+        "correct": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "interval": {
+            "lower": null,
+            "upper": null,
+            "confidence_level": 0.95
+          }
+        }
+      },
+      {
+        "bucket": "[0.5, 0.7)",
+        "cases": 15,
+        "mean_p_max": 0.6746666666666667,
+        "correct": {
+          "rate": {
+            "numerator": 5,
+            "denominator": 15,
+            "value": 0.3333333333333333
+          },
+          "interval": {
+            "lower": 0.15176100694691236,
+            "upper": 0.5828687484878701,
+            "confidence_level": 0.95
+          }
+        }
+      },
+      {
+        "bucket": "[0.7, 0.9)",
+        "cases": 284,
+        "mean_p_max": 0.8202464788732394,
+        "correct": {
+          "rate": {
+            "numerator": 199,
+            "denominator": 284,
+            "value": 0.7007042253521126
+          },
+          "interval": {
+            "lower": 0.6450527841978866,
+            "upper": 0.7509983772742563,
+            "confidence_level": 0.95
+          }
+        }
+      },
+      {
+        "bucket": "[0.9, 0.99)",
+        "cases": 51,
+        "mean_p_max": 0.9384313725490196,
+        "correct": {
+          "rate": {
+            "numerator": 33,
+            "denominator": 51,
+            "value": 0.6470588235294118
+          },
+          "interval": {
+            "lower": 0.5098580497281073,
+            "upper": 0.7636569461874021,
+            "confidence_level": 0.95
+          }
+        }
+      },
+      {
+        "bucket": "[0.99, 1.0]",
+        "cases": 0,
+        "mean_p_max": null,
+        "correct": {
+          "rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "interval": {
+            "lower": null,
+            "upper": null,
+            "confidence_level": 0.95
+          }
+        }
+      }
+    ],
+    "by_stratum": [
+      {
+        "field": "entity_type",
+        "rows": [
+          {
+            "key": "customers",
+            "brier": {
+              "cases": 73,
+              "multi_class": 0.30192054794520545,
+              "top_option": 0.15337808219178076
+            },
+            "reliability": [
+              {
+                "bucket": "[0, 0.5)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.5, 0.7)",
+                "cases": 7,
+                "mean_p_max": 0.6828571428571429,
+                "correct": {
+                  "rate": {
+                    "numerator": 5,
+                    "denominator": 7,
+                    "value": 0.7142857142857143
+                  },
+                  "interval": {
+                    "lower": 0.35892909014821267,
+                    "upper": 0.9177828342909844,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.7, 0.9)",
+                "cases": 66,
+                "mean_p_max": 0.7521212121212121,
+                "correct": {
+                  "rate": {
+                    "numerator": 54,
+                    "denominator": 66,
+                    "value": 0.8181818181818182
+                  },
+                  "interval": {
+                    "lower": 0.7085458078248001,
+                    "upper": 0.8928149857423577,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.9, 0.99)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.99, 1.0]",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "key": "kyc_documents",
+            "brier": {
+              "cases": 28,
+              "multi_class": 0.6755428571428571,
+              "top_option": 0.26860357142857144
+            },
+            "reliability": [
+              {
+                "bucket": "[0, 0.5)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.5, 0.7)",
+                "cases": 5,
+                "mean_p_max": 0.66,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 5,
+                    "value": 0.0
+                  },
+                  "interval": {
+                    "lower": 0.0,
+                    "upper": 0.43449149475208104,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.7, 0.9)",
+                "cases": 23,
+                "mean_p_max": 0.7465217391304348,
+                "correct": {
+                  "rate": {
+                    "numerator": 14,
+                    "denominator": 23,
+                    "value": 0.6086956521739131
+                  },
+                  "interval": {
+                    "lower": 0.4078517960374599,
+                    "upper": 0.7784262201761787,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.9, 0.99)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.99, 1.0]",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "key": "marketing_consents",
+            "brier": {
+              "cases": 29,
+              "multi_class": 0.9625310344827585,
+              "top_option": 0.46787931034482766
+            },
+            "reliability": [
+              {
+                "bucket": "[0, 0.5)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.5, 0.7)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.7, 0.9)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.9, 0.99)",
+                "cases": 29,
+                "mean_p_max": 0.9617241379310345,
+                "correct": {
+                  "rate": {
+                    "numerator": 14,
+                    "denominator": 29,
+                    "value": 0.4827586206896552
+                  },
+                  "interval": {
+                    "lower": 0.3138581933079522,
+                    "upper": 0.6556926202943085,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.99, 1.0]",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "key": "transactions",
+            "brier": {
+              "cases": 220,
+              "multi_class": 0.5035181818181818,
+              "top_option": 0.23000500000000001
+            },
+            "reliability": [
+              {
+                "bucket": "[0, 0.5)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.5, 0.7)",
+                "cases": 3,
+                "mean_p_max": 0.68,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 3,
+                    "value": 0.0
+                  },
+                  "interval": {
+                    "lower": 0.0,
+                    "upper": 0.5615060804490177,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.7, 0.9)",
+                "cases": 195,
+                "mean_p_max": 0.852,
+                "correct": {
+                  "rate": {
+                    "numerator": 131,
+                    "denominator": 195,
+                    "value": 0.6717948717948717
+                  },
+                  "interval": {
+                    "lower": 0.6031245004670382,
+                    "upper": 0.7338271233380407,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.9, 0.99)",
+                "cases": 22,
+                "mean_p_max": 0.9077272727272727,
+                "correct": {
+                  "rate": {
+                    "numerator": 19,
+                    "denominator": 22,
+                    "value": 0.8636363636363636
+                  },
+                  "interval": {
+                    "lower": 0.6666458812053,
+                    "upper": 0.9525108273576373,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.99, 1.0]",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "field": "floor_set",
+        "rows": [
+          {
+            "key": "",
+            "brier": {
+              "cases": 29,
+              "multi_class": 0.9625310344827585,
+              "top_option": 0.46787931034482766
+            },
+            "reliability": [
+              {
+                "bucket": "[0, 0.5)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.5, 0.7)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.7, 0.9)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.9, 0.99)",
+                "cases": 29,
+                "mean_p_max": 0.9617241379310345,
+                "correct": {
+                  "rate": {
+                    "numerator": 14,
+                    "denominator": 29,
+                    "value": 0.4827586206896552
+                  },
+                  "interval": {
+                    "lower": 0.3138581933079522,
+                    "upper": 0.6556926202943085,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.99, 1.0]",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "key": "pmla_kyc",
+            "brier": {
+              "cases": 101,
+              "multi_class": 0.40549900990099,
+              "top_option": 0.1853217821782178
+            },
+            "reliability": [
+              {
+                "bucket": "[0, 0.5)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.5, 0.7)",
+                "cases": 12,
+                "mean_p_max": 0.6733333333333333,
+                "correct": {
+                  "rate": {
+                    "numerator": 5,
+                    "denominator": 12,
+                    "value": 0.4166666666666667
+                  },
+                  "interval": {
+                    "lower": 0.19325746190524656,
+                    "upper": 0.6804926643446272,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.7, 0.9)",
+                "cases": 89,
+                "mean_p_max": 0.7506741573033708,
+                "correct": {
+                  "rate": {
+                    "numerator": 68,
+                    "denominator": 89,
+                    "value": 0.7640449438202247
+                  },
+                  "interval": {
+                    "lower": 0.6660617969546638,
+                    "upper": 0.8401767857496412,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.9, 0.99)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.99, 1.0]",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "key": "pmla_kyc,gst,income_tax,companies_act",
+            "brier": {
+              "cases": 146,
+              "multi_class": 0.5942698630136987,
+              "top_option": 0.26943904109589034
+            },
+            "reliability": [
+              {
+                "bucket": "[0, 0.5)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.5, 0.7)",
+                "cases": 3,
+                "mean_p_max": 0.68,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 3,
+                    "value": 0.0
+                  },
+                  "interval": {
+                    "lower": 0.0,
+                    "upper": 0.5615060804490177,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.7, 0.9)",
+                "cases": 134,
+                "mean_p_max": 0.8476119402985075,
+                "correct": {
+                  "rate": {
+                    "numerator": 83,
+                    "denominator": 134,
+                    "value": 0.6194029850746269
+                  },
+                  "interval": {
+                    "lower": 0.534950966709163,
+                    "upper": 0.6971995596921556,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.9, 0.99)",
+                "cases": 9,
+                "mean_p_max": 0.9077777777777778,
+                "correct": {
+                  "rate": {
+                    "numerator": 7,
+                    "denominator": 9,
+                    "value": 0.7777777777777778
+                  },
+                  "interval": {
+                    "lower": 0.4525833436728054,
+                    "upper": 0.9367762376877727,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.99, 1.0]",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "key": "pmla_kyc,income_tax,companies_act,sebi",
+            "brier": {
+              "cases": 74,
+              "multi_class": 0.32446756756756756,
+              "top_option": 0.15220270270270272
+            },
+            "reliability": [
+              {
+                "bucket": "[0, 0.5)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.5, 0.7)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.7, 0.9)",
+                "cases": 61,
+                "mean_p_max": 0.8616393442622952,
+                "correct": {
+                  "rate": {
+                    "numerator": 48,
+                    "denominator": 61,
+                    "value": 0.7868852459016393
+                  },
+                  "interval": {
+                    "lower": 0.6687734610328795,
+                    "upper": 0.8710034722938738,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.9, 0.99)",
+                "cases": 13,
+                "mean_p_max": 0.9076923076923078,
+                "correct": {
+                  "rate": {
+                    "numerator": 12,
+                    "denominator": 13,
+                    "value": 0.9230769230769231
+                  },
+                  "interval": {
+                    "lower": 0.6668546607175265,
+                    "upper": 0.9862899336203037,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.99, 1.0]",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "field": "collision_arity",
+        "rows": [
+          {
+            "key": "0",
+            "brier": {
+              "cases": 29,
+              "multi_class": 0.9625310344827585,
+              "top_option": 0.46787931034482766
+            },
+            "reliability": [
+              {
+                "bucket": "[0, 0.5)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.5, 0.7)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.7, 0.9)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.9, 0.99)",
+                "cases": 29,
+                "mean_p_max": 0.9617241379310345,
+                "correct": {
+                  "rate": {
+                    "numerator": 14,
+                    "denominator": 29,
+                    "value": 0.4827586206896552
+                  },
+                  "interval": {
+                    "lower": 0.3138581933079522,
+                    "upper": 0.6556926202943085,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.99, 1.0]",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "key": "1",
+            "brier": {
+              "cases": 101,
+              "multi_class": 0.40549900990099,
+              "top_option": 0.1853217821782178
+            },
+            "reliability": [
+              {
+                "bucket": "[0, 0.5)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.5, 0.7)",
+                "cases": 12,
+                "mean_p_max": 0.6733333333333333,
+                "correct": {
+                  "rate": {
+                    "numerator": 5,
+                    "denominator": 12,
+                    "value": 0.4166666666666667
+                  },
+                  "interval": {
+                    "lower": 0.19325746190524656,
+                    "upper": 0.6804926643446272,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.7, 0.9)",
+                "cases": 89,
+                "mean_p_max": 0.7506741573033708,
+                "correct": {
+                  "rate": {
+                    "numerator": 68,
+                    "denominator": 89,
+                    "value": 0.7640449438202247
+                  },
+                  "interval": {
+                    "lower": 0.6660617969546638,
+                    "upper": 0.8401767857496412,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.9, 0.99)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.99, 1.0]",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "key": "4",
+            "brier": {
+              "cases": 220,
+              "multi_class": 0.5035181818181818,
+              "top_option": 0.23000500000000001
+            },
+            "reliability": [
+              {
+                "bucket": "[0, 0.5)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.5, 0.7)",
+                "cases": 3,
+                "mean_p_max": 0.68,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 3,
+                    "value": 0.0
+                  },
+                  "interval": {
+                    "lower": 0.0,
+                    "upper": 0.5615060804490177,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.7, 0.9)",
+                "cases": 195,
+                "mean_p_max": 0.852,
+                "correct": {
+                  "rate": {
+                    "numerator": 131,
+                    "denominator": 195,
+                    "value": 0.6717948717948717
+                  },
+                  "interval": {
+                    "lower": 0.6031245004670382,
+                    "upper": 0.7338271233380407,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.9, 0.99)",
+                "cases": 22,
+                "mean_p_max": 0.9077272727272727,
+                "correct": {
+                  "rate": {
+                    "numerator": 19,
+                    "denominator": 22,
+                    "value": 0.8636363636363636
+                  },
+                  "interval": {
+                    "lower": 0.6666458812053,
+                    "upper": 0.9525108273576373,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.99, 1.0]",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "field": "anchor_computable",
+        "rows": [
+          {
+            "key": "false",
+            "brier": {
+              "cases": 28,
+              "multi_class": 1.208764285714286,
+              "top_option": 0.5067464285714285
+            },
+            "reliability": [
+              {
+                "bucket": "[0, 0.5)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.5, 0.7)",
+                "cases": 7,
+                "mean_p_max": 0.6642857142857144,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 7,
+                    "value": 0.0
+                  },
+                  "interval": {
+                    "lower": 0.0,
+                    "upper": 0.35433884297520657,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.7, 0.9)",
+                "cases": 21,
+                "mean_p_max": 0.7266666666666667,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 21,
+                    "value": 0.0
+                  },
+                  "interval": {
+                    "lower": 0.0,
+                    "upper": 0.15464382326420195,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.9, 0.99)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.99, 1.0]",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "key": "true",
+            "brier": {
+              "cases": 322,
+              "multi_class": 0.45278695652173906,
+              "top_option": 0.2133484472049689
+            },
+            "reliability": [
+              {
+                "bucket": "[0, 0.5)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.5, 0.7)",
+                "cases": 8,
+                "mean_p_max": 0.68375,
+                "correct": {
+                  "rate": {
+                    "numerator": 5,
+                    "denominator": 8,
+                    "value": 0.625
+                  },
+                  "interval": {
+                    "lower": 0.30573785458380187,
+                    "upper": 0.863158240538479,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.7, 0.9)",
+                "cases": 263,
+                "mean_p_max": 0.8277186311787073,
+                "correct": {
+                  "rate": {
+                    "numerator": 199,
+                    "denominator": 263,
+                    "value": 0.7566539923954373
+                  },
+                  "interval": {
+                    "lower": 0.7013405345224775,
+                    "upper": 0.8045775831923017,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.9, 0.99)",
+                "cases": 51,
+                "mean_p_max": 0.9384313725490196,
+                "correct": {
+                  "rate": {
+                    "numerator": 33,
+                    "denominator": 51,
+                    "value": 0.6470588235294118
+                  },
+                  "interval": {
+                    "lower": 0.5098580497281073,
+                    "upper": 0.7636569461874021,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.99, 1.0]",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "field": "boundary_flag",
+        "rows": [
+          {
+            "key": "elapsed_by_1d",
+            "brier": {
+              "cases": 30,
+              "multi_class": 0.06193333333333336,
+              "top_option": 0.04014666666666666
+            },
+            "reliability": [
+              {
+                "bucket": "[0, 0.5)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.5, 0.7)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.7, 0.9)",
+                "cases": 30,
+                "mean_p_max": 0.8079999999999999,
+                "correct": {
+                  "rate": {
+                    "numerator": 30,
+                    "denominator": 30,
+                    "value": 1.0
+                  },
+                  "interval": {
+                    "lower": 0.8864829086095221,
+                    "upper": 1.0,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.9, 0.99)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.99, 1.0]",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "key": "none",
+            "brier": {
+              "cases": 290,
+              "multi_class": 0.607065517241379,
+              "top_option": 0.277725517241379
+            },
+            "reliability": [
+              {
+                "bucket": "[0, 0.5)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.5, 0.7)",
+                "cases": 15,
+                "mean_p_max": 0.6746666666666667,
+                "correct": {
+                  "rate": {
+                    "numerator": 5,
+                    "denominator": 15,
+                    "value": 0.3333333333333333
+                  },
+                  "interval": {
+                    "lower": 0.15176100694691236,
+                    "upper": 0.5828687484878701,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.7, 0.9)",
+                "cases": 226,
+                "mean_p_max": 0.8234070796460177,
+                "correct": {
+                  "rate": {
+                    "numerator": 141,
+                    "denominator": 226,
+                    "value": 0.6238938053097345
+                  },
+                  "interval": {
+                    "lower": 0.5591631401994932,
+                    "upper": 0.6844829186514718,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.9, 0.99)",
+                "cases": 49,
+                "mean_p_max": 0.9393877551020409,
+                "correct": {
+                  "rate": {
+                    "numerator": 31,
+                    "denominator": 49,
+                    "value": 0.6326530612244898
+                  },
+                  "interval": {
+                    "lower": 0.49266811386889864,
+                    "upper": 0.7533501747521878,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.99, 1.0]",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "key": "unelapsed_by_1d",
+            "brier": {
+              "cases": 30,
+              "multi_class": 0.057860000000000016,
+              "top_option": 0.038076666666666655
+            },
+            "reliability": [
+              {
+                "bucket": "[0, 0.5)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.5, 0.7)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.7, 0.9)",
+                "cases": 28,
+                "mean_p_max": 0.8078571428571429,
+                "correct": {
+                  "rate": {
+                    "numerator": 28,
+                    "denominator": 28,
+                    "value": 1.0
+                  },
+                  "interval": {
+                    "lower": 0.8793527963418923,
+                    "upper": 1.0,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.9, 0.99)",
+                "cases": 2,
+                "mean_p_max": 0.915,
+                "correct": {
+                  "rate": {
+                    "numerator": 2,
+                    "denominator": 2,
+                    "value": 1.0
+                  },
+                  "interval": {
+                    "lower": 0.34237195288961925,
+                    "upper": 1.0,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.99, 1.0]",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "field": "trigger_shape",
+        "rows": [
+          {
+            "key": "consent_withdrawn",
+            "brier": {
+              "cases": 14,
+              "multi_class": 0.001142857142857144,
+              "top_option": 0.0007500000000000014
+            },
+            "reliability": [
+              {
+                "bucket": "[0, 0.5)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.5, 0.7)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.7, 0.9)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.9, 0.99)",
+                "cases": 14,
+                "mean_p_max": 0.9735714285714285,
+                "correct": {
+                  "rate": {
+                    "numerator": 14,
+                    "denominator": 14,
+                    "value": 1.0
+                  },
+                  "interval": {
+                    "lower": 0.7846829880728186,
+                    "upper": 1.0,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.99, 1.0]",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "key": "explicit_erasure_right",
+            "brier": {
+              "cases": 70,
+              "multi_class": 0.8476857142857142,
+              "top_option": 0.3739171428571428
+            },
+            "reliability": [
+              {
+                "bucket": "[0, 0.5)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.5, 0.7)",
+                "cases": 7,
+                "mean_p_max": 0.6642857142857144,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 7,
+                    "value": 0.0
+                  },
+                  "interval": {
+                    "lower": 0.0,
+                    "upper": 0.35433884297520657,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.7, 0.9)",
+                "cases": 61,
+                "mean_p_max": 0.7770491803278688,
+                "correct": {
+                  "rate": {
+                    "numerator": 28,
+                    "denominator": 61,
+                    "value": 0.45901639344262296
+                  },
+                  "interval": {
+                    "lower": 0.3401273088828912,
+                    "upper": 0.5827617006418584,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.9, 0.99)",
+                "cases": 2,
+                "mean_p_max": 0.905,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 2,
+                    "value": 0.0
+                  },
+                  "interval": {
+                    "lower": 0.0,
+                    "upper": 0.6576280471103807,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.99, 1.0]",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "key": "inactivity",
+            "brier": {
+              "cases": 14,
+              "multi_class": 1.2168571428571429,
+              "top_option": 0.52895
+            },
+            "reliability": [
+              {
+                "bucket": "[0, 0.5)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.5, 0.7)",
+                "cases": 3,
+                "mean_p_max": 0.68,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 3,
+                    "value": 0.0
+                  },
+                  "interval": {
+                    "lower": 0.0,
+                    "upper": 0.5615060804490177,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.7, 0.9)",
+                "cases": 11,
+                "mean_p_max": 0.739090909090909,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 11,
+                    "value": 0.0
+                  },
+                  "interval": {
+                    "lower": 2.7755575615628914e-17,
+                    "upper": 0.2588400172488141,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.9, 0.99)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.99, 1.0]",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "key": "none",
+            "brier": {
+              "cases": 90,
+              "multi_class": 0.3662355555555556,
+              "top_option": 0.18684555555555554
+            },
+            "reliability": [
+              {
+                "bucket": "[0, 0.5)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.5, 0.7)",
+                "cases": 5,
+                "mean_p_max": 0.6859999999999999,
+                "correct": {
+                  "rate": {
+                    "numerator": 5,
+                    "denominator": 5,
+                    "value": 1.0
+                  },
+                  "interval": {
+                    "lower": 0.5655085052479191,
+                    "upper": 1.0,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.7, 0.9)",
+                "cases": 70,
+                "mean_p_max": 0.8102857142857143,
+                "correct": {
+                  "rate": {
+                    "numerator": 70,
+                    "denominator": 70,
+                    "value": 1.0
+                  },
+                  "interval": {
+                    "lower": 0.9479751251327163,
+                    "upper": 0.9999999999999999,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.9, 0.99)",
+                "cases": 15,
+                "mean_p_max": 0.9506666666666667,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 15,
+                    "value": 0.0
+                  },
+                  "interval": {
+                    "lower": 0.0,
+                    "upper": 0.20388926630434784,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.99, 1.0]",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "key": "purpose_fulfilled",
+            "brier": {
+              "cases": 162,
+              "multi_class": 0.4338987654320987,
+              "top_option": 0.20050000000000007
+            },
+            "reliability": [
+              {
+                "bucket": "[0, 0.5)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.5, 0.7)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.7, 0.9)",
+                "cases": 142,
+                "mean_p_max": 0.85,
+                "correct": {
+                  "rate": {
+                    "numerator": 101,
+                    "denominator": 142,
+                    "value": 0.7112676056338029
+                  },
+                  "interval": {
+                    "lower": 0.6319429096819695,
+                    "upper": 0.7794623409461092,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.9, 0.99)",
+                "cases": 20,
+                "mean_p_max": 0.908,
+                "correct": {
+                  "rate": {
+                    "numerator": 19,
+                    "denominator": 20,
+                    "value": 0.95
+                  },
+                  "interval": {
+                    "lower": 0.7638641064874331,
+                    "upper": 0.9911187805671268,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.99, 1.0]",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "field": "re_engagement",
+        "rows": [
+          {
+            "key": "false",
+            "brier": {
+              "cases": 336,
+              "multi_class": 0.46840773809523784,
+              "top_option": 0.21692738095238076
+            },
+            "reliability": [
+              {
+                "bucket": "[0, 0.5)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.5, 0.7)",
+                "cases": 15,
+                "mean_p_max": 0.6746666666666667,
+                "correct": {
+                  "rate": {
+                    "numerator": 5,
+                    "denominator": 15,
+                    "value": 0.3333333333333333
+                  },
+                  "interval": {
+                    "lower": 0.15176100694691236,
+                    "upper": 0.5828687484878701,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.7, 0.9)",
+                "cases": 270,
+                "mean_p_max": 0.818962962962963,
+                "correct": {
+                  "rate": {
+                    "numerator": 199,
+                    "denominator": 270,
+                    "value": 0.737037037037037
+                  },
+                  "interval": {
+                    "lower": 0.6814625536161206,
+                    "upper": 0.7859609496061802,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.9, 0.99)",
+                "cases": 51,
+                "mean_p_max": 0.9384313725490196,
+                "correct": {
+                  "rate": {
+                    "numerator": 33,
+                    "denominator": 51,
+                    "value": 0.6470588235294118
+                  },
+                  "interval": {
+                    "lower": 0.5098580497281073,
+                    "upper": 0.7636569461874021,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.99, 1.0]",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "key": "true",
+            "brier": {
+              "cases": 14,
+              "multi_class": 1.5898428571428576,
+              "top_option": 0.7142499999999998
+            },
+            "reliability": [
+              {
+                "bucket": "[0, 0.5)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.5, 0.7)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.7, 0.9)",
+                "cases": 14,
+                "mean_p_max": 0.845,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 14,
+                    "value": 0.0
+                  },
+                  "interval": {
+                    "lower": 0.0,
+                    "upper": 0.21531701192718142,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.9, 0.99)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.99, 1.0]",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "field": "split",
+        "rows": [
+          {
+            "key": "eval",
+            "brier": {
+              "cases": 74,
+              "multi_class": 0.32446756756756756,
+              "top_option": 0.15220270270270272
+            },
+            "reliability": [
+              {
+                "bucket": "[0, 0.5)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.5, 0.7)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.7, 0.9)",
+                "cases": 61,
+                "mean_p_max": 0.8616393442622952,
+                "correct": {
+                  "rate": {
+                    "numerator": 48,
+                    "denominator": 61,
+                    "value": 0.7868852459016393
+                  },
+                  "interval": {
+                    "lower": 0.6687734610328795,
+                    "upper": 0.8710034722938738,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.9, 0.99)",
+                "cases": 13,
+                "mean_p_max": 0.9076923076923078,
+                "correct": {
+                  "rate": {
+                    "numerator": 12,
+                    "denominator": 13,
+                    "value": 0.9230769230769231
+                  },
+                  "interval": {
+                    "lower": 0.6668546607175265,
+                    "upper": 0.9862899336203037,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.99, 1.0]",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "key": "train",
+            "brier": {
+              "cases": 276,
+              "multi_class": 0.5638847826086953,
+              "top_option": 0.259507608695652
+            },
+            "reliability": [
+              {
+                "bucket": "[0, 0.5)",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.5, 0.7)",
+                "cases": 15,
+                "mean_p_max": 0.6746666666666667,
+                "correct": {
+                  "rate": {
+                    "numerator": 5,
+                    "denominator": 15,
+                    "value": 0.3333333333333333
+                  },
+                  "interval": {
+                    "lower": 0.15176100694691236,
+                    "upper": 0.5828687484878701,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.7, 0.9)",
+                "cases": 223,
+                "mean_p_max": 0.8089237668161434,
+                "correct": {
+                  "rate": {
+                    "numerator": 151,
+                    "denominator": 223,
+                    "value": 0.6771300448430493
+                  },
+                  "interval": {
+                    "lower": 0.6132086637548838,
+                    "upper": 0.7350519727421255,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.9, 0.99)",
+                "cases": 38,
+                "mean_p_max": 0.9489473684210527,
+                "correct": {
+                  "rate": {
+                    "numerator": 21,
+                    "denominator": 38,
+                    "value": 0.5526315789473685
+                  },
+                  "interval": {
+                    "lower": 0.3970602917908942,
+                    "upper": 0.6985383468844911,
+                    "confidence_level": 0.95
+                  }
+                }
+              },
+              {
+                "bucket": "[0.99, 1.0]",
+                "cases": 0,
+                "mean_p_max": null,
+                "correct": {
+                  "rate": {
+                    "numerator": 0,
+                    "denominator": 0,
+                    "value": null
+                  },
+                  "interval": {
+                    "lower": null,
+                    "upper": null,
+                    "confidence_level": 0.95
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "p_max_histogram": {
+    "0.64": 1,
+    "0.65": 1,
+    "0.66": 2,
+    "0.67": 2,
+    "0.68": 4,
+    "0.69": 5,
+    "0.70": 10,
+    "0.71": 5,
+    "0.72": 10,
+    "0.73": 8,
+    "0.74": 10,
+    "0.75": 14,
+    "0.76": 11,
+    "0.77": 12,
+    "0.78": 7,
+    "0.79": 9,
+    "0.80": 4,
+    "0.81": 5,
+    "0.82": 6,
+    "0.83": 23,
+    "0.84": 16,
+    "0.85": 23,
+    "0.86": 29,
+    "0.87": 31,
+    "0.88": 26,
+    "0.89": 25,
+    "0.90": 9,
+    "0.91": 10,
+    "0.92": 2,
+    "0.93": 2,
+    "0.94": 3,
+    "0.95": 6,
+    "0.96": 6,
+    "0.97": 6,
+    "0.98": 7
+  }
+}
