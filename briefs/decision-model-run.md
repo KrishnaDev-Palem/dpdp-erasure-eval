@@ -338,22 +338,49 @@ above what a sequential sweep needs.
 
 ## Acceptance
 
-- [ ] Brief committed before any live call; key in the environment
-- [ ] Branch (a): role, client, runner, cache fields and isolation checks merged; `make_cache_key` and
+- [x] Brief committed before any live call; key in the environment
+- [x] Branch (a): role, client, runner, cache fields and isolation checks merged; `make_cache_key` and
       `make_gate_cache_key` unchanged; existing entries byte-identical; ruff and full pytest green
-- [ ] First live gate responses checked for rounding, ties and whether option order reaches the model
-- [ ] Q1: 900 entries under `cache/jev-1.13.0/`; offline replay through the Jev runner reproduces
+- [x] First live gate responses checked for rounding, ties and whether option order reaches the model
+- [x] Q1: 900 entries under `cache/jev-1.13.0/`; offline replay through the Jev runner reproduces
       `results/jev/gate-live.json`; reading applied as pre-registered
-- [ ] Branch (b): 6,300 entries; offline replay reproduces `results/jev/t2-live.json` and
+- [x] Branch (b): 6,300 entries; offline replay reproduces `results/jev/t2-live.json` and
       `results/jev/t3-live.json`; `results/jev/calibration.json` and `results/jev/stability.json` committed
-- [ ] Q2 to Q4 readings applied as pre-registered; Q5 trigger evaluated and recorded
-- [ ] The hard rule's `git diff --stat` is empty
-- [ ] Every entry's `model` is `jev-1.13.0` and every entry has `latency_ms`; actual cost recorded here
+- [x] Q2 to Q4 readings applied as pre-registered; Q5 trigger evaluated and recorded
+- [x] The hard rule's `git diff --stat` is empty
+- [x] Every entry's `model` is `jev-1.13.0` and every entry has `latency_ms`; actual cost recorded here
 - [ ] CI green on each PR and on `main`
 
 ## Results
 
-Recorded after the run. Readings are applied as pre-registered above.
+Recorded after the run (2026-10-14 and 2026-10-15). Readings are applied as pre-registered above. The gate,
+T2 and T3 files come from `decision_model_run.py gate`, `t2` and `t3`; Q2 to Q5 from its `readings` task, which
+replays the cache without calling, into `results/jev/adjudication-comparison.json` (Q2, Q5), `calibration.json`
+(Q3) and `stability.json` (Q4). First try, primary order unless stated.
+
+- **Q1.** Detection 36/45 against Gemini's 39/45 (p = 0.375), false alarms 0/45 against 0/45: **no detectable
+  difference**. Not a classifier-seam candidate: `benign-control-21` changes flag between the two orders.
+- **Q2.** Over-erasure / over-retention / mis-escalation, wrong, out of 350: T2 263 / 0 / 31, 266 wrong (Sonnet
+  253); T3 15 / 70 / 28, 113 wrong (Sonnet 139). H2a **no detectable difference** (date cases 28/88 wrong,
+  others 85/262); H2b **confirmed** (263 to 15, every order); H2c **no detectable difference** (fewer wrong than
+  Sonnet, p = 0.034, 0.068 after Holm). Both models are wrong on more than half of `marketing_active`,
+  `ordinary_elapsed_with_purpose_payment`, `ordinary_erase_securities` and `ordinary_inactivity_erase_payment`.
+- **Q3.** No threshold meets 1%. For 5% the chosen t is 0.34: Jev acts on all 254 test cases, 11 over-erasures
+  (4.3%, CI 2.4% to 7.6%), all in `marketing_active`. p_max runs 0.64 to 0.98 and is overconfident: in
+  `[0.7, 0.9)` the mean is 0.82 and 70% are correct.
+- **Q4.** At T3 no top option changes across samples or orders, though every case's probabilities differ by
+  order. T2: 2 to 8 cases change across samples per order, 6 across orders. No headline is order-sensitive.
+  Ties: gate 2, T2 3, T3 0. All 7,200 entries name `jev-1.13.0` and carry `latency_ms`.
+- **Q5.** Not triggered (date cases hold 28 of 113 wrong verdicts, 25%; H2a not confirmed). Not run.
+- **Descriptive, not pre-registered.** Jev gives nearly one answer per tier: `erase` on 345 of 350 cases at T2,
+  `retain` on 321 at T3, `escalate` never at T3. A constant `erase` has 266 wrong verdicts and a constant
+  `retain` 112, so at both tiers Jev does no better than a constant answer. H2b and the H2c direction are read
+  in that light.
+- **Choice not top.** Twice at T2 Jev's choice had less probability than another option. The first stopped the
+  sweep before its entry was written, so that sample was drawn again; the parser now keeps such answers, and
+  `stability.json` lists the second (`t2-rot2`, sample 1). None at T3.
+- **Cost.** 7,200 stored calls, 5,269,344 input tokens, **$0.2213** (gate $0.0117, T2 $0.0751, T3 $0.1346),
+  plus about $0.0001 for four calls not stored. Latency 238 to 2,954 ms, median 273 (T2 and T3).
 
 ## Sources
 
