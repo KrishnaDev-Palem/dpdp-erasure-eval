@@ -381,6 +381,8 @@ replays the cache without calling, into `results/jev/adjudication-comparison.jso
   `stability.json` lists the second (`t2-rot2`, sample 1). None at T3.
 - **Cost.** 7,200 stored calls, 5,269,344 input tokens, **$0.2213** (gate $0.0117, T2 $0.0751, T3 $0.1346),
   plus about $0.0001 for four calls not stored. Latency 238 to 2,954 ms, median 273 (T2 and T3).
+- **Figures.** `scripts/decision_model_figures.py` draws four figures from the committed results files and
+  the export (no cache read, no call) into `results/jev/figures/`.
 
 ## Sources
 
