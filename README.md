@@ -166,6 +166,10 @@ record and every rule already fetched. (The retrieval side of that split cannot 
 current tool design, because every session fetches everything; the writeup's
 [Retrieval versus reasoning](docs/writeup.md#4-retrieval-versus-reasoning) section explains.)
 
+> **Correction (17 October 2026):** the rule text given at T3 holds the retention floors and governance
+> map only; the trigger rule was never in the model's context. See the note at the top of
+> `docs/writeup.md`.
+
 Variance is the other half of the story. Between 24% (T1) and 38% (autonomous) of locations do not get
 the same verdict on all three tries of an identical input. Two identical requests adjudicated by the
 model can receive different verdicts; under the deterministic agent they cannot. For a decision that must
