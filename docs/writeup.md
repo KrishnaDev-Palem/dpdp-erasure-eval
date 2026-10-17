@@ -1,5 +1,7 @@
 # Evaluating a Model Adjudicator Against Deterministic Ground Truth
 
+> **Correction (17 October 2026).** T3 does not hand the model everything the deterministic core uses. The T3 context, and the autonomous setting's `get_retention_floors` and `get_governance_map` tools, carry the request, the location records, the retention floors and the governance map. The erasure-trigger rule (the agent's `_collect_triggers`) and the escalation rule are not in it, and there is no system prompt. Every count here is unchanged and measures agreement with the agent. The interpretation changes: the 58 over-erasures among the 90 `trigger_shape: none` locations, and the "reasoning failure" label in the retrieval split, describe disagreement with a rule the model was never given, not a misreading of supplied text. All 90 of those requests are `type: erasure` with basis `consent_withdrawn`.
+
 Results and analysis for the DPDP Erasure Evaluation Harness.
 
 ## 1. What this measures
